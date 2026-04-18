@@ -1,7 +1,8 @@
 {
-  "name": "bulk-upload",
+  "name": "cine-admin-cms",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
+  "description": "Professional Content Management System for Movie & Drama Metadata Registration",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -11,7 +12,8 @@
   },
   "dependencies": {
     "react": "^19.2.4",
-    "react-dom": "^19.2.4"
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^7.13.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",

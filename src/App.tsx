@@ -1,120 +1,62 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect } from 'react'
+import {
+  Navigate,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom'
+import { HOME_PATH, projectPathMap } from './app/paths'
+import { PageShell } from './components/layout/page-shell'
+import { SiteHeader } from './components/layout/site-header'
+import { HomePage } from './pages/home'
+import { ContentImportPage } from './pages/content-import'
+import { MetadataReviewPage } from './pages/metadata-review'
+import { PagePreviewPage } from './pages/page-preview'
+import './portfolio.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+// 라우트가 바뀔 때마다 새 화면의 시작 지점으로 스크롤을 맞춘다.
+function ScrollToTop() {
+  const { pathname } = useLocation()
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [pathname])
+
+  return null
+}
+
+// 공통 레이아웃 안에서 각 화면 페이지만 교체한다.
+function AppLayout() {
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+    <PageShell>
+      <ScrollToTop />
+      <div className="site-shell">
+        <SiteHeader />
+        <Outlet />
+      </div>
+    </PageShell>
+  )
+}
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
+// 홈과 상세 화면을 표준 React Router 경로로 분기한다.
+function App() {
+  return (
+    <Routes>
+      <Route element={<AppLayout />}>
+        <Route path={HOME_PATH} element={<HomePage />} />
+        <Route path={projectPathMap['content-import']} element={<ContentImportPage />} />
+        <Route
+          path={projectPathMap['metadata-review']}
+          element={<MetadataReviewPage />}
+        />
+        <Route
+          path={projectPathMap['page-preview']}
+          element={<PagePreviewPage />}
+        />
+        <Route path="*" element={<Navigate replace to={HOME_PATH} />} />
+      </Route>
+    </Routes>
   )
 }
 
