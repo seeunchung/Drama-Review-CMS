@@ -32,8 +32,8 @@ function SelectedFileBar({ file, onRemove }: SelectedFileBarProps) {
         <small>{formatFileSize(file.size)}</small>
       </div>
 
-      <button className="selected-file-remove" type="button" onClick={onRemove}>
-        제거
+      <button className="selected-file-remove" type="button" onClick={onRemove} aria-label="파일 제거">
+        ✕
       </button>
     </div>
   )

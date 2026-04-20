@@ -229,6 +229,12 @@
   border: none;
 }
 
+.upload-dropzone-footnote {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
 .selected-file-bar {
   display: flex;
   align-items: center;
@@ -237,6 +243,125 @@
   background: var(--bg-deep);
   border-radius: 20px;
   border: 1px solid var(--line-soft);
+  margin-top: 16px;
+}
+
+/* Filter Bar */
+.upload-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line-soft);
+  border-radius: 18px;
+  margin-bottom: 20px;
+}
+
+.upload-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-chip {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line-soft);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-chip.is-active {
+  background: var(--accent);
+  color: var(--bg-deep);
+  border-color: var(--accent);
+}
+
+.filter-chip:hover:not(.is-active) {
+  border-color: var(--accent-soft);
+  background: var(--accent-soft-bg, rgba(var(--accent-rgb), 0.05));
+}
+
+.filter-count {
+  margin-left: 12px;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  opacity: 0.8;
+}
+
+.upload-filter-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.filter-select select {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line-soft);
+  background: var(--bg-panel);
+  color: var(--ink-strong);
+  font-size: 0.85rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.filter-select select:focus {
+  border-color: var(--accent);
+}
+
+.filter-button {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.filter-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.filter-button-secondary {
+  border-color: var(--line-soft);
+  background: transparent;
+  color: var(--ink-strong);
+}
+
+.filter-button-secondary:hover:not(:disabled) {
+  background: var(--line-soft);
+}
+
+.filter-button-primary {
+  background: var(--accent);
+  color: var(--bg-deep);
+}
+
+.filter-button-primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.selected-file-copy {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .selected-file-pill {
@@ -245,6 +370,27 @@
   padding: 4px 12px;
   border-radius: 999px;
   font-weight: 600;
+}
+
+.selected-file-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--line-soft);
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.selected-file-remove:hover {
+  background: var(--text-error-bg, #fee2e2);
+  color: var(--text-error, #ef4444);
+  border-color: transparent;
 }
 
 .stats-grid {
@@ -272,7 +418,9 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 12px;
-  margin-bottom: 24px;
+  margin: 0 0 24px 0;
+  padding: 0;
+  list-style: none;
 }
 
 .upload-step {
@@ -281,6 +429,19 @@
   border: 1px solid var(--line-soft);
   border-radius: 18px;
   opacity: 0.5;
+}
+
+.upload-step-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.upload-step-copy small {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  opacity: 0.8;
 }
 
 .upload-step.is-current, .upload-step.is-complete {
@@ -340,6 +501,19 @@
 .error-text {
   color: var(--status-error);
   font-size: 0.9rem;
+}
+
+.cell-summary {
+  max-width: 200px;
+}
+
+.summary-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  cursor: help;
 }
 
 /* Preset Bar */

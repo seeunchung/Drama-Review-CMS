@@ -11,10 +11,14 @@ export interface BulkUploadRow {
   id: string
   seq: number
   title: string
-  distributor: string // 방영 플랫폼 (Youku, iQIYI 등)
+  distributor: string // 방영 플랫폼 (넷플릭스, Youku 등)
   rating: string // 관람 등급
+  episode: number // 회차
+  subtitle: string // 부제목
+  runningTime: string // 러닝타임
+  summary: string // 줄거리
   status: RowStatus
-  errorMessage?: string
+  errorMessages: string[] // 상세 검증 메시지
 }
 
 export interface BulkUploadSummary {
