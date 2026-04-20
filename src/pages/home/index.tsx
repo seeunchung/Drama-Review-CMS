@@ -14,45 +14,43 @@ function StatWidget({ label, value, trend, color }: { label: string, value: stri
   )
 }
 
-// 홈 화면을 전문적인 운영 대시보드로 구성
+// 중드 리뷰 CMS 대시보드
 function HomePage() {
   return (
     <main className="dashboard-page">
       <section className="dashboard-hero">
         <div className="dashboard-title-group">
-          <span className="dashboard-kicker">System Overview</span>
-          <h1>운영 대시보드</h1>
-          <p>전체 콘텐츠 등록 현황 및 주요 운영 지표를 확인합니다.</p>
+          <span className="dashboard-kicker">C-Drama Review Admin</span>
+          <h1>중드 리뷰 운영 시스템</h1>
+          <p>중국 드라마 콘텐츠 등록, 회차 관리 및 팬 리뷰 플랫폼 데이터를 관리합니다.</p>
         </div>
         <div className="dashboard-actions">
            <Link to="/content-import" className="quick-action-button">
-             신규 콘텐츠 일괄 등록
+             신규 시리즈 에피소드 등록
            </Link>
         </div>
       </section>
 
-      {/* 실무 시스템 느낌의 통계 영역 */}
       <section className="dashboard-stats-grid">
-        <StatWidget label="오늘 등록된 콘텐츠" value="24" trend="+12%↑" color="var(--accent)" />
-        <StatWidget label="검토 대기 중" value="12" trend="긴급 3건" color="var(--status-pending)" />
-        <StatWidget label="최종 승인 완료" value="1,204" trend="+8건" color="var(--status-valid)" />
-        <StatWidget label="데이터 오류 건수" value="2" trend="-5%↓" color="var(--status-error)" />
+        <StatWidget label="이번 주 신작 등록" value="8" trend="+2건↑" color="var(--accent)" />
+        <StatWidget label="회차 검토 대기" value="45" trend="투투장부주 포함" color="var(--status-pending)" />
+        <StatWidget label="활성 리뷰어" value="3,842" trend="+124명" color="var(--status-valid)" />
+        <StatWidget label="DB 정합성 에러" value="1" trend="-2건↓" color="var(--status-error)" />
       </section>
 
       <section className="dashboard-content-grid">
-        {/* 주요 업무 바로가기 섹션 (기존 카드 대체) */}
         <div className="dashboard-main-panel panel">
           <div className="panel-header">
-            <h3>주요 업무 바로가기</h3>
-            <p>수행할 업무 단계를 선택하세요.</p>
+            <h3>운영 업무 큐</h3>
+            <p>오늘 처리해야 할 콘텐츠 운영 태스크입니다.</p>
           </div>
           <div className="dashboard-menu-list">
             {projectList.map((project) => (
               <Link key={project.id} to={project.path} className="dashboard-menu-item">
                 <div className="menu-icon-box">
-                  {project.id === 'content-import' && '📥'}
-                  {project.id === 'metadata-review' && '⚖️'}
-                  {project.id === 'page-preview' && '🖥️'}
+                  {project.id === 'content-import' && '📂'}
+                  {project.id === 'metadata-review' && '🎬'}
+                  {project.id === 'page-preview' && '📱'}
                 </div>
                 <div className="menu-copy">
                   <strong>{project.title}</strong>
@@ -64,23 +62,26 @@ function HomePage() {
           </div>
         </div>
 
-        {/* 시스템 공지 또는 활동 내역 (더미) */}
         <aside className="dashboard-side-panel panel">
           <div className="panel-header">
-            <h3>최근 활동 내역</h3>
+            <h3>최근 업데이트 내역</h3>
           </div>
           <ul className="activity-list">
             <li>
-              <span className="activity-time">10:24</span>
-              <p>Netflix '오징어 게임 2' 승인 완료</p>
+              <span className="activity-time">방금 전</span>
+              <p>'암격리적비밀' 24화 메타데이터 수정</p>
             </li>
             <li>
-              <span className="activity-time">09:15</span>
-              <p>배급사 'Disney+' 신규 데이터 업로드</p>
+              <span className="activity-time">1시간 전</span>
+              <p>'절요' 출연진 정보 대량 업데이트</p>
+            </li>
+            <li>
+              <span className="activity-time">오늘</span>
+              <p>'투투장부주' 에피소드 1-10화 승인</p>
             </li>
             <li>
               <span className="activity-time">어제</span>
-              <p>시스템 정기 점검 완료</p>
+              <p>신규 장르 '선협물' 카테고리 추가</p>
             </li>
           </ul>
         </aside>

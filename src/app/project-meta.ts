@@ -13,28 +13,28 @@ interface ProjectMeta {
   tags: string[]
 }
 
-// 각 화면을 홈 갤러리에서 하나의 항목으로 노출한다.
+// 중드 리뷰 CMS 도메인에 맞춘 프로젝트 리스트
 const projectList: ProjectMeta[] = [
   {
     id: 'content-import',
     path: projectPathMap['content-import'],
-    title: 'Content Import Console',
-    description: '배급사 영화 메타데이터 대량 업로드, 데이터 검증 및 에러 리뷰',
-    tags: ['영화 등록', '데이터 검증', '대량 업로드', '에러 핸들링'],
+    title: 'Episode Import Console',
+    description: '중국 드라마 회차별 메타데이터(부제, 방영일) 대량 업로드 및 검증',
+    tags: ['에피소드 등록', '데이터 검증', '대량 업로드', '중드 운영'],
   },
   {
     id: 'metadata-review',
     path: projectPathMap['metadata-review'],
-    title: 'Metadata Review Workspace',
-    description: '영화 상세 정보 검토, 변경 사항 감지 및 최종 승인 워크플로우',
-    tags: ['운영자 리뷰', '변경 감지', '콘텐츠 승인', '탭 레이아웃'],
+    title: 'Drama Metadata Review',
+    description: '신규 중드 마스터 정보(배우, 장르, 플랫폼) 검토 및 최종 승인',
+    tags: ['마스터 데이터', '변경 감지', '콘텐츠 승인', '배우 정보'],
   },
   {
     id: 'page-preview',
     path: projectPathMap['page-preview'],
-    title: 'CMS Page Preview',
-    description: '배급사 제공 원본 데이터의 서비스 화면 매핑 및 최종 미리보기',
-    tags: ['미리보기', '데이터 매핑', '렌더링 검증', '파싱'],
+    title: 'C-Drama Page Preview',
+    description: '리뷰 사이트 내 드라마 상세 페이지 및 회차 목록 UI 미리보기',
+    tags: ['UI 미리보기', '데이터 매핑', '모바일 최적화', '팬 커뮤니티'],
   },
 ]
 

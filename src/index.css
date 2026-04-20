@@ -23,24 +23,28 @@
 }
 
 :root {
-  /* Cinematic Midnight Blue & Teal Theme */
-  --bg-deep: #0F172A;         /* 배경: 깊은 네이비 블루 */
+  /* Cinematic Midnight Blue Base */
+  --bg-deep: #0F172A;
   --surface-0: #0F172A;
-  --surface-1: #1E293B;       /* 카드/패널: 약간 밝은 네이비 */
-  --surface-2: #334155;       /* 호버/강조 영역 */
+  --surface-1: #1E293B;
+  --surface-2: #334155;
   --line-soft: rgba(255, 255, 255, 0.08);
   
-  --ink-strong: #F8FAFC;      /* 메인 텍스트: 거의 흰색 */
-  --ink-muted: #CBD5E1;       /* 보조 텍스트: 밝은 회색 */
-  --ink-soft: #94A3B8;        /* 연한 텍스트: 중간 회색 */
+  --ink-strong: #F8FAFC;
+  --ink-muted: #CBD5E1;
+  --ink-soft: #94A3B8;
   
-  --accent: #2DD4BF;          /* 포인트: 틸(Teal) - 시네마틱 엑센트 */
-  --accent-soft: rgba(45, 212, 191, 0.1);
+  /* Brand & Accent */
+  --brand-red: #E11D48;        /* 로고 및 브랜딩: 크림슨 레드 */
+  --accent: #F59E0B;           /* 주요 포인트: 골드 (기존 레드에서 변경) */
+  --accent-soft: rgba(245, 158, 11, 0.1);
+  --button-bg: #E11D48;        /* 버튼 영역: 크림슨 레드 */
+  --accent-gold: #F59E0B;      /* 보조 포인트: 골드 */
   
   /* Status Colors */
   --status-valid: #10B981;    /* 에메랄드 그린 */
-  --status-pending: #F59E0B;  /* 앰버 옐로우 */
-  --status-error: #EF4444;    /* 크림슨 레드 */
+  --status-pending: #F59E0B;  /* 골드와 동일 (검토 중) */
+  --status-error: #EF4444;    /* 크림슨 레드 (에러) */
   
   --font-sans: 'GMarketSans', 'Segoe UI Variable', sans-serif;
   --font-display: 'GMarketSans', 'Segoe UI Variable', sans-serif;
@@ -107,7 +111,6 @@ p {
   border: 0;
 }
 
-/* Common UI Elements Adjustment */
 .panel {
   background: var(--surface-1);
   border: 1px solid var(--line-soft);

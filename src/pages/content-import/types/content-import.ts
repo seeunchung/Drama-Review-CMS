@@ -11,7 +11,7 @@ export interface BulkUploadRow {
   id: string
   seq: number
   title: string
-  distributor: string // 배급사
+  distributor: string // 방영 플랫폼 (Youku, iQIYI 등)
   rating: string // 관람 등급
   status: RowStatus
   errorMessage?: string

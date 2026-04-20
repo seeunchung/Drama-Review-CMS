@@ -3,7 +3,7 @@ import { ProjectHeader } from "../../components/layout/project-header";
 
 // 입력 중, 변경 감지, 저장 가능 상태를 빠르게 전환해 본다.
 type ReviewMode = "draft" | "changed" | "ready";
-type ReviewTab = "기본정보" | "출연/제작" | "시놉시스";
+type ReviewTab = "기본정보" | "출연진/제작" | "작품소개";
 
 const modeLabelMap = {
     draft: "초안 작성",
@@ -11,9 +11,9 @@ const modeLabelMap = {
     ready: "승인 가능",
 } as const;
 
-const tabList: ReviewTab[] = ["기본정보", "출연/제작", "시놉시스"];
+const tabList: ReviewTab[] = ["기본정보", "출연진/제작", "작품소개"];
 
-// 영화 메타데이터 검토 워크스페이스
+// 중드 마스터 데이터 검토 워크스페이스
 function MetadataReviewPage() {
     const [mode, setMode] = useState<ReviewMode>("changed");
     const [activeTab, setActiveTab] = useState<ReviewTab>("기본정보");
@@ -25,7 +25,7 @@ function MetadataReviewPage() {
                 saveLabel: "임시 저장",
                 saveEnabled: false,
                 changedFields: [],
-                attachments: ["포스터_초안.jpg"],
+                attachments: ["절요_포스터_가안.jpg"],
             };
         }
 
@@ -33,16 +33,16 @@ function MetadataReviewPage() {
             return {
                 saveLabel: "최종 승인",
                 saveEnabled: true,
-                changedFields: ["콘텐츠 제목", "관람 등급", "출연진 정보"],
-                attachments: ["포스터_최종.png", "예고편_v1.mp4"],
+                changedFields: ["작품명", "장르 분류", "주연 배우"],
+                attachments: ["절요_공식포스터.png", "메인예고편_최종.mp4"],
             };
         }
 
         return {
             saveLabel: "변경 검토",
             saveEnabled: false,
-            changedFields: ["콘텐츠 제목", "포스터 이미지"],
-            attachments: ["포스터_수정본.jpg"],
+            changedFields: ["작품명", "포스터 이미지"],
+            attachments: ["절요_수정포스터.jpg"],
         };
     }, [mode]);
 
@@ -57,9 +57,9 @@ function MetadataReviewPage() {
     return (
         <main className="project-page">
             <ProjectHeader
-                title="Metadata Review Workspace"
-                description="영화/드라마 메타데이터의 변경 사항을 감지하고 운영자가 최종 승인하는 워크플로우"
-                tags={["운영자 리뷰", "변경 감지", "콘텐츠 승인", "CMS 레이아웃"]}
+                title="Drama Metadata Review"
+                description="신규 중국 드라마 '절요(Zhe Yao)'의 마스터 메타데이터와 미디어 자산을 검토하고 최종 승인합니다."
+                tags={["마스터 데이터", "변경 감지", "중드 승인", "운영 워크플로우"]}
             />
 
             <div className="screen-toolbar panel">
@@ -78,7 +78,7 @@ function MetadataReviewPage() {
                     )}
                 </div>
                 <span className="screen-toolbar-status">
-                    현재 워크플로우: {modeLabelMap[mode]}
+                    현재 상태: {modeLabelMap[mode]}
                 </span>
             </div>
 
@@ -100,24 +100,24 @@ function MetadataReviewPage() {
                     <div className="review-form-card">
                         <div className="form-row">
                             <span>콘텐츠 ID</span>
-                            <strong>CID-MOV-2026-0012</strong>
+                            <strong>CDRAMA-MOV-2024-0081</strong>
                         </div>
                         <div
-                            className={`form-row${summary.changedFields.includes("콘텐츠 제목") ? " is-changed" : ""}`}
+                            className={`form-row${summary.changedFields.includes("작품명") ? " is-changed" : ""}`}
                         >
-                            <span>콘텐츠 제목</span>
-                            <strong>오징어 게임 시즌 2</strong>
+                            <span>작품명</span>
+                            <strong>절요 (Zhe Yao)</strong>
                         </div>
                         <div className="form-row">
                             <span>장르</span>
-                            <strong>스릴러 / 드라마</strong>
+                            <strong>고장극 / 로맨스 / 정극</strong>
                         </div>
                         <div
-                            className={`form-row${summary.changedFields.includes("관람 등급") ? " is-changed" : ""}`}
+                            className={`form-row${summary.changedFields.includes("장르 분류") ? " is-changed" : ""}`}
                         >
-                            <span>관람 등급</span>
+                            <span>장르 분류</span>
                             <strong>
-                                {mode === "ready" ? "19세 이용가" : "검토 중"}
+                                {mode === "ready" ? "언정소설 원작" : "검토 중"}
                             </strong>
                         </div>
                         <div className="form-row">
@@ -128,7 +128,7 @@ function MetadataReviewPage() {
 
                     <aside className="review-side-panel">
                         <div className="review-side-box">
-                            <span>미디어 자산</span>
+                            <span>공식 미디어 자산</span>
                             <ul className="attachment-list">
                                 {summary.attachments.map((file) => (
                                     <li key={file}>{file}</li>
@@ -141,7 +141,7 @@ function MetadataReviewPage() {
                             <div className="change-chip-list">
                                 {summary.changedFields.length === 0 ? (
                                     <span className="change-chip is-muted">
-                                        변경 없음
+                                        변경 사항 없음
                                     </span>
                                 ) : (
                                     summary.changedFields.map((field) => (
@@ -163,21 +163,21 @@ function MetadataReviewPage() {
                         <thead>
                             <tr>
                                 <th>검토 항목</th>
-                                <th>상태 정보</th>
-                                <th>승인 여부</th>
+                                <th>현재 등록값</th>
+                                <th>검증 상태</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {["기본 메타", "출연진/스태프", "자막/영상파일"].map(
+                            {["작품 기본 정보", "주연진(송조아, 류우녕)", "원본/자막 영상"].map(
                                 (label, index) => (
                                     <tr key={label}>
                                         <td>{label}</td>
                                         <td>
                                             {index === 0
-                                                ? "검증 완료"
+                                                ? "입력 완료"
                                                 : index === 1
                                                   ? "변경 사항 있음"
-                                                  : "파일 대조중"}
+                                                  : "미디어 확인 중"}
                                         </td>
                                         <td>{rowStatus[index]}</td>
                                     </tr>
@@ -190,9 +190,9 @@ function MetadataReviewPage() {
                 <div className="save-dock">
                     <div>
                         <strong>
-                            {summary.changedFields.length}건의 데이터 변경 감지
+                            {summary.changedFields.length}건의 마스터 데이터 수정됨
                         </strong>
-                        <span>미디어 첨부 {summary.attachments.length}건</span>
+                        <span>첨부 미디어 {summary.attachments.length}건</span>
                     </div>
                     <button disabled={!summary.saveEnabled} type="button">
                         {summary.saveLabel}

@@ -4,54 +4,55 @@ import { ProjectHeader } from '../../components/layout/project-header'
 // 원본 데이터, 매핑 정보, 최종 서비스 미리보기 상태를 전환해 본다.
 type PreviewMode = 'raw' | 'mapped' | 'preview'
 
-interface ContentMetadata {
+interface DramaMetadata {
   id: string
   title: string
   status: string
-  distributor: string
-  director: string
-  rating: string
+  platform: string
+  actors: string
+  genre: string
 }
 
-const contentList: ContentMetadata[] = [
-  { id: 'mov-1', title: '오징어 게임 2', status: '검증완료', distributor: 'Netflix', director: '황동혁', rating: '19세 이용가' },
-  { id: 'mov-2', title: '파묘', status: '매핑완료', distributor: 'Showbox', director: '장재현', rating: '15세 이용가' },
-  { id: 'mov-3', title: '무도 실무관', status: '미리보기', distributor: 'Netflix', director: '김주환', rating: '15세 이용가' },
+const dramaList: DramaMetadata[] = [
+  { id: 'cd-1', title: '암격리적비밀', status: '검증완료', platform: 'iQIYI', actors: '진철원, 서몽결', genre: '학원물 / 로맨스' },
+  { id: 'cd-2', title: '투투장부주', status: '매핑완료', platform: 'Youku', actors: '진철원, 조로사', genre: '로맨스 / 현대극' },
+  { id: 'cd-3', title: '난홍', status: '미리보기', platform: 'Youku', actors: '백경정, 장약남', genre: '로맨스 / 오피스' },
+  { id: 'cd-4', title: '옥을 찾아서', status: '대기중', platform: 'WeTV', actors: '조로사, 류우녕', genre: '고장극 / 모험' },
 ]
 
-// 배급사 제공 원본 데이터가 실제 서비스 화면으로 변환되는 과정을 보여준다.
+// 배급사 제공 원본 데이터가 중드 리뷰 사이트 화면으로 변환되는 과정을 보여준다.
 function PagePreviewPage() {
   const [mode, setMode] = useState<PreviewMode>('preview')
-  const [selectedId, setSelectedId] = useState<string>('mov-1')
+  const [selectedId, setSelectedId] = useState<string>('cd-1')
 
-  // 현재 선택된 콘텐츠 정보만 오른쪽 미리보기 패널에 연결한다.
-  const selectedContent = useMemo(
-    () => contentList.find((item) => item.id === selectedId) ?? contentList[0],
+  // 현재 선택된 드라마 정보만 오른쪽 미리보기 패널에 연결한다.
+  const selectedDrama = useMemo(
+    () => dramaList.find((item) => item.id === selectedId) ?? dramaList[0],
     [selectedId],
   )
 
-  // 원본 데이터를 서비스 UI 필드와 매핑한다.
+  // 원본 데이터를 팬 사이트 UI 필드와 매핑한다.
   const mappingRows = [
-    ['콘텐츠 제목', selectedContent.title],
-    ['배급사명', selectedContent.distributor],
-    ['감독명', selectedContent.director],
-    ['관람등급', selectedContent.rating],
+    ['작품 제목', selectedDrama.title],
+    ['방영 플랫폼', selectedDrama.platform],
+    ['주연 배우', selectedDrama.actors],
+    ['드라마 장르', selectedDrama.genre],
   ]
 
   return (
     <main className="project-page">
       <ProjectHeader
-        title="CMS Page Preview"
-        description="배급사 제공 원본 데이터를 서비스 화면용 메타데이터로 매핑하고 최종 UI를 미리 확인"
-        tags={['데이터 매핑', 'UI 미리보기', '검증 결과 시각화', '콘텐츠 CMS']}
+        title="C-Drama Page Preview"
+        description="드라마 상세 정보가 실제 팬 커뮤니티나 리뷰 사이트 UI에 어떻게 매핑되어 노출되는지 미리 확인합니다."
+        tags={['팬 사이트 미리보기', '데이터 매핑', 'UI 시뮬레이션', '중드 도메인']}
       />
 
       <div className="screen-toolbar panel">
         <div className="screen-mode-group">
           {([
-            ['raw', '원본 데이터'],
+            ['raw', 'Raw 데이터'],
             ['mapped', '필드 매핑'],
-            ['preview', '서비스 미리보기'],
+            ['preview', '팬 사이트 미리보기'],
           ] as Array<[PreviewMode, string]>).map(([item, label]) => (
             <button
               className={mode === item ? 'is-active' : ''}
@@ -63,12 +64,12 @@ function PagePreviewPage() {
             </button>
           ))}
         </div>
-        <span className="screen-toolbar-status">검토 중인 콘텐츠: {selectedContent.title}</span>
+        <span className="screen-toolbar-status">검토 작품: {selectedDrama.title}</span>
       </div>
 
       <section className="project-screen panel document-layout">
         <aside className="document-list-panel">
-          {contentList.map((item) => (
+          {dramaList.map((item) => (
             <button
               className={`document-list-item${selectedId === item.id ? ' is-active' : ''}`}
               key={item.id}
@@ -77,7 +78,7 @@ function PagePreviewPage() {
             >
               <strong>{item.title}</strong>
               <span>{item.status}</span>
-              <small>{item.distributor}</small>
+              <small>{item.platform}</small>
             </button>
           ))}
         </aside>
@@ -86,13 +87,11 @@ function PagePreviewPage() {
           {mode === 'raw' && (
             <pre className="document-code-view">
 {`{
-  "content_id": "${selectedContent.id}",
-  "official_title": "${selectedContent.title}",
-  "provider": "${selectedContent.distributor}",
-  "credits": {
-    "director": "${selectedContent.director}"
-  },
-  "certification": "${selectedContent.rating}"
+  "drama_id": "${selectedDrama.id}",
+  "title": "${selectedDrama.title}",
+  "streaming_on": "${selectedDrama.platform}",
+  "cast": "${selectedDrama.actors}",
+  "categories": ["${selectedDrama.genre.split(' / ').join('", "')}"]
 }`}
             </pre>
           )}
@@ -111,22 +110,27 @@ function PagePreviewPage() {
           {mode === 'preview' && (
             <div className="document-preview-sheet">
               <div className="document-preview-head">
-                <span>서비스 상세 페이지 미리보기</span>
-                <strong>{selectedContent.title}</strong>
+                <span>리뷰 사이트 상세 페이지 미리보기</span>
+                <strong>{selectedDrama.title}</strong>
               </div>
               <div className="document-preview-body">
                 <div className="preview-hero-placeholder">
-                  [ {selectedContent.title} 메인 포스터 이미지 영역 ]
+                  [ {selectedDrama.title} 메인 포스터 & 스틸컷 영역 ]
                 </div>
                 <div className="preview-info">
-                  <p><strong>감독:</strong> {selectedContent.director}</p>
-                  <p><strong>배급:</strong> {selectedContent.distributor}</p>
-                  <p><strong>등급:</strong> {selectedContent.rating}</p>
+                  <p><strong>출연:</strong> {selectedDrama.actors}</p>
+                  <p><strong>채널:</strong> {selectedDrama.platform}</p>
+                  <p><strong>장르:</strong> {selectedDrama.genre}</p>
                 </div>
                 <p className="preview-synopsis">
-                  {selectedContent.title}에 대한 상세 정보와 흥미진진한 스토리가 이곳에 노출됩니다. 
-                  운영자는 이 미리보기를 통해 최종 정합성을 검토합니다.
+                  {selectedDrama.title}는 팬들 사이에서 큰 화제를 모으고 있는 작품입니다. 
+                  고퀄리티의 자막과 함께 상세한 리뷰 정보를 제공하기 위해 데이터를 검토 중입니다.
                 </p>
+                <div className="preview-episode-list">
+                  <div className="preview-line wide" />
+                  <div className="preview-line" />
+                  <div className="preview-line" />
+                </div>
               </div>
             </div>
           )}
@@ -134,11 +138,11 @@ function PagePreviewPage() {
 
         <aside className="document-meta-panel">
           <div className="document-meta-box">
-            <span>매핑 상태</span>
-            <strong>{selectedContent.status}</strong>
+            <span>최종 상태</span>
+            <strong>{selectedDrama.status}</strong>
           </div>
           <div className="document-meta-box">
-            <span>추출 데이터 키</span>
+            <span>매핑 데이터 키</span>
             <ul className="document-key-list">
               {mappingRows.map(([label]) => (
                 <li key={label}>{label}</li>

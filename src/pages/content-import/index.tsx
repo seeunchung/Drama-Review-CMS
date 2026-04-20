@@ -46,7 +46,7 @@ function buildPresetRows(preset: BulkScreenPreset) {
 
 // 현재 필터 결과를 바로 내려받아 볼 수 있게 CSV로 변환한다.
 function downloadRowsAsCsv(rows: BulkUploadRow[]) {
-    const header = ["순번", "콘텐츠 제목", "배급사", "관람 등급", "상태", "에러메시지"];
+    const header = ["순번", "에피소드 제목", "방영 플랫폼", "러닝타임", "상태", "에러메시지"];
     const lines = rows.map((row) =>
         [
             row.seq,
@@ -67,12 +67,12 @@ function downloadRowsAsCsv(rows: BulkUploadRow[]) {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "영화메타데이터_검토결과.csv";
+    link.download = "중드_회차데이터_검토결과.csv";
     link.click();
     window.URL.revokeObjectURL(url);
 }
 
-// 영화 메타데이터 대량 등록 상세 화면의 상태 전환과 테이블 시뮬레이션을 관리한다.
+// 중국 드라마 회차 메타데이터 대량 등록 상세 화면의 상태 전환과 테이블 시뮬레이션을 관리한다.
 function ContentImportPage() {
     const [selectedFile, setSelectedFile] = useState<DemoSelectedFile | null>(
         sampleFile,
@@ -174,9 +174,9 @@ function ContentImportPage() {
     return (
         <main className="content-import-page">
             <ProjectHeader
-                title="Content Import Console"
-                description="배급사 영화 메타데이터 대량 업로드 및 정합성 검토"
-                tags={["영화 등록", "데이터 검증", "대량 업로드"]}
+                title="Episode Import Console"
+                description="방영 플랫폼별 중국 드라마 회차 데이터 대량 업로드 및 정합성 검토"
+                tags={["중드 등록", "회차 검증", "대량 업로드"]}
             />
 
             <div className="preset-toggle-bar panel">
