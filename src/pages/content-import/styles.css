@@ -545,8 +545,94 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Upload Progress Toast */
+.upload-progress-toast {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 400px;
+  padding: 24px;
+  background: #1e293b;
+  border: 1px solid var(--accent-soft);
+  border-radius: 20px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  color: #fff;
+  animation: rise-in 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.upload-progress-toast.is-complete {
+  border-color: #10b981;
+}
+
+.progress-toast-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.progress-info strong {
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.progress-percentage {
+  font-size: 0.9rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.progress-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1rem;
+}
+
+.progress-bar-track {
+  height: 8px;
+  background: #334155;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), #60a5fa);
+  transition: width 0.4s ease;
+}
+
+.upload-progress-toast.is-complete .progress-bar-fill {
+  background: #10b981;
+}
+
+.progress-footnote {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  line-height: 1.5;
+  margin: 0;
+}
+
 @media (max-width: 1024px) {
   .upload-hero, .workspace-top-grid, .upload-stepper {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .upload-progress-toast {
+    width: calc(100% - 32px);
+    right: 16px;
+    bottom: 16px;
   }
 }

@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ProjectHeader } from "../../components/layout/project-header";
 import { useDramaExcelParsing } from "./hooks/use-drama-excel-parsing";
+import { useBulkUpload } from "./hooks/use-bulk-upload";
 import { UploadWorkspace } from "./sections/upload-workspace";
+import { UploadProgressBar } from "./components/upload-progress-bar";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -17,13 +19,11 @@ const statusSortRank = {
     uploaded: 2,
 } as const;
 
-// 업로드 직후 선택된 파일 라벨을 화면용 형태로 정리한다.
 function createFileLabel(fileName: string) {
     const extension = fileName.split(".").pop()?.toUpperCase();
     return extension && extension.length > 0 ? extension : "FILE";
 }
 
-// 현재 필터 결과를 바로 내려받아 볼 수 있게 CSV로 변환한다.
 function downloadRowsAsCsv(rows: BulkUploadRow[]) {
     const header = [
         "순번",
@@ -36,8 +36,9 @@ function downloadRowsAsCsv(rows: BulkUploadRow[]) {
         "상태",
         "에러메시지",
     ];
-    const lines = rows.map((row) =>
-        [
+
+    const lines = rows.map((row) => {
+        const rowValues = [
             row.seq,
             row.title,
             row.distributor,
@@ -47,15 +48,15 @@ function downloadRowsAsCsv(rows: BulkUploadRow[]) {
             row.runningTime,
             row.status,
             row.errorMessages.join(" | "),
-        ]
+        ];
+        return rowValues
             .map((value) => `"${String(value).replace(/"/g, '""')}"`)
-            .join(","),
-    );
-
-    const blob = new Blob([[header.join(","), ...lines].join("\n")], {
-        type: "text/csv;charset=utf-8",
+            .join(",");
     });
 
+    // \n 부분을 명확하게 이스케이프 처리하여 합칩니다.
+    const csvContent = [header.join(","), ...lines].join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
@@ -64,7 +65,6 @@ function downloadRowsAsCsv(rows: BulkUploadRow[]) {
     window.URL.revokeObjectURL(url);
 }
 
-// 중국 드라마 회차 메타데이터 대량 등록 상세 화면의 상태 전환과 테이블 시뮬레이션을 관리한다.
 function ContentImportPage() {
     const [selectedFile, setSelectedFile] = useState<DemoSelectedFile | null>(
         null,
@@ -74,8 +74,10 @@ function ContentImportPage() {
     const [sortMode, setSortMode] = useState<SortMode>("seq");
     const [currentStep, setCurrentStep] =
         useState<BulkUploadSummary["currentStep"]>("idle");
+    const [batchError, setBatchError] = useState<string | null>(null);
 
     const { parseExcel, isParsing } = useDramaExcelParsing();
+    const { upload, uploadProgress, resetProgress } = useBulkUpload();
 
     const handleFileSelect = async (file: File) => {
         setSelectedFile({
@@ -84,24 +86,28 @@ function ContentImportPage() {
             typeLabel: createFileLabel(file.name),
         });
         setCurrentStep("idle");
+        setBatchError(null);
+        resetProgress();
 
         try {
-            // 단계별 시뮬레이션 효과를 위해 약간의 딜레이를 줌
             await new Promise((resolve) => setTimeout(resolve, 500));
             setCurrentStep("parsed");
+
+            const parsedData = await parseExcel(file);
 
             await new Promise((resolve) => setTimeout(resolve, 800));
             setCurrentStep("validated");
 
-            const parsedData = await parseExcel(file);
-
             await new Promise((resolve) => setTimeout(resolve, 500));
             setRows(parsedData);
             setCurrentStep("reviewed");
-        } catch (error) {
+        } catch (error: any) {
             console.error("Parsing error:", error);
             setCurrentStep("idle");
-            alert("엑셀 파일 파싱 중 오류가 발생했습니다.");
+            setBatchError(
+                error.message || "엑셀 파일 파싱 중 오류가 발생했습니다.",
+            );
+            setRows([]);
         }
     };
 
@@ -109,24 +115,42 @@ function ContentImportPage() {
         setSelectedFile(null);
         setRows([]);
         setCurrentStep("idle");
+        setBatchError(null);
+        resetProgress();
     };
 
-    const handleSave = () => {
-        setCurrentStep("saved");
-        setRows((prev) =>
-            prev.map((row) =>
-                row.status === "error" ? row : { ...row, status: "uploaded" },
-            ),
-        );
+    const handleSave = async () => {
+        if (!selectedFile || rows.length === 0 || batchError) {
+            alert("파일 상태를 확인해주세요.");
+            return;
+        }
+
+        const dramaTitle = rows[0].title;
+        const fileName = selectedFile.name;
+
+        try {
+            await upload({
+                rows: rows,
+                dramaTitle: dramaTitle,
+                fileName: fileName,
+                chunkSize: 5,
+            });
+
+            setCurrentStep("saved");
+            setRows((prev) =>
+                prev.map((row) => ({ ...row, status: "uploaded" })),
+            );
+        } catch (error) {
+            console.error("Save error:", error);
+            alert("DB 저장 중 오류가 발생했습니다.");
+        }
     };
 
     const visibleRows = useMemo(() => {
         let result = [...rows];
-
         if (filterMode === "error") {
             result = result.filter((row) => row.status === "error");
         }
-
         if (sortMode === "title") {
             result.sort((a, b) => a.title.localeCompare(b.title));
         } else if (sortMode === "status") {
@@ -136,7 +160,6 @@ function ContentImportPage() {
         } else {
             result.sort((a, b) => a.seq - b.seq);
         }
-
         return result;
     }, [rows, filterMode, sortMode]);
 
@@ -149,6 +172,10 @@ function ContentImportPage() {
         };
     }, [rows, currentStep]);
 
+    const isUploading =
+        uploadProgress.isUploading ||
+        (uploadProgress.progress > 0 && uploadProgress.progress < 100);
+
     return (
         <main className="content-import-page">
             <ProjectHeader
@@ -156,6 +183,18 @@ function ContentImportPage() {
                 description="방영 플랫폼별 중국 드라마 회차 데이터 대량 업로드 및 내용 검토"
                 tags={["대량 업로드"]}
             />
+
+            {batchError && (
+                <div className="batch-error-message">
+                    <p>⚠️ {batchError}</p>
+                    <button
+                        onClick={handleFileRemove}
+                        aria-label="오류 메시지 닫기"
+                    >
+                        ✕
+                    </button>
+                </div>
+            )}
 
             <UploadWorkspace
                 file={selectedFile}
@@ -169,9 +208,25 @@ function ContentImportPage() {
                 onSortChange={setSortMode}
                 onDownload={() => downloadRowsAsCsv(visibleRows)}
                 onSave={handleSave}
-                canDownload={visibleRows.length > 0}
-                canSave={summary.total > 0 && currentStep === "reviewed"}
+                isSaving={isUploading}
+                canDownload={visibleRows.length > 0 && !isUploading}
+                canSave={
+                    summary.total > 0 &&
+                    (currentStep === "reviewed" || currentStep === "saved") &&
+                    !isUploading &&
+                    !batchError
+                }
             />
+
+            {(isUploading || uploadProgress.progress > 0) && (
+                <UploadProgressBar
+                    progress={uploadProgress.progress}
+                    currentChunk={uploadProgress.currentChunk}
+                    totalChunks={uploadProgress.totalChunks}
+                    isUploading={isUploading}
+                    onClose={resetProgress}
+                />
+            )}
         </main>
     );
 }

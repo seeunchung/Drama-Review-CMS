@@ -27,6 +27,7 @@ interface UploadWorkspaceProps {
   onSortChange: (mode: SortMode) => void
   onDownload: () => void
   onSave: () => void
+  isSaving?: boolean
   canDownload: boolean
   canSave: boolean
 }
@@ -47,6 +48,7 @@ function UploadWorkspace({
   onSortChange,
   onDownload,
   onSave,
+  isSaving = false,
   canDownload,
   canSave,
 }: UploadWorkspaceProps) {
@@ -80,6 +82,7 @@ function UploadWorkspace({
         totalCount={summary.total}
         canDownload={canDownload}
         canSave={canSave}
+        isSaving={isSaving}
         onFilterChange={onFilterChange}
         onSortChange={onSortChange}
         onDownload={onDownload}
