@@ -1,16 +1,16 @@
 import { useMemo, useState } from "react";
-import { ProjectHeader } from "../../components/layout/project-header";
-import { useDramaExcelParsing } from "./hooks/use-drama-excel-parsing";
-import { useBulkUpload } from "./hooks/use-bulk-upload";
-import { UploadWorkspace } from "./sections/upload-workspace";
-import { UploadProgressBar } from "./components/upload-progress-bar";
+import { ProjectHeader } from "@/components/layout";
+import { useDramaExcelParsing } from "@/pages/content-import/hooks/use-drama-excel-parsing";
+import { useBulkUpload } from "@/pages/content-import/hooks/use-bulk-upload";
+import { UploadWorkspace } from "@/pages/content-import/sections/UploadWorkspace";
+import { UploadProgressBar } from "@/pages/content-import/components/UploadProgressBar";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
     DemoSelectedFile,
     FilterMode,
     SortMode,
-} from "./types/content-import";
+} from "@/pages/content-import/types/content-import";
 import "./styles.css";
 
 const statusSortRank = {
@@ -76,7 +76,7 @@ function ContentImportPage() {
         useState<BulkUploadSummary["currentStep"]>("idle");
     const [batchError, setBatchError] = useState<string | null>(null);
 
-    const { parseExcel, isParsing } = useDramaExcelParsing();
+    const { parseExcel } = useDramaExcelParsing();
     const { upload, uploadProgress, resetProgress } = useBulkUpload();
 
     const handleFileSelect = async (file: File) => {

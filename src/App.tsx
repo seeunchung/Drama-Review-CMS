@@ -6,13 +6,12 @@ import {
   Routes,
   useLocation,
 } from 'react-router-dom'
-import { HOME_PATH, projectPathMap } from './app/paths'
-import { PageShell } from './components/layout/page-shell'
-import { SiteHeader } from './components/layout/site-header'
-import { HomePage } from './pages/home'
-import { ContentImportPage } from './pages/content-import'
-import { MetadataReviewPage } from './pages/metadata-review'
-import { PagePreviewPage } from './pages/page-preview'
+import { HOME_PATH, projectPathMap } from '@/app/paths'
+import { PageShell, SiteHeader } from '@/components/layout'
+import { HomePage } from '@/pages/home'
+import { ContentImportPage } from '@/pages/content-import'
+import { MetadataReviewPage } from '@/pages/metadata-review'
+import { PagePreviewPage } from '@/pages/page-preview'
 import './portfolio.css'
 
 // 라우트가 바뀔 때마다 새 화면의 시작 지점으로 스크롤을 맞춘다.

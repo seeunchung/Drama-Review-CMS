@@ -1,4 +1,4 @@
-import type { DemoSelectedFile } from '../types/content-import'
+import type { DemoSelectedFile } from '@/pages/content-import/types/content-import'
 
 interface SelectedFileBarProps {
   file: DemoSelectedFile | null

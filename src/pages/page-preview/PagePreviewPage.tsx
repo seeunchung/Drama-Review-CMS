@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ProjectHeader } from '../../components/layout/project-header'
+import { ProjectHeader } from '@/components/layout'
 
 // 원본 데이터, 매핑 정보, 최종 서비스 미리보기 상태를 전환해 본다.
 type PreviewMode = 'raw' | 'mapped' | 'preview'

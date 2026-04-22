@@ -1,5 +1,5 @@
-import { StatusBadge } from "./status-badge";
-import type { BulkUploadRow } from "../types/content-import";
+import { StatusBadge } from "./StatusBadge";
+import type { BulkUploadRow } from "@/pages/content-import/types/content-import";
 
 interface Props {
     rows: BulkUploadRow[];

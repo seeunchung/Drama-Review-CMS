@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { HOME_PATH } from "../../app/paths";
+import { HOME_PATH } from "@/app/paths";
 
 interface ProjectHeaderProps {
     title: string;

@@ -1,4 +1,4 @@
-import type { FilterMode, SortMode } from "../types/content-import";
+import type { FilterMode, SortMode } from "@/pages/content-import/types/content-import";
 
 interface UploadFilterBarProps {
     filterMode: FilterMode;

@@ -1,4 +1,4 @@
-import type { BulkUploadSummary } from '../types/content-import'
+import type { BulkUploadSummary } from '@/pages/content-import/types/content-import'
 
 interface UploadStatsCardsProps {
   summary: BulkUploadSummary

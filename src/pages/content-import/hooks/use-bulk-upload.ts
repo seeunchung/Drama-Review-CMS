@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "../../../lib/supabase";
-import type { BulkUploadRow } from "../types/content-import";
+import { supabase } from "@/lib/supabase";
+import type { BulkUploadRow } from "@/pages/content-import/types/content-import";
 
 interface UploadProgress {
     totalChunks: number;

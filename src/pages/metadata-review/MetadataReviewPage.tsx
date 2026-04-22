@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ProjectHeader } from "../../components/layout/project-header";
+import { ProjectHeader } from "@/components/layout";
 
 // 입력 중, 변경 감지, 저장 가능 상태를 빠르게 전환해 본다.
 type ReviewMode = "draft" | "changed" | "ready";

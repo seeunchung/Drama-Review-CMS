@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import * as XLSX from "xlsx";
-import type { BulkUploadRow, RowStatus } from "../types/content-import";
+import type { BulkUploadRow, RowStatus } from "@/pages/content-import/types/content-import";
 
 /** 드라마 리뷰 엑셀 파싱 및 검증 훅 */
 export function useDramaExcelParsing() {

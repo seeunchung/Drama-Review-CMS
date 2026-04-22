@@ -1,4 +1,4 @@
-import type { RowStatus } from '../types/content-import'
+import type { RowStatus } from '@/pages/content-import/types/content-import'
 
 interface StatusBadgeProps {
   status: RowStatus

@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { HOME_PATH, projectPathMap } from '../../app/paths'
+import { HOME_PATH, projectPathMap } from '@/app/paths'
 
 export function SiteHeader() {
   const { pathname } = useLocation()

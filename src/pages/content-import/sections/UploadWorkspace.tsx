@@ -1,16 +1,16 @@
-import { UploadDropzone } from '../components/upload-dropzone'
-import { SelectedFileBar } from '../components/selected-file-bar'
-import { UploadFilterBar } from '../components/upload-filter-bar'
-import { UploadProgressStepper } from '../components/upload-progress-stepper'
-import { UploadResultTable } from '../components/upload-result-table'
-import { UploadStatsCards } from '../components/upload-stats-cards'
+import { UploadDropzone } from '@/pages/content-import/components/UploadDropzone'
+import { SelectedFileBar } from '@/pages/content-import/components/SelectedFileBar'
+import { UploadFilterBar } from '@/pages/content-import/components/UploadFilterBar'
+import { UploadProgressStepper } from '@/pages/content-import/components/UploadProgressStepper'
+import { UploadResultTable } from '@/pages/content-import/components/UploadResultTable'
+import { UploadStatsCards } from '@/pages/content-import/components/UploadStatsCards'
 import type {
   BulkUploadRow,
   BulkUploadSummary,
   DemoSelectedFile,
   FilterMode,
   SortMode,
-} from '../types/content-import'
+} from '@/pages/content-import/types/content-import'
 
 interface UploadWorkspaceProps {
   headingKicker?: string
