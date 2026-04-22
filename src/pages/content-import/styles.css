@@ -233,6 +233,26 @@
   margin-top: 16px;
   font-size: 0.85rem;
   color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.footnote-divider {
+  opacity: 0.3;
+}
+
+.sample-download-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.sample-download-link:hover {
+  text-decoration: underline;
+  filter: brightness(1.2);
 }
 
 .selected-file-bar {

@@ -58,7 +58,15 @@ function UploadDropzone({ onFileSelect }: UploadDropzoneProps) {
             />
 
             <div className="upload-dropzone-footnote">
-                지원 포맷: `.xlsx`, `.xls`
+                <span>지원 포맷: `.xlsx`, `.xls`</span>
+                <span className="footnote-divider">|</span>
+                <a
+                    href="/samples/드라마정보업로드샘플.xlsx"
+                    download
+                    className="sample-download-link"
+                >
+                    샘플 양식 다운로드
+                </a>
             </div>
         </div>
     );

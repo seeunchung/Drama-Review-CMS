@@ -125,7 +125,21 @@ function ContentImportPage() {
             return;
         }
 
-        const dramaTitle = rows[0].title;
+        // 1. 에러가 포함된 행이 있는지 최종 확인
+        const hasErrorRows = rows.some((row) => row.status === "error");
+        if (hasErrorRows) {
+            alert("검토 결과 에러가 포함된 행이 있습니다. 모든 에러를 수정한 후 다시 업로드해주세요.");
+            return;
+        }
+
+        // 2. 모든 행의 드라마 제목이 동일한지 최종 확인
+        const uniqueTitles = Array.from(new Set(rows.map((r) => r.title)));
+        if (uniqueTitles.length > 1) {
+            alert(`한 파일에 여러 드라마 제목이 섞여 있습니다: ${uniqueTitles.join(", ")}\n한 번에 하나의 드라마만 업로드 가능합니다.`);
+            return;
+        }
+
+        const dramaTitle = uniqueTitles[0];
         const fileName = selectedFile.name;
 
         try {

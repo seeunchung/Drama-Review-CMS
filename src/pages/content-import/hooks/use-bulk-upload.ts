@@ -99,6 +99,18 @@ export function useBulkUpload() {
                     progress: Math.round(((i + 1) / chunks.length) * 100),
                 }));
             }
+
+            // 4. 활동 내역(activities)에 로그 기록
+            const { error: activityError } = await supabase.from("activities").insert({
+                type: "upload",
+                message: `'${dramaTitle}' ${validRows.length}개 에피소드 업로드 완료`,
+                batch_id: batchId,
+            });
+
+            if (activityError) {
+                console.warn("활동 로그 기록 중 오류가 발생했습니다:", activityError);
+                // 로그 기록 실패가 전체 업로드 실패는 아니므로 throw는 하지 않습니다.
+            }
         },
         onSuccess: () => {
             // 업로드 성공 시 관련 쿼리 무효화 (필요시)

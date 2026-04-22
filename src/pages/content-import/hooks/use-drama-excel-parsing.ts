@@ -40,6 +40,7 @@ export function useDramaExcelParsing() {
                         }
 
                         const parsedRows: BulkUploadRow[] = [];
+                        let baseTitle = ""; // 파일의 기준이 되는 첫 번째 드라마 제목
                         let lastTitle = "";
                         let lastDistributor = "";
                         let lastRating = "";
@@ -57,6 +58,11 @@ export function useDramaExcelParsing() {
                             const subtitle = String(row[4] || "").trim();
                             const runningTime = String(row[5] || "").trim();
                             const summary = String(row[6] || "").trim();
+
+                            // 기준 제목 설정 (첫 번째 유효한 제목)
+                            if (rawTitle && !baseTitle) {
+                                baseTitle = rawTitle;
+                            }
 
                             // 비어있으면 이전 행의 값을 사용 (Fill-down 로직)
                             const title = rawTitle || lastTitle;
@@ -76,8 +82,15 @@ export function useDramaExcelParsing() {
                             const errorMessages: string[] = [];
 
                             // 검증 로직
-                            if (!title)
+                            if (!title) {
                                 errorMessages.push("제목이 누락되었습니다.");
+                            } else if (baseTitle && title !== baseTitle) {
+                                // 제목 일관성 검증: 기준 제목과 다른 제목이 감지된 경우
+                                errorMessages.push(
+                                    `다른 드라마 제목이 감지되었습니다("${title}"). 한 파일에는 하나의 드라마만 포함되어야 합니다.`,
+                                );
+                            }
+
                             if (!rawEpisode)
                                 errorMessages.push("회차가 누락되었습니다.");
                             if (!summary || summary.length < 10)
