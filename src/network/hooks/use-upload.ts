@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
+import { uploadApi } from "../api/upload";
 import type { BulkUploadRow } from "@/pages/content-import/types/content-import";
 
 interface UploadProgress {
@@ -38,18 +38,8 @@ export function useBulkUpload() {
             const validRows = rows.filter((row) => row.status === "valid");
             if (validRows.length === 0) return;
 
-            // 1. import_batches 레코드 생성 (Master 데이터)
-            const { data: batchData, error: batchError } = await supabase
-                .from("import_batches")
-                .insert({
-                    drama_title: dramaTitle,
-                    file_name: fileName,
-                    status: "pending",
-                })
-                .select()
-                .single();
-
-            if (batchError) throw batchError;
+            // 1. 배치 생성
+            const batchData = await uploadApi.createBatch(dramaTitle, fileName);
             const batchId = batchData.id;
 
             // 2. 데이터를 청크 단위로 나누기
@@ -69,25 +59,7 @@ export function useBulkUpload() {
             for (let i = 0; i < chunks.length; i++) {
                 const chunk = chunks[i];
 
-                // DB 컬럼명에 맞춰 데이터 변환 및 batch_id 추가
-                const insertData = chunk.map((row) => ({
-                    batch_id: batchId,
-                    seq: row.seq,
-                    title: row.title,
-                    distributor: row.distributor,
-                    rating: row.rating,
-                    episode: row.episode,
-                    subtitle: row.subtitle,
-                    running_time: row.runningTime,
-                    summary: row.summary,
-                    status: "uploaded",
-                }));
-
-                const { error } = await supabase
-                    .from("episodes")
-                    .insert(insertData);
-
-                if (error) throw error;
+                await uploadApi.insertEpisodes(batchId, chunk);
 
                 // 시각적 효과를 위한 의도적인 딜레이 (데모용)
                 await new Promise((resolve) => setTimeout(resolve, 800));
@@ -100,24 +72,15 @@ export function useBulkUpload() {
                 }));
             }
 
-            // 4. 활동 내역(activities)에 로그 기록
-            const { error: activityError } = await supabase.from("activities").insert({
-                type: "upload",
-                message: `'${dramaTitle}' ${validRows.length}개 에피소드 업로드 완료`,
-                batch_id: batchId,
-            });
-
-            if (activityError) {
-                console.warn("활동 로그 기록 중 오류가 발생했습니다:", activityError);
-                // 로그 기록 실패가 전체 업로드 실패는 아니므로 throw는 하지 않습니다.
-            }
+            // 4. 활동 내역 로그 기록
+            await uploadApi.logActivity(dramaTitle, validRows.length, batchId);
         },
         onSuccess: () => {
-            // 업로드 성공 시 관련 쿼리 무효화 (필요시)
             queryClient.invalidateQueries({ queryKey: ["episodes"] });
+            queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+            queryClient.invalidateQueries({ queryKey: ["recent-activities"] });
         },
         onSettled: () => {
-            // 최종적으로 상태 초기화는 하지 않고, UI에서 완료 상태를 유지하도록 함
             setUploadProgress((prev) => ({ ...prev, isUploading: false }));
         },
     });

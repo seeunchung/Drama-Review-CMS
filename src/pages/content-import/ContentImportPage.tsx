@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ProjectHeader } from "@/components/layout";
 import { useDramaExcelParsing } from "@/pages/content-import/hooks/use-drama-excel-parsing";
-import { useBulkUpload } from "@/pages/content-import/hooks/use-bulk-upload";
+import { useBulkUpload } from "@/network/hooks/use-upload";
 import { UploadWorkspace } from "@/pages/content-import/sections/UploadWorkspace";
 import { UploadProgressBar } from "@/pages/content-import/components/UploadProgressBar";
 import type {

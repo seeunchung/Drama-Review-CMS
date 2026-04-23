@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { projectList } from "@/app/project-meta";
-import { useHomeData } from "./hooks/use-home-data";
+import { useHomeData } from "@/network/hooks/use-home";
 
 // 시간을 사람이 읽기 좋은 형식으로 변환 (데모용)
 function formatTime(dateString: string) {
