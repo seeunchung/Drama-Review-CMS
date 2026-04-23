@@ -10,7 +10,7 @@ import { HOME_PATH, projectPathMap } from '@/app/paths'
 import { PageShell, SiteHeader } from '@/components/layout'
 import { HomePage } from '@/pages/home'
 import { ContentImportPage } from '@/pages/content-import'
-import { MetadataReviewPage } from '@/pages/metadata-review'
+import { MetadataReviewPage, MetadataReviewDetailPage } from '@/pages/metadata-review'
 import { PagePreviewPage } from '@/pages/page-preview'
 import './portfolio.css'
 
@@ -48,6 +48,10 @@ function App() {
         <Route
           path={projectPathMap['metadata-review']}
           element={<MetadataReviewPage />}
+        />
+        <Route
+          path={projectPathMap['metadata-review-detail']}
+          element={<MetadataReviewDetailPage />}
         />
         <Route
           path={projectPathMap['page-preview']}

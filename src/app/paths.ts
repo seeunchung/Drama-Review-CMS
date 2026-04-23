@@ -4,6 +4,7 @@ const HOME_PATH = '/' as const
 const projectPathMap = {
   'content-import': '/content-import',
   'metadata-review': '/metadata-review',
+  'metadata-review-detail': '/metadata-review/:batchId',
   'page-preview': '/page-preview',
 } as const
 

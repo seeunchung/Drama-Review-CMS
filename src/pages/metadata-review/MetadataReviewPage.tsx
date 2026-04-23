@@ -1,202 +1,72 @@
-import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
+import { useBatches } from "@/network/hooks/use-review";
+import { projectPathMap } from "@/app/paths";
+import "./styles.css";
 
-// 입력 중, 변경 감지, 저장 가능 상태를 빠르게 전환해 본다.
-type ReviewMode = "draft" | "changed" | "ready";
-type ReviewTab = "기본정보" | "출연진/제작" | "작품소개";
-
-const modeLabelMap = {
-    draft: "초안 작성",
-    changed: "수정 감지",
-    ready: "승인 가능",
-} as const;
-
-const tabList: ReviewTab[] = ["기본정보", "출연진/제작", "작품소개"];
-
-// 중드 마스터 데이터 검토 워크스페이스
 function MetadataReviewPage() {
-    const [mode, setMode] = useState<ReviewMode>("changed");
-    const [activeTab, setActiveTab] = useState<ReviewTab>("기본정보");
+    const navigate = useNavigate();
+    const { batches, isLoading, error } = useBatches();
 
-    // 상태마다 변경 필드와 저장 가능 여부를 다르게 보여준다.
-    const summary = useMemo(() => {
-        if (mode === "draft") {
-            return {
-                saveLabel: "임시 저장",
-                saveEnabled: false,
-                changedFields: [],
-                attachments: ["절요_포스터_가안.jpg"],
-            };
-        }
+    if (isLoading) return <div className="loading-state">목록을 불러오는 중...</div>;
+    if (error) return <div className="error-state">오류가 발생했습니다: {error.message}</div>;
 
-        if (mode === "ready") {
-            return {
-                saveLabel: "최종 승인",
-                saveEnabled: true,
-                changedFields: ["작품명", "장르 분류", "주연 배우"],
-                attachments: ["절요_공식포스터.png", "메인예고편_최종.mp4"],
-            };
-        }
-
-        return {
-            saveLabel: "변경 검토",
-            saveEnabled: false,
-            changedFields: ["작품명", "포스터 이미지"],
-            attachments: ["절요_수정포스터.jpg"],
-        };
-    }, [mode]);
-
-    // 하단 테이블은 현재 모드에 맞는 행 상태만 단순하게 표현한다.
-    const rowStatus =
-        mode === "ready"
-            ? ["정상", "정상", "정상"]
-            : mode === "changed"
-              ? ["변경", "대기", "대기"]
-              : ["대기", "대기", "대기"];
+    const handleRowClick = (batchId: string) => {
+        // 상세 페이지로 이동 (batchId 포함)
+        const path = projectPathMap["metadata-review-detail"].replace(":batchId", batchId);
+        navigate(path);
+    };
 
     return (
-        <main className="project-page">
+        <main className="project-page review-list-page">
             <ProjectHeader
-                title="Drama Metadata Review"
-                description="신규 중국 드라마 '절요(Zhe Yao)'의 마스터 메타데이터와 미디어 자산을 검토하고 최종 승인합니다."
-                tags={["마스터 데이터", "변경 감지", "중드 승인", "운영 워크플로우"]}
+                title="Metadata Review"
+                description="대량 업로드된 드라마 메타데이터를 검토하고 승인하여 서비스에 반영합니다."
+                tags={["운영 관리", "드라마 승인", "데이터 검토"]}
             />
 
-            <div className="screen-toolbar panel">
-                <div className="screen-mode-group">
-                    {(["draft", "changed", "ready"] as ReviewMode[]).map(
-                        (item) => (
-                            <button
-                                className={mode === item ? "is-active" : ""}
-                                key={item}
-                                type="button"
-                                onClick={() => setMode(item)}
-                            >
-                                {modeLabelMap[item]}
-                            </button>
-                        ),
-                    )}
-                </div>
-                <span className="screen-toolbar-status">
-                    현재 상태: {modeLabelMap[mode]}
-                </span>
-            </div>
-
             <section className="project-screen panel">
-                <div className="workspace-tabs">
-                    {tabList.map((tab) => (
-                        <button
-                            className={activeTab === tab ? "is-active" : ""}
-                            key={tab}
-                            type="button"
-                            onClick={() => setActiveTab(tab)}
-                        >
-                            {tab}
-                        </button>
-                    ))}
+                <div className="list-header">
+                    <h2>업로드 배치 목록 ({batches.length})</h2>
+                    <p>드라마를 선택하여 상세 에피소드 정보를 확인하고 승인 처리를 진행하세요.</p>
                 </div>
 
-                <div className="review-layout">
-                    <div className="review-form-card">
-                        <div className="form-row">
-                            <span>콘텐츠 ID</span>
-                            <strong>CDRAMA-MOV-2024-0081</strong>
-                        </div>
-                        <div
-                            className={`form-row${summary.changedFields.includes("작품명") ? " is-changed" : ""}`}
-                        >
-                            <span>작품명</span>
-                            <strong>절요 (Zhe Yao)</strong>
-                        </div>
-                        <div className="form-row">
-                            <span>장르</span>
-                            <strong>고장극 / 로맨스 / 정극</strong>
-                        </div>
-                        <div
-                            className={`form-row${summary.changedFields.includes("장르 분류") ? " is-changed" : ""}`}
-                        >
-                            <span>장르 분류</span>
-                            <strong>
-                                {mode === "ready" ? "언정소설 원작" : "검토 중"}
-                            </strong>
-                        </div>
-                        <div className="form-row">
-                            <span>활성 탭</span>
-                            <strong>{activeTab}</strong>
-                        </div>
-                    </div>
-
-                    <aside className="review-side-panel">
-                        <div className="review-side-box">
-                            <span>공식 미디어 자산</span>
-                            <ul className="attachment-list">
-                                {summary.attachments.map((file) => (
-                                    <li key={file}>{file}</li>
-                                ))}
-                            </ul>
-                        </div>
-
-                        <div className="review-side-box">
-                            <span>변경 감지 필드</span>
-                            <div className="change-chip-list">
-                                {summary.changedFields.length === 0 ? (
-                                    <span className="change-chip is-muted">
-                                        변경 사항 없음
-                                    </span>
-                                ) : (
-                                    summary.changedFields.map((field) => (
-                                        <span
-                                            className="change-chip"
-                                            key={field}
-                                        >
-                                            {field}
-                                        </span>
-                                    ))
-                                )}
-                            </div>
-                        </div>
-                    </aside>
-                </div>
-
-                <div className="review-table-wrap">
-                    <table className="review-table">
+                <div className="batch-table-wrap">
+                    <table className="review-table is-selectable">
                         <thead>
                             <tr>
-                                <th>검토 항목</th>
-                                <th>현재 등록값</th>
-                                <th>검증 상태</th>
+                                <th>상태</th>
+                                <th>드라마 제목</th>
+                                <th>업로드 파일명</th>
+                                <th>업로드 일시</th>
+                                <th>관리</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {["작품 기본 정보", "주연진(송조아, 류우녕)", "원본/자막 영상"].map(
-                                (label, index) => (
-                                    <tr key={label}>
-                                        <td>{label}</td>
+                            {batches.length === 0 ? (
+                                <tr>
+                                    <td colSpan={5} className="empty-cell">업로드된 내역이 없습니다.</td>
+                                </tr>
+                            ) : (
+                                batches.map((batch) => (
+                                    <tr key={batch.id} onClick={() => handleRowClick(batch.id)}>
                                         <td>
-                                            {index === 0
-                                                ? "입력 완료"
-                                                : index === 1
-                                                  ? "변경 사항 있음"
-                                                  : "미디어 확인 중"}
+                                            <span className={`status-badge is-${batch.status}`}>
+                                                {batch.status === "pending" ? "검토 대기" : 
+                                                 batch.status === "completed" ? "승인 완료" : "승인 거절"}
+                                            </span>
                                         </td>
-                                        <td>{rowStatus[index]}</td>
+                                        <td className="cell-important">{batch.drama_title}</td>
+                                        <td>{batch.file_name}</td>
+                                        <td>{new Date(batch.created_at).toLocaleString()}</td>
+                                        <td>
+                                            <button className="btn-text">검토하기</button>
+                                        </td>
                                     </tr>
-                                ),
+                                ))
                             )}
                         </tbody>
                     </table>
-                </div>
-
-                <div className="save-dock">
-                    <div>
-                        <strong>
-                            {summary.changedFields.length}건의 마스터 데이터 수정됨
-                        </strong>
-                        <span>첨부 미디어 {summary.attachments.length}건</span>
-                    </div>
-                    <button disabled={!summary.saveEnabled} type="button">
-                        {summary.saveLabel}
-                    </button>
                 </div>
             </section>
         </main>
