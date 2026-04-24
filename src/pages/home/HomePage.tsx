@@ -112,7 +112,6 @@ function HomePage() {
                                 <div className="menu-icon-box">
                                     {project.id === "content-import" && "📂"}
                                     {project.id === "metadata-review" && "🎬"}
-                                    {project.id === "page-preview" && "📱"}
                                 </div>
                                 <div className="menu-copy">
                                     <strong>{project.title}</strong>
