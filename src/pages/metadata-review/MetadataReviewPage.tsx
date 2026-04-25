@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
 import { useBatches } from "@/network/hooks/use-review";
-import { projectPathMap } from "@/app/paths";
+import { ROUTES } from "@/app/paths";
 import "./styles.css";
 
 function MetadataReviewPage() {
@@ -13,7 +13,7 @@ function MetadataReviewPage() {
 
     const handleRowClick = (batchId: string) => {
         // 상세 페이지로 이동 (batchId 포함)
-        const path = projectPathMap["metadata-review-detail"].replace(":batchId", batchId);
+        const path = ROUTES["metadata-review-detail"].replace(":batchId", batchId);
         navigate(path);
     };
 

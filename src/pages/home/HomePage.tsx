@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { projectList } from "@/app/project-meta";
+import { ADMIN_TASKS } from "@/app/project-meta";
 import { useHomeData } from "@/network/hooks/use-home";
 
 // 시간을 사람이 읽기 좋은 형식으로 변환 (데모용)
@@ -103,7 +103,7 @@ function HomePage() {
                         <p>오늘 처리해야 할 콘텐츠 운영 태스크입니다.</p>
                     </div>
                     <div className="dashboard-menu-list">
-                        {projectList.map((project) => (
+                        {ADMIN_TASKS.map((project) => (
                             <Link
                                 key={project.id}
                                 to={project.path}
@@ -112,6 +112,7 @@ function HomePage() {
                                 <div className="menu-icon-box">
                                     {project.id === "content-import" && "📂"}
                                     {project.id === "metadata-review" && "🎬"}
+                                    {project.id === "review-curation" && "🎯"}
                                 </div>
                                 <div className="menu-copy">
                                     <strong>{project.title}</strong>

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
-import { HOME_PATH, projectPathMap } from "@/app/paths";
+import { HOME_PATH, ROUTES } from "@/app/paths";
 import { PageShell, SiteHeader } from "@/components/layout";
 import { HomePage } from "@/pages/home";
 import { ContentImportPage } from "@/pages/content-import";
@@ -8,7 +8,8 @@ import {
     MetadataReviewPage,
     MetadataReviewDetailPage,
 } from "@/pages/metadata-review";
-import "./portfolio.css";
+import { ReviewCurationPage } from "@/pages/review-curation";
+import "./layout.css";
 
 // 라우트가 바뀔 때마다 새 화면의 시작 지점으로 스크롤을 맞춘다.
 function ScrollToTop() {
@@ -41,16 +42,20 @@ function App() {
             <Route element={<AppLayout />}>
                 <Route path={HOME_PATH} element={<HomePage />} />
                 <Route
-                    path={projectPathMap["content-import"]}
+                    path={ROUTES["content-import"]}
                     element={<ContentImportPage />}
                 />
                 <Route
-                    path={projectPathMap["metadata-review"]}
+                    path={ROUTES["metadata-review"]}
                     element={<MetadataReviewPage />}
                 />
                 <Route
-                    path={projectPathMap["metadata-review-detail"]}
+                    path={ROUTES["metadata-review-detail"]}
                     element={<MetadataReviewDetailPage />}
+                />
+                <Route
+                    path={ROUTES["review-curation"]}
+                    element={<ReviewCurationPage />}
                 />
                 <Route path="*" element={<Navigate replace to={HOME_PATH} />} />
             </Route>

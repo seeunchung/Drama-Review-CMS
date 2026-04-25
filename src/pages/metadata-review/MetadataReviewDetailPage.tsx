@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
 import { useBatchDetail } from "@/network/hooks/use-review";
-import { projectPathMap } from "@/app/paths";
+import { ROUTES } from "@/app/paths";
 import "./styles.css";
 
 function MetadataReviewDetailPage() {
@@ -22,7 +22,7 @@ function MetadataReviewDetailPage() {
             const result = await updateStatus(status);
             if (result?.success) {
                 alert("처리되었습니다.");
-                navigate(projectPathMap["metadata-review"]);
+                navigate(ROUTES["metadata-review"]);
             }
         }
     };
@@ -42,7 +42,7 @@ function MetadataReviewDetailPage() {
                 <div className="action-group">
                     <button 
                         className="btn-outline" 
-                        onClick={() => navigate(projectPathMap["metadata-review"])}
+                        onClick={() => navigate(ROUTES["metadata-review"])}
                     >
                         목록으로
                     </button>
