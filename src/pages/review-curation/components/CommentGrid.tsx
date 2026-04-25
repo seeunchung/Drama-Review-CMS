@@ -3,7 +3,7 @@ import { DramaComment } from "../types/review-curation";
 
 interface Props {
   comments: DramaComment[];
-  selectedId: number | null;
+  selectedId: string | number | null;
   onSelect: (comment: DramaComment) => void;
 }
 

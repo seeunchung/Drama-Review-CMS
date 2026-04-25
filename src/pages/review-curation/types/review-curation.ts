@@ -1,5 +1,6 @@
 export interface DramaComment {
-  id: number;
+  id: string | number;
+  drama_id?: string;
   episode_no: number;
   user_nickname: string;
   content: string;

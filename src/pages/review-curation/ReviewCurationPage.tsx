@@ -5,62 +5,57 @@ import { EpisodeFilter } from "./components/EpisodeFilter";
 import { CommentGrid } from "./components/CommentGrid";
 import { ActionPanel } from "./components/ActionPanel";
 import { MobilePreviewModal } from "./components/MobilePreviewModal";
-import { MOCK_COMMENTS, MOCK_STATS } from "./mocks/review-curation";
-import { DramaComment } from "./types/review-curation";
+import { useReviewCuration } from "@/network/hooks/use-review-curation";
 import "./styles.css";
 
-const DRAMAS = [
-  { id: 1, title: "화서인: 생사의 수레바퀴" },
-  { id: 2, title: "장가행 (The Long Ballad)" },
-  { id: 3, title: "삼생삼세 십리도화" },
-];
-
 const ReviewCurationPage: React.FC = () => {
-  const [selectedDramaId, setSelectedDramaId] = useState<number>(DRAMAS[0].id);
-  const [comments, setComments] = useState<DramaComment[]>(MOCK_COMMENTS);
+  const {
+    dramas,
+    selectedDramaId,
+    setSelectedDramaId,
+    comments,
+    isLoading,
+    toggleStatus
+  } = useReviewCuration();
+
   const [activeEpisode, setActiveEpisode] = useState<number | null>(null);
-  const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
+  const [selectedCommentId, setSelectedCommentId] = useState<string | number | null>(null);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  // Filter episodes based on selected drama (Mock logic)
+  // Filter episodes based on comments of selected drama
   const episodes = useMemo(() => {
-    // 실제 데이터라면 dramaId로 필터링하겠지만, 여기선 데모를 위해 고정된 리스트를 보여줍니다.
-    const set = new Set(MOCK_COMMENTS.map(c => c.episode_no));
+    const set = new Set(comments.map(c => c.episode_no));
     return Array.from(set).sort((a, b) => a - b);
-  }, []);
+  }, [comments]);
 
-  // Filtered comments based on drama and episode
+  // Filtered comments based on episode
   const filteredComments = useMemo(() => {
-    // 드라마 선택에 따라 다른 댓글을 보여주는 척 하기 위해 dramaId를 조건으로 사용 가능
     return activeEpisode 
       ? comments.filter(c => c.episode_no === activeEpisode)
       : comments;
-  }, [comments, activeEpisode, selectedDramaId]);
+  }, [comments, activeEpisode]);
 
   const selectedComment = useMemo(() => {
-    return comments.find(c => c.id === selectedCommentId) || null;
+    return comments.find(c => String(c.id) === String(selectedCommentId)) || null;
   }, [comments, selectedCommentId]);
+
+  // Stats calculation from real data
+  const stats = useMemo(() => ({
+    totalComments: comments.length,
+    spoilerReports: comments.filter(c => c.is_spoiler).length,
+    bestSelections: comments.filter(c => c.is_best).length,
+  }), [comments]);
 
   // Handlers
   const handleDramaChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedDramaId(Number(e.target.value));
+    setSelectedDramaId(e.target.value);
     setActiveEpisode(null);
     setSelectedCommentId(null);
   };
 
-  const handleToggleSpoiler = (id: number) => {
-    setComments(prev => prev.map(c => 
-      c.id === id ? { ...c, is_spoiler: !c.is_spoiler } : c
-    ));
-    console.log(`Comment ${id} spoiler status toggled`);
-  };
-
-  const handleToggleBest = (id: number) => {
-    setComments(prev => prev.map(c => 
-      c.id === id ? { ...c, is_best: !c.is_best } : c
-    ));
-    console.log(`Comment ${id} best status toggled`);
-  };
+  if (isLoading && dramas.length === 0) {
+    return <div className="loading-container">데이터를 로드하는 중...</div>;
+  }
 
   return (
     <main className="review-curation-page">
@@ -78,13 +73,13 @@ const ReviewCurationPage: React.FC = () => {
             value={selectedDramaId} 
             onChange={handleDramaChange}
           >
-            {DRAMAS.map(drama => (
-              <option key={drama.id} value={drama.id}>{drama.title}</option>
+            {dramas.map(drama => (
+              <option key={drama.id} value={drama.id}>{drama.drama_title}</option>
             ))}
           </select>
         </div>
 
-        <ReviewStatsCards stats={MOCK_STATS} />
+        <ReviewStatsCards stats={stats} />
         
         <div className="curation-workspace">
           <EpisodeFilter 
@@ -98,14 +93,14 @@ const ReviewCurationPage: React.FC = () => {
           
           <CommentGrid 
             comments={filteredComments}
-            selectedId={selectedCommentId}
+            selectedId={selectedCommentId as any}
             onSelect={(c) => setSelectedCommentId(c.id)}
           />
           
           <ActionPanel 
             comment={selectedComment}
-            onToggleSpoiler={handleToggleSpoiler}
-            onToggleBest={handleToggleBest}
+            onToggleSpoiler={(id) => toggleStatus(String(id), "is_spoiler")}
+            onToggleBest={(id) => toggleStatus(String(id), "is_best")}
             onOpenPreview={() => setIsPreviewOpen(true)}
           />
         </div>

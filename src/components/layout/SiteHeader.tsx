@@ -9,7 +9,7 @@ export function SiteHeader() {
             <Link className="site-brand" to={HOME_PATH}>
                 <div className="site-brand-mark">C</div>
                 <div className="site-brand-copy">
-                    <strong>Cine-Admin CMS</strong>
+                    <strong>중드 달글 CMS</strong>
                 </div>
             </Link>
 

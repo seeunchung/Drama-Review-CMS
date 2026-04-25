@@ -3,8 +3,8 @@ import { DramaComment } from "../types/review-curation";
 
 interface Props {
   comment: DramaComment | null;
-  onToggleSpoiler: (id: number) => void;
-  onToggleBest: (id: number) => void;
+  onToggleSpoiler: (id: string | number) => void;
+  onToggleBest: (id: string | number) => void;
   onOpenPreview: () => void;
 }
 
