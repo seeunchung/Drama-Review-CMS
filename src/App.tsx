@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { HOME_PATH, ROUTES } from "@/app/paths";
 import { PageShell, SiteHeader } from "@/components/layout";
+import { AuthGuard } from "@/components/layout/AuthGuard";
+import { useAuthStore } from "@/app/store/use-auth-store";
 import { HomePage } from "@/pages/home";
+import { LoginPage } from "@/pages/auth";
 import { ContentImportPage } from "@/pages/content-import";
 import {
     MetadataReviewPage,
@@ -25,20 +28,32 @@ function ScrollToTop() {
 // 공통 레이아웃 안에서 각 화면 페이지만 교체한다.
 function AppLayout() {
     return (
-        <PageShell>
-            <ScrollToTop />
-            <div className="site-shell">
-                <SiteHeader />
-                <Outlet />
-            </div>
-        </PageShell>
+        <AuthGuard>
+            <PageShell>
+                <ScrollToTop />
+                <div className="site-shell">
+                    <SiteHeader />
+                    <Outlet />
+                </div>
+            </PageShell>
+        </AuthGuard>
     );
 }
 
 // 홈과 상세 화면을 표준 React Router 경로로 분기한다.
 function App() {
+    const initializeAuth = useAuthStore((state) => state.initialize);
+
+    useEffect(() => {
+        initializeAuth();
+    }, [initializeAuth]);
+
     return (
         <Routes>
+            {/* 인증이 필요 없는 라우트 */}
+            <Route path={ROUTES.auth} element={<LoginPage />} />
+
+            {/* 인증이 필요한 라우트들 */}
             <Route element={<AppLayout />}>
                 <Route path={HOME_PATH} element={<HomePage />} />
                 <Route

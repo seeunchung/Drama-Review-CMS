@@ -2,6 +2,7 @@
 const HOME_PATH = "/" as const;
 
 const ROUTES = {
+    "auth": "/login",
     "content-import": "/content-import",
     "metadata-review": "/metadata-review",
     "metadata-review-detail": "/metadata-review/:batchId",
