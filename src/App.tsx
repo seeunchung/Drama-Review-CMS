@@ -4,6 +4,7 @@ import { HOME_PATH, ROUTES } from "@/app/paths";
 import { PageShell, SiteHeader } from "@/components/layout";
 import { AuthGuard } from "@/components/layout/AuthGuard";
 import { useAuthStore } from "@/app/store/use-auth-store";
+import { GlobalModal } from "@/components/common/Modal/GlobalModal";
 import { HomePage } from "@/pages/home";
 import { LoginPage } from "@/pages/auth";
 import { ContentImportPage } from "@/pages/content-import";
@@ -49,32 +50,35 @@ function App() {
     }, [initializeAuth]);
 
     return (
-        <Routes>
-            {/* 인증이 필요 없는 라우트 */}
-            <Route path={ROUTES.auth} element={<LoginPage />} />
+        <>
+            <GlobalModal />
+            <Routes>
+                {/* 인증이 필요 없는 라우트 */}
+                <Route path={ROUTES.auth} element={<LoginPage />} />
 
-            {/* 인증이 필요한 라우트들 */}
-            <Route element={<AppLayout />}>
-                <Route path={HOME_PATH} element={<HomePage />} />
-                <Route
-                    path={ROUTES["content-import"]}
-                    element={<ContentImportPage />}
-                />
-                <Route
-                    path={ROUTES["metadata-review"]}
-                    element={<MetadataReviewPage />}
-                />
-                <Route
-                    path={ROUTES["metadata-review-detail"]}
-                    element={<MetadataReviewDetailPage />}
-                />
-                <Route
-                    path={ROUTES["review-curation"]}
-                    element={<ReviewCurationPage />}
-                />
-                <Route path="*" element={<Navigate replace to={HOME_PATH} />} />
-            </Route>
-        </Routes>
+                {/* 인증이 필요한 라우트들 */}
+                <Route element={<AppLayout />}>
+                    <Route path={HOME_PATH} element={<HomePage />} />
+                    <Route
+                        path={ROUTES["content-import"]}
+                        element={<ContentImportPage />}
+                    />
+                    <Route
+                        path={ROUTES["metadata-review"]}
+                        element={<MetadataReviewPage />}
+                    />
+                    <Route
+                        path={ROUTES["metadata-review-detail"]}
+                        element={<MetadataReviewDetailPage />}
+                    />
+                    <Route
+                        path={ROUTES["review-curation"]}
+                        element={<ReviewCurationPage />}
+                    />
+                    <Route path="*" element={<Navigate replace to={HOME_PATH} />} />
+                </Route>
+            </Routes>
+        </>
     );
 }
 

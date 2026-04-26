@@ -4,6 +4,7 @@ import { useDramaExcelParsing } from "@/pages/content-import/hooks/use-drama-exc
 import { useBulkUpload } from "@/network/hooks/use-upload";
 import { UploadWorkspace } from "@/pages/content-import/sections/UploadWorkspace";
 import { UploadProgressBar } from "@/pages/content-import/components/UploadProgressBar";
+import { useModalStore } from "@/app/store/use-modal-store";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -78,6 +79,7 @@ function ContentImportPage() {
 
     const { parseExcel } = useDramaExcelParsing();
     const { upload, uploadProgress, resetProgress } = useBulkUpload();
+    const { alert: modalAlert } = useModalStore();
 
     const handleFileSelect = async (file: File) => {
         setSelectedFile({
@@ -121,21 +123,21 @@ function ContentImportPage() {
 
     const handleSave = async () => {
         if (!selectedFile || rows.length === 0 || batchError) {
-            alert("파일 상태를 확인해주세요.");
+            await modalAlert("파일 상태를 확인해주세요.");
             return;
         }
 
         // 1. 에러가 포함된 행이 있는지 최종 확인
         const hasErrorRows = rows.some((row) => row.status === "error");
         if (hasErrorRows) {
-            alert("검토 결과 에러가 포함된 행이 있습니다. 모든 에러를 수정한 후 다시 업로드해주세요.");
+            await modalAlert("검토 결과 에러가 포함된 행이 있습니다. 모든 에러를 수정한 후 다시 업로드해주세요.");
             return;
         }
 
         // 2. 모든 행의 드라마 제목이 동일한지 최종 확인
         const uniqueTitles = Array.from(new Set(rows.map((r) => r.title)));
         if (uniqueTitles.length > 1) {
-            alert(`한 파일에 여러 드라마 제목이 섞여 있습니다: ${uniqueTitles.join(", ")}\n한 번에 하나의 드라마만 업로드 가능합니다.`);
+            await modalAlert(`한 파일에 여러 드라마 제목이 섞여 있습니다: ${uniqueTitles.join(", ")}\n한 번에 하나의 드라마만 업로드 가능합니다.`);
             return;
         }
 
@@ -156,7 +158,7 @@ function ContentImportPage() {
             );
         } catch (error) {
             console.error("Save error:", error);
-            alert("DB 저장 중 오류가 발생했습니다.");
+            await modalAlert("DB 저장 중 오류가 발생했습니다.");
         }
     };
 

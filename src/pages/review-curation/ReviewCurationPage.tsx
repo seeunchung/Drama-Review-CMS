@@ -6,6 +6,7 @@ import { CommentGrid } from "./components/CommentGrid";
 import { ActionPanel } from "./components/ActionPanel";
 import { MobilePreviewModal } from "./components/MobilePreviewModal";
 import { useReviewCuration } from "@/network/hooks/use-review-curation";
+import { useQueryModal } from "@/app/hooks/use-query-modal";
 import "./styles.css";
 
 const ReviewCurationPage: React.FC = () => {
@@ -20,7 +21,13 @@ const ReviewCurationPage: React.FC = () => {
 
   const [activeEpisode, setActiveEpisode] = useState<number | null>(null);
   const [selectedCommentId, setSelectedCommentId] = useState<string | number | null>(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  
+  // URL Query Parameter를 사용한 모달 상태 관리
+  const { 
+    isOpen: isPreviewOpen, 
+    open: openPreview, 
+    close: closePreview 
+  } = useQueryModal('preview');
 
   // Filter episodes based on comments of selected drama
   const episodes = useMemo(() => {
@@ -101,14 +108,14 @@ const ReviewCurationPage: React.FC = () => {
             comment={selectedComment}
             onToggleSpoiler={(id) => toggleStatus(String(id), "is_spoiler")}
             onToggleBest={(id) => toggleStatus(String(id), "is_best")}
-            onOpenPreview={() => setIsPreviewOpen(true)}
+            onOpenPreview={() => openPreview()}
           />
         </div>
       </div>
 
       <MobilePreviewModal 
         isOpen={isPreviewOpen}
-        onClose={() => setIsPreviewOpen(false)}
+        onClose={closePreview}
         comment={selectedComment}
       />
     </main>

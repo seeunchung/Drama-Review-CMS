@@ -67,6 +67,43 @@
   color: var(--accent);
 }
 
+.site-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 16px;
+  border-left: 1px solid var(--line-soft);
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.logout-btn {
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-soft);
+  border-radius: 8px;
+  color: var(--ink-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.logout-btn:hover {
+  background: rgba(255, 107, 107, 0.1);
+  border-color: rgba(255, 107, 107, 0.3);
+  color: #ff6b6b;
+}
+
 /* Dashboard Page Styles */
 .dashboard-page {
   display: flex;

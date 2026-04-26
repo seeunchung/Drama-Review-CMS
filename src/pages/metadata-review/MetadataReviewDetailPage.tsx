@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
 import { useBatchDetail } from "@/network/hooks/use-review";
+import { useModalStore } from "@/app/store/use-modal-store";
 import { ROUTES } from "@/app/paths";
 import "./styles.css";
 
@@ -8,6 +9,7 @@ function MetadataReviewDetailPage() {
     const { batchId } = useParams<{ batchId: string }>();
     const navigate = useNavigate();
     const { batch, episodes, isLoading, error, updateStatus } = useBatchDetail(batchId);
+    const { confirm: modalConfirm, alert: modalAlert } = useModalStore();
 
     if (isLoading) return <div className="loading-state">데이터를 불러오는 중...</div>;
     if (error) return <div className="error-state">오류가 발생했습니다: {error.message}</div>;
@@ -18,10 +20,12 @@ function MetadataReviewDetailPage() {
             ? "승인하시겠습니까? 승인 시 리뷰 사이트에 등록됩니다." 
             : "승인을 거절하시겠습니까?";
         
-        if (window.confirm(confirmMsg)) {
+        const isConfirmed = await modalConfirm(confirmMsg);
+        
+        if (isConfirmed) {
             const result = await updateStatus(status);
             if (result?.success) {
-                alert("처리되었습니다.");
+                await modalAlert("처리되었습니다.");
                 navigate(ROUTES["metadata-review"]);
             }
         }

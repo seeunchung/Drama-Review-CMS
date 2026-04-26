@@ -1,8 +1,25 @@
 import { Link, useLocation } from "react-router-dom";
 import { HOME_PATH, ROUTES } from "@/app/paths";
+import { useAuthStore } from "@/app/store/use-auth-store";
+import { useModalStore } from "@/app/store/use-modal-store";
 
 export function SiteHeader() {
     const { pathname } = useLocation();
+    const { user, signOut } = useAuthStore();
+    const { confirm } = useModalStore();
+
+    const handleLogout = async () => {
+        const isConfirmed = await confirm({
+            title: "로그아웃",
+            message: "정말 로그아웃 하시겠습니까?",
+            confirmText: "로그아웃",
+            cancelText: "취소"
+        });
+
+        if (isConfirmed) {
+            await signOut();
+        }
+    };
 
     return (
         <header className="site-header">
@@ -51,6 +68,17 @@ export function SiteHeader() {
                     리뷰 큐레이션
                 </Link>
             </nav>
+
+            <div className="site-header-actions">
+                {user && (
+                    <div className="user-info">
+                        <span className="user-email">{user.email}</span>
+                        <button className="logout-btn" onClick={handleLogout}>
+                            로그아웃
+                        </button>
+                    </div>
+                )}
+            </div>
         </header>
     );
 }

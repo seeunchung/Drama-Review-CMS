@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { User, Session } from '@supabase/supabase-js'
-import { supabase } from '../../lib/supabase'
+import { supabase } from '@/lib/supabase'
 
 interface AuthState {
   user: User | null

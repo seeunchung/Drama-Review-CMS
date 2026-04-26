@@ -3,9 +3,11 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { reviewApi } from "../api/review";
 import { curationApi } from "../api/curation";
 import { DramaComment } from "@/pages/review-curation/types/review-curation";
+import { useModalStore } from "@/app/store/use-modal-store";
 
 export function useReviewCuration() {
   const queryClient = useQueryClient();
+  const { alert: modalAlert } = useModalStore();
   const [selectedDramaId, setSelectedDramaId] = useState<string>("");
 
   // 1. 드라마 목록 조회 (승인 완료된 것만)
@@ -57,11 +59,11 @@ export function useReviewCuration() {
     },
     
     // 에러 발생 시 롤백
-    onError: (_err, _variables, context) => {
+    onError: async (_err, _variables, context) => {
       if (context?.previousComments) {
         queryClient.setQueryData(["comments", selectedDramaId], context.previousComments);
       }
-      alert("상태 업데이트에 실패했습니다.");
+      await modalAlert("상태 업데이트에 실패했습니다.");
     },
     
     // 성공 혹은 에러 후 데이터 최신화
