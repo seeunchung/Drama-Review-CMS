@@ -5,6 +5,7 @@ import { useBulkUpload } from "@/network/hooks/use-upload";
 import { UploadWorkspace } from "@/pages/content-import/sections/UploadWorkspace";
 import { UploadProgressBar } from "@/pages/content-import/components/UploadProgressBar";
 import { useModalStore } from "@/app/store/use-modal-store";
+import { useToastStore } from "@/app/store/use-toast-store";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -55,7 +56,6 @@ function downloadRowsAsCsv(rows: BulkUploadRow[]) {
             .join(",");
     });
 
-    // \n 부분을 명확하게 이스케이프 처리하여 합칩니다.
     const csvContent = [header.join(","), ...lines].join("\n");
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
     const url = window.URL.createObjectURL(blob);
@@ -80,6 +80,7 @@ function ContentImportPage() {
     const { parseExcel } = useDramaExcelParsing();
     const { upload, uploadProgress, resetProgress } = useBulkUpload();
     const { alert: modalAlert } = useModalStore();
+    const toast = useToastStore();
 
     const handleFileSelect = async (file: File) => {
         setSelectedFile({
@@ -92,23 +93,27 @@ function ContentImportPage() {
         resetProgress();
 
         try {
-            await new Promise((resolve) => setTimeout(resolve, 500));
             setCurrentStep("parsed");
-
             const parsedData = await parseExcel(file);
-
-            await new Promise((resolve) => setTimeout(resolve, 800));
+            
             setCurrentStep("validated");
-
             await new Promise((resolve) => setTimeout(resolve, 500));
+            
             setRows(parsedData);
             setCurrentStep("reviewed");
+            
+            const errorCount = parsedData.filter(r => r.status === 'error').length;
+            if (errorCount > 0) {
+                toast.error(`데이터 검증 결과 ${errorCount}건의 오류가 발견되었습니다.`);
+            } else {
+                toast.success("파일 파싱 및 데이터 검증이 완료되었습니다.");
+            }
         } catch (error: any) {
             console.error("Parsing error:", error);
             setCurrentStep("idle");
-            setBatchError(
-                error.message || "엑셀 파일 파싱 중 오류가 발생했습니다.",
-            );
+            const errorMsg = error.message || "엑셀 파일 파싱 중 오류가 발생했습니다.";
+            setBatchError(errorMsg);
+            toast.error(errorMsg);
             setRows([]);
         }
     };
@@ -123,21 +128,19 @@ function ContentImportPage() {
 
     const handleSave = async () => {
         if (!selectedFile || rows.length === 0 || batchError) {
-            await modalAlert("파일 상태를 확인해주세요.");
+            toast.error("업로드할 파일 상태를 확인해주세요.");
             return;
         }
 
-        // 1. 에러가 포함된 행이 있는지 최종 확인
         const hasErrorRows = rows.some((row) => row.status === "error");
         if (hasErrorRows) {
             await modalAlert("검토 결과 에러가 포함된 행이 있습니다. 모든 에러를 수정한 후 다시 업로드해주세요.");
             return;
         }
 
-        // 2. 모든 행의 드라마 제목이 동일한지 최종 확인
         const uniqueTitles = Array.from(new Set(rows.map((r) => r.title)));
         if (uniqueTitles.length > 1) {
-            await modalAlert(`한 파일에 여러 드라마 제목이 섞여 있습니다: ${uniqueTitles.join(", ")}\n한 번에 하나의 드라마만 업로드 가능합니다.`);
+            toast.error("한 번에 하나의 드라마만 업로드 가능합니다.");
             return;
         }
 
@@ -149,16 +152,17 @@ function ContentImportPage() {
                 rows: rows,
                 dramaTitle: dramaTitle,
                 fileName: fileName,
-                chunkSize: 5,
+                chunkSize: 10,
             });
 
             setCurrentStep("saved");
             setRows((prev) =>
                 prev.map((row) => ({ ...row, status: "uploaded" })),
             );
-        } catch (error) {
+            toast.success(`'${dramaTitle}' 에피소드 업로드가 완료되었습니다.`);
+        } catch (error: any) {
             console.error("Save error:", error);
-            await modalAlert("DB 저장 중 오류가 발생했습니다.");
+            toast.error(error.message || "DB 저장 중 오류가 발생했습니다.");
         }
     };
 

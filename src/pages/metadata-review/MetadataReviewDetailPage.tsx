@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
 import { useBatchDetail } from "@/network/hooks/use-review";
 import { useModalStore } from "@/app/store/use-modal-store";
+import { useToastStore } from "@/app/store/use-toast-store";
 import { ROUTES } from "@/app/paths";
 import { PosterUploadSection } from "./components/PosterUploadSection";
 import "./styles.css";
@@ -18,11 +19,22 @@ function MetadataReviewDetailPage() {
         uploadPoster, 
         isUploadingPoster 
     } = useBatchDetail(batchId);
-    const { confirm: modalConfirm, alert: modalAlert } = useModalStore();
+    
+    const { confirm: modalConfirm } = useModalStore();
+    const toast = useToastStore();
 
     if (isLoading) return <div className="loading-state">데이터를 불러오는 중...</div>;
     if (error) return <div className="error-state">오류가 발생했습니다: {error.message}</div>;
     if (!batch) return <div className="error-state">해당 데이터를 찾을 수 없습니다.</div>;
+
+    const handlePosterUpload = async (file: File) => {
+        const result = await uploadPoster(file);
+        if (result.success) {
+            toast.success("포스터 이미지가 업로드되었습니다.");
+        } else {
+            toast.error(`업로드 실패: ${result.error?.message || "알 수 없는 오류"}`);
+        }
+    };
 
     const handleStatusChange = async (status: "completed" | "failed") => {
         let confirmMsg = status === "completed" 
@@ -39,8 +51,10 @@ function MetadataReviewDetailPage() {
         if (isConfirmed) {
             const result = await updateStatus(status);
             if (result?.success) {
-                await modalAlert("처리되었습니다.");
+                toast.success(status === "completed" ? "최종 승인되었습니다." : "승인 거절 처리되었습니다.");
                 navigate(ROUTES["metadata-review"]);
+            } else {
+                toast.error("처리 중 오류가 발생했습니다.");
             }
         }
     };
@@ -85,7 +99,7 @@ function MetadataReviewDetailPage() {
                 <PosterUploadSection 
                     posterUrl={batch.poster_url}
                     isUploading={isUploadingPoster}
-                    onUpload={uploadPoster}
+                    onUpload={handlePosterUpload}
                     disabled={batch.status === "failed"}
                 />
 

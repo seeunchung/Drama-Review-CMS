@@ -81,23 +81,47 @@ export const reviewApi = {
      * 드라마 포스터 업로드
      */
     uploadPoster: async (batchId: string, file: File) => {
+        // 1. 기존 포스터 정보 조회 (삭제를 위해)
+        const { data: currentBatch } = await supabase
+            .from("import_batches")
+            .select("poster_url")
+            .eq("id", batchId)
+            .single();
+
+        // 2. 기존 포스터가 있다면 Storage에서 삭제
+        if (currentBatch?.poster_url) {
+            try {
+                // URL에서 파일명 추출 (예: .../posters/filename.jpg -> filename.jpg)
+                const urlParts = currentBatch.poster_url.split('/');
+                const oldFileName = urlParts[urlParts.length - 1];
+                
+                if (oldFileName) {
+                    await supabase.storage
+                        .from('posters')
+                        .remove([oldFileName]);
+                }
+            } catch (error) {
+                console.warn("이전 포스터 삭제 실패 (무시하고 진행):", error);
+            }
+        }
+
         const fileExt = file.name.split('.').pop();
         const fileName = `${batchId}-${Math.random()}.${fileExt}`;
         const filePath = `${fileName}`;
 
-        // 1. Supabase Storage에 파일 업로드
+        // 3. Supabase Storage에 새 파일 업로드
         const { error: uploadError } = await supabase.storage
             .from('posters')
             .upload(filePath, file);
 
         if (uploadError) throw uploadError;
 
-        // 2. 업로드된 파일의 Public URL 가져오기
+        // 4. 업로드된 파일의 Public URL 가져오기
         const { data: { publicUrl } } = supabase.storage
             .from('posters')
             .getPublicUrl(filePath);
 
-        // 3. import_batches 테이블의 poster_url 업데이트
+        // 5. import_batches 테이블의 poster_url 업데이트
         const { error: updateError } = await supabase
             .from("import_batches")
             .update({ poster_url: publicUrl })

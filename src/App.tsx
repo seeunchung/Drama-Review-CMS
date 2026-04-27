@@ -5,6 +5,7 @@ import { PageShell, SiteHeader } from "@/components/layout";
 import { AuthGuard } from "@/components/layout/AuthGuard";
 import { useAuthStore } from "@/app/store/use-auth-store";
 import { GlobalModal } from "@/components/common/Modal/GlobalModal";
+import { GlobalToast } from "@/components/common/Toast/GlobalToast";
 import { HomePage } from "@/pages/home";
 import { LoginPage } from "@/pages/auth";
 import { ContentImportPage } from "@/pages/content-import";
@@ -52,6 +53,7 @@ function App() {
     return (
         <>
             <GlobalModal />
+            <GlobalToast />
             <Routes>
                 {/* 인증이 필요 없는 라우트 */}
                 <Route path={ROUTES.auth} element={<LoginPage />} />
