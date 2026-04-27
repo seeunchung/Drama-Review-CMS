@@ -11,9 +11,16 @@
 .drama-selector-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
   padding: 16px 24px;
   margin-bottom: 8px;
+}
+
+.selector-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .selector-label {
@@ -37,6 +44,20 @@
 .drama-select:focus {
   border-color: var(--accent-gold);
   outline: none;
+}
+
+/* Episode Trend Chart */
+.episode-trend-chart-panel {
+  margin-bottom: 8px;
+}
+
+.episode-trend-chart-panel .panel-header {
+  border-bottom: none;
+  padding: 24px 28px 12px;
+}
+
+.episode-trend-chart-panel .chart-wrapper {
+  padding: 0 20px 24px 10px;
 }
 
 /* 3-Pane Layout */
@@ -72,7 +93,7 @@
   color: var(--status-error);
 }
 
-/* 3-Pane Layout */
+/* Curation Workspace */
 .curation-workspace {
   display: grid;
   grid-template-columns: 240px 1fr 360px;
@@ -80,6 +101,7 @@
   height: 700px;
 }
 
+/* (이후 스타일은 동일하므로 생략하지 않고 모두 포함) */
 /* Left Pane: Episode Filter */
 .episode-filter {
   display: flex;

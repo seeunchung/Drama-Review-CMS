@@ -1,8 +1,21 @@
 import { Link } from "react-router-dom";
+import { 
+    BarChart, 
+    Bar, 
+    XAxis, 
+    YAxis, 
+    CartesianGrid, 
+    Tooltip, 
+    ResponsiveContainer,
+    Cell
+} from "recharts";
 import { ADMIN_TASKS } from "@/app/project-meta";
 import { useHomeData } from "@/network/hooks/use-home";
+import { debugApi } from "@/network/api/debug";
+import { useToastStore } from "@/app/store/use-toast-store";
+import { useModalStore } from "@/app/store/use-modal-store";
 
-// 시간을 사람이 읽기 좋은 형식으로 변환 (데모용)
+// 시간을 사람이 읽기 좋은 형식으로 변환
 function formatTime(dateString: string) {
     const date = new Date(dateString);
     const now = new Date();
@@ -43,7 +56,25 @@ function StatWidget({
 
 // 중드 리뷰 CMS 대시보드
 function HomePage() {
-    const { stats, activities, isLoading } = useHomeData();
+    const { activities, chartData, reviewCounts, isLoading, refresh } = useHomeData();
+    const toast = useToastStore();
+    const { confirm } = useModalStore();
+
+    const handleSeedData = async () => {
+        const isConfirmed = await confirm("기존 데이터를 모두 삭제하고 테스트용 데이터를 다시 생성하시겠습니까? (정합성 보장 로직 적용)");
+        if (!isConfirmed) return;
+
+        try {
+            toast.info("데이터 시딩 중...");
+            await debugApi.seedAllData();
+            toast.success("데이터 시딩 및 정합성 검증이 완료되었습니다.");
+            refresh(); 
+        } catch (error: any) {
+            toast.error(`시딩 실패: ${error.message}`);
+        }
+    };
+
+    const COLORS = ["var(--brand-red)", "#F59E0B", "#10B981", "#3B82F6", "#8B5CF6"];
 
     return (
         <main className="dashboard-page">
@@ -59,6 +90,13 @@ function HomePage() {
                     </p>
                 </div>
                 <div className="dashboard-actions">
+                    <button 
+                        onClick={handleSeedData} 
+                        className="btn-outline" 
+                        style={{ marginRight: '12px' }}
+                    >
+                        테스트 데이터 시딩
+                    </button>
                     <Link to="/content-import" className="quick-action-button">
                         신규 시리즈 에피소드 등록
                     </Link>
@@ -68,32 +106,77 @@ function HomePage() {
             <section className="dashboard-stats-grid">
                 <StatWidget
                     label="이번 주 신작 등록"
-                    value={stats?.weekly_new_series ?? 0}
+                    value={reviewCounts.weekly}
                     trend="+신규"
                     color="var(--accent)"
                     isLoading={isLoading}
                 />
                 <StatWidget
-                    label="회차 검토 대기"
-                    value={stats?.pending_reviews ?? 0}
-                    trend="에피소드"
+                    label="검토 대기 드라마"
+                    value={reviewCounts.pending}
+                    trend="건수"
                     color="var(--status-pending)"
                     isLoading={isLoading}
                 />
                 <StatWidget
-                    label="활성 리뷰어"
-                    value={stats?.active_reviewers ?? 3842}
-                    trend="+124명"
+                    label="누적 리뷰 수"
+                    value={reviewCounts.total}
+                    trend="건"
                     color="var(--status-valid)"
                     isLoading={isLoading}
                 />
                 <StatWidget
-                    label="DB 정합성 에러"
-                    value={stats?.integrity_errors ?? 0}
-                    trend="건수"
-                    color="var(--status-error)"
+                    label="오늘 유입 리뷰"
+                    value={reviewCounts.today}
+                    trend="건"
+                    color="var(--brand-red)"
                     isLoading={isLoading}
                 />
+            </section>
+
+            <section className="dashboard-chart-section panel">
+                <div className="panel-header">
+                    <h3>실시간 드라마 인기 지표 (리뷰 수 Top 5)</h3>
+                    <p>승인 완료된 드라마 중 유저 리뷰가 가장 많이 달린 순위입니다.</p>
+                </div>
+                <div className="chart-container">
+                    {chartData.length > 0 ? (
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart
+                                data={chartData}
+                                layout="vertical"
+                                margin={{ top: 5, right: 30, left: 40, bottom: 5 }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
+                                <XAxis type="number" hide />
+                                <YAxis 
+                                    dataKey="name" 
+                                    type="category" 
+                                    width={150}
+                                    tick={{ fill: 'var(--ink-soft)' }}
+                                />
+                                <Tooltip 
+                                    contentStyle={{ 
+                                        backgroundColor: 'var(--surface-1)', 
+                                        border: '1px solid var(--line-soft)',
+                                        borderRadius: '12px',
+                                        color: 'var(--ink-strong)'
+                                    }}
+                                    itemStyle={{ color: 'var(--accent)' }}
+                                />
+                                <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={32}>
+                                    {chartData.map((_, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    ) : (
+                        <div className="empty-chart-state">
+                            <p>표시할 데이터가 없습니다. 드라마를 승인하거나 리뷰 데이터를 생성해주세요.</p>
+                        </div>
+                    )}
+                </div>
             </section>
 
             <section className="dashboard-content-grid">

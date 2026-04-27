@@ -61,8 +61,8 @@ export function useBulkUpload() {
 
                 await uploadApi.insertEpisodes(batchId, chunk);
 
-                // 시각적 효과를 위한 의도적인 딜레이 (데모용)
-                await new Promise((resolve) => setTimeout(resolve, 800));
+                // 시각적 피드백을 위한 의도적인 딜레이 (UX 최적화)
+                await new Promise((resolve) => setTimeout(resolve, 600));
 
                 // 진행 상태 업데이트
                 setUploadProgress((prev) => ({

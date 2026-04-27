@@ -26,7 +26,14 @@ export function SiteHeader() {
     return (
         <header className="site-header">
             <Link className="site-brand" to={HOME_PATH}>
-                <div className="site-brand-mark">C</div>
+                <div className="site-brand-mark">
+                    <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 10L10 6H22L26 10H6Z" fill="white"/>
+                        <rect x="6" y="10" width="20" height="16" rx="2" fill="white"/>
+                        <path d="M10 6L13 10M16 6L19 10M22 6L25 10" stroke="var(--brand-red)" strokeWidth="2" strokeLinecap="round"/>
+                        <circle cx="16" cy="18" r="3" fill="var(--brand-red)"/>
+                    </svg>
+                </div>
                 <div className="site-brand-copy">
                     <strong>중드 달글 CMS</strong>
                 </div>
