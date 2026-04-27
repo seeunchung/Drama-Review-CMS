@@ -4,6 +4,7 @@ import { HOME_PATH, ROUTES } from "@/app/paths";
 import { PageShell, SiteHeader } from "@/components/layout";
 import { AuthGuard } from "@/components/layout/AuthGuard";
 import { useAuthStore } from "@/app/store/use-auth-store";
+import { useThemeStore } from "@/app/store/use-theme-store";
 import { GlobalModal } from "@/components/common/Modal/GlobalModal";
 import { GlobalToast } from "@/components/common/Toast/GlobalToast";
 import { HomePage } from "@/pages/home";
@@ -45,10 +46,20 @@ function AppLayout() {
 // 홈과 상세 화면을 표준 React Router 경로로 분기한다.
 function App() {
     const initializeAuth = useAuthStore((state) => state.initialize);
+    const theme = useThemeStore((state) => state.theme);
 
     useEffect(() => {
         initializeAuth();
     }, [initializeAuth]);
+
+    // 테마 변경 시 body 클래스 토글
+    useEffect(() => {
+        if (theme === "light") {
+            document.body.classList.add("light-mode");
+        } else {
+            document.body.classList.remove("light-mode");
+        }
+    }, [theme]);
 
     return (
         <>

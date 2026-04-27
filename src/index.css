@@ -61,6 +61,22 @@
   font-weight: 400;
 }
 
+/* Light Mode Theme */
+.light-mode {
+  --bg-deep: #F1F5F9;
+  --surface-0: #F8FAFC;
+  --surface-1: #FFFFFF;
+  --surface-2: #E2E8F0;
+  --line-soft: rgba(15, 23, 42, 0.08);
+  
+  --ink-strong: #0F172A;
+  --ink-muted: #475569;
+  --ink-soft: #64748B;
+  
+  --shadow-panel: 0 4px 20px rgba(15, 23, 42, 0.06);
+  --accent-soft: rgba(245, 158, 11, 0.15);
+}
+
 * {
   box-sizing: border-box;
 }

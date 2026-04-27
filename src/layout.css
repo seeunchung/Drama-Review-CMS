@@ -12,11 +12,12 @@
   padding: 14px 22px;
   border: 1px solid var(--line-soft);
   border-radius: 18px;
-  background: rgba(15, 23, 42, 0.85);
+  background: var(--surface-1);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 18px;
   z-index: 30;
+  box-shadow: var(--shadow-panel);
 }
 
 .site-brand {
@@ -71,6 +72,26 @@
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.theme-toggle-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--line-soft);
+  border-radius: 12px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--surface-2);
+  color: var(--accent);
+  border-color: var(--accent-soft);
 }
 
 .user-info {
