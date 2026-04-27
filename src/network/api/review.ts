@@ -76,4 +76,35 @@ export const reviewApi = {
         
         return { success: true };
     },
+
+    /**
+     * 드라마 포스터 업로드
+     */
+    uploadPoster: async (batchId: string, file: File) => {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${batchId}-${Math.random()}.${fileExt}`;
+        const filePath = `${fileName}`;
+
+        // 1. Supabase Storage에 파일 업로드
+        const { error: uploadError } = await supabase.storage
+            .from('posters')
+            .upload(filePath, file);
+
+        if (uploadError) throw uploadError;
+
+        // 2. 업로드된 파일의 Public URL 가져오기
+        const { data: { publicUrl } } = supabase.storage
+            .from('posters')
+            .getPublicUrl(filePath);
+
+        // 3. import_batches 테이블의 poster_url 업데이트
+        const { error: updateError } = await supabase
+            .from("import_batches")
+            .update({ poster_url: publicUrl })
+            .eq("id", batchId);
+
+        if (updateError) throw updateError;
+
+        return { publicUrl };
+    },
 };

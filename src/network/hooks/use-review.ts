@@ -65,12 +65,35 @@ export function useBatchDetail(batchId: string | undefined) {
         }
     };
 
+    // 3. 포스터 업로드 Mutation
+    const posterMutation = useMutation({
+        mutationFn: (file: File) => {
+            if (!batchId) throw new Error("Batch ID is required");
+            return reviewApi.uploadPoster(batchId, file);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["batch-detail", batchId] });
+            queryClient.invalidateQueries({ queryKey: ["batches"] });
+        },
+    });
+
+    const uploadPoster = async (file: File) => {
+        try {
+            await posterMutation.mutateAsync(file);
+            return { success: true };
+        } catch (err: any) {
+            return { success: false, error: err };
+        }
+    };
+
     return { 
         batch: data?.batch || null, 
         episodes: data?.episodes || [], 
         isLoading, 
         error, 
         updateStatus, 
+        uploadPoster,
+        isUploadingPoster: posterMutation.isPending,
         refresh: refetch 
     };
 }

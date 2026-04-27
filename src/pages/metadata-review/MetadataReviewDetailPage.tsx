@@ -3,12 +3,21 @@ import { ProjectHeader } from "@/components/layout";
 import { useBatchDetail } from "@/network/hooks/use-review";
 import { useModalStore } from "@/app/store/use-modal-store";
 import { ROUTES } from "@/app/paths";
+import { PosterUploadSection } from "./components/PosterUploadSection";
 import "./styles.css";
 
 function MetadataReviewDetailPage() {
     const { batchId } = useParams<{ batchId: string }>();
     const navigate = useNavigate();
-    const { batch, episodes, isLoading, error, updateStatus } = useBatchDetail(batchId);
+    const { 
+        batch, 
+        episodes, 
+        isLoading, 
+        error, 
+        updateStatus, 
+        uploadPoster, 
+        isUploadingPoster 
+    } = useBatchDetail(batchId);
     const { confirm: modalConfirm, alert: modalAlert } = useModalStore();
 
     if (isLoading) return <div className="loading-state">데이터를 불러오는 중...</div>;
@@ -16,9 +25,14 @@ function MetadataReviewDetailPage() {
     if (!batch) return <div className="error-state">해당 데이터를 찾을 수 없습니다.</div>;
 
     const handleStatusChange = async (status: "completed" | "failed") => {
-        const confirmMsg = status === "completed" 
+        let confirmMsg = status === "completed" 
             ? "승인하시겠습니까? 승인 시 리뷰 사이트에 등록됩니다." 
             : "승인을 거절하시겠습니까?";
+
+        // 포스터 미등록 상태에서 승인 시 경고 메시지 강화
+        if (status === "completed" && !batch.poster_url) {
+            confirmMsg = "포스터가 등록되지 않았습니다.\n포스터 없이 승인하여 리뷰 사이트에 등록하시겠습니까?";
+        }
         
         const isConfirmed = await modalConfirm(confirmMsg);
         
@@ -68,10 +82,12 @@ function MetadataReviewDetailPage() {
             </div>
 
             <section className="detail-content panel">
-                {/* 확장 포인트: 향후 포스터 업로드 기능이 들어갈 자리 */}
-                <div className="expansion-placeholder">
-                    <p>📸 드라마 포스터 및 에셋 관리 섹션 (추가 예정)</p>
-                </div>
+                <PosterUploadSection 
+                    posterUrl={batch.poster_url}
+                    isUploading={isUploadingPoster}
+                    onUpload={uploadPoster}
+                    disabled={batch.status === "failed"}
+                />
 
                 <div className="review-table-wrap is-full">
                     <table className="review-table">
