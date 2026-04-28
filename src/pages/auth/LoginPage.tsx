@@ -23,8 +23,8 @@ export const LoginPage = () => {
 
     const handleGuestLogin = async () => {
         // 환경 변수에서 데모 계정 정보를 가져옵니다.
-        const demoEmail = import.meta.env.VITE_DEMO_EMAIL;
-        const demoPassword = import.meta.env.VITE_DEMO_PASSWORD;
+        const demoEmail = import.meta.env.VITE_DEMO_EMAIL as string;
+        const demoPassword = import.meta.env.VITE_DEMO_PASSWORD as string;
 
         if (!demoEmail || !demoPassword) {
             setError("데모 계정 설정이 되어 있지 않습니다.");
