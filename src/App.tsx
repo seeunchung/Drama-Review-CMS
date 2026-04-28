@@ -54,10 +54,10 @@ function App() {
 
     // 테마 변경 시 body 클래스 토글
     useEffect(() => {
-        if (theme === "light") {
-            document.body.classList.add("light-mode");
+        if (theme === "dark") {
+            document.body.classList.add("dark-mode");
         } else {
-            document.body.classList.remove("light-mode");
+            document.body.classList.remove("dark-mode");
         }
     }, [theme]);
 
