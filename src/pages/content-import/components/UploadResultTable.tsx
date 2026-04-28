@@ -26,7 +26,8 @@ export function UploadResultTable({ rows }: Props) {
                     {rows.length === 0 ? (
                         <tr>
                             <td colSpan={9} className="empty-row">
-                                검토할 데이터가 없습니다. 파일을 업로드해 주세요.
+                                검토할 데이터가 없습니다. 파일을 업로드해
+                                주세요.
                             </td>
                         </tr>
                     ) : (
@@ -39,13 +40,20 @@ export function UploadResultTable({ rows }: Props) {
                                 <td>
                                     <div className="cell-sub-info">
                                         <span>{row.distributor}</span>
-                                        <span className="badge-rating">{row.rating}</span>
+                                        <span className="badge-rating">
+                                            {row.rating}
+                                        </span>
                                     </div>
                                 </td>
-                                <td style={{ textAlign: "center" }}>{row.episode}화</td>
+                                <td style={{ textAlign: "center" }}>
+                                    {row.episode}화
+                                </td>
                                 <td>{row.subtitle}</td>
-                                <td className="cell-summary">
-                                    <div className="summary-text" title={row.summary}>
+                                <td className="cell-summary upload-result-table">
+                                    <div
+                                        className="summary-text"
+                                        title={row.summary}
+                                    >
                                         {row.summary}
                                     </div>
                                 </td>
