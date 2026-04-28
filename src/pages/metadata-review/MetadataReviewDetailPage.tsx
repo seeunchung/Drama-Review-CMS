@@ -4,54 +4,75 @@ import { useBatchDetail } from "@/network/hooks/use-review";
 import { useModalStore } from "@/app/store/use-modal-store";
 import { useToastStore } from "@/app/store/use-toast-store";
 import { ROUTES } from "@/app/paths";
+import { ADMIN_TASKS, STATUS_LABELS } from "@/app/project-meta";
 import { PosterUploadSection } from "./components/PosterUploadSection";
 import "./styles.css";
 
 function MetadataReviewDetailPage() {
     const { batchId } = useParams<{ batchId: string }>();
     const navigate = useNavigate();
-    const { 
-        batch, 
-        episodes, 
-        isLoading, 
-        error, 
-        updateStatus, 
-        uploadPoster, 
-        isUploadingPoster 
+    const {
+        batch,
+        episodes,
+        isLoading,
+        error,
+        updateStatus,
+        uploadPoster,
+        isUploadingPoster,
     } = useBatchDetail(batchId);
-    
+
     const { confirm: modalConfirm } = useModalStore();
     const toast = useToastStore();
 
-    if (isLoading) return <div className="loading-state">데이터를 불러오는 중...</div>;
-    if (error) return <div className="error-state">오류가 발생했습니다: {error.message}</div>;
-    if (!batch) return <div className="error-state">해당 데이터를 찾을 수 없습니다.</div>;
+    // 메타데이터 정보 추출
+    const pageMeta = ADMIN_TASKS.find(t => t.id === "metadata-review");
+
+    if (isLoading)
+        return <div className="loading-state">데이터를 불러오는 중...</div>;
+    if (error)
+        return (
+            <div className="error-state">
+                오류가 발생했습니다: {error.message}
+            </div>
+        );
+    if (!batch)
+        return (
+            <div className="error-state">해당 데이터를 찾을 수 없습니다.</div>
+        );
 
     const handlePosterUpload = async (file: File) => {
         const result = await uploadPoster(file);
         if (result.success) {
             toast.success("포스터 이미지가 업로드되었습니다.");
         } else {
-            toast.error(`업로드 실패: ${result.error?.message || "알 수 없는 오류"}`);
+            toast.error(
+                `업로드 실패: ${result.error?.message || "알 수 없는 오류"}`,
+            );
         }
     };
 
     const handleStatusChange = async (status: "completed" | "failed") => {
-        let confirmMsg = status === "completed" 
-            ? "승인하시겠습니까? 승인 시 리뷰 사이트에 등록됩니다." 
-            : "승인을 거절하시겠습니까?";
+        let confirmMsg =
+            status === "completed"
+                ? "승인하시겠습니까? 승인 시 리뷰 사이트에 등록됩니다."
+                : "승인을 거절하시겠습니까?";
 
         // 포스터 미등록 상태에서 승인 시 경고 메시지 강화
         if (status === "completed" && !batch.poster_url) {
-            confirmMsg = "포스터가 등록되지 않았습니다.\n포스터 없이 승인하여 리뷰 사이트에 등록하시겠습니까?";
+            confirmMsg =
+                "포스터가 등록되지 않았습니다.\n포스터 없이 승인하여 리뷰 사이트에 등록하시겠습니까?";
         }
-        
+
         const isConfirmed = await modalConfirm(confirmMsg);
-        
+
         if (isConfirmed) {
             const result = await updateStatus(status);
             if (result?.success) {
-                toast.success(status === "completed" ? "최종 승인되었습니다." : "승인 거절 처리되었습니다.");
+                toast.success(
+                    status === "completed"
+                        ? "최종 승인되었습니다."
+                        : "승인 거절 처리되었습니다.",
+                );
                 navigate(ROUTES["metadata-review"]);
             } else {
                 toast.error("처리 중 오류가 발생했습니다.");
@@ -62,31 +83,34 @@ function MetadataReviewDetailPage() {
     return (
         <main className="project-page review-detail-page">
             <ProjectHeader
-                title={`Review: ${batch.drama_title}`}
+                title={`${pageMeta?.title || "메타 데이터 검토"}: ${batch.drama_title}`}
                 description={`${batch.file_name}을(를) 통해 업로드된 메타데이터를 검토합니다.`}
-                tags={["상세 검토", batch.status.toUpperCase()]}
+                tags={["상세 검토"]}
             />
 
             <div className="detail-toolbar panel">
                 <div className="status-info">
-                    현재 상태: <span className={`status-badge is-${batch.status}`}>{batch.status}</span>
+                    현재 상태:{" "}
+                    <span className={`status-badge is-${batch.status}`}>
+                        {STATUS_LABELS[batch.status] || batch.status}
+                    </span>
                 </div>
                 <div className="action-group">
-                    <button 
-                        className="btn-outline" 
+                    <button
+                        className="btn-outline"
                         onClick={() => navigate(ROUTES["metadata-review"])}
                     >
                         목록으로
                     </button>
-                    <button 
-                        className="btn-danger" 
+                    <button
+                        className="btn-danger"
                         disabled={batch.status === "failed"}
                         onClick={() => handleStatusChange("failed")}
                     >
                         승인 거절
                     </button>
-                    <button 
-                        className="btn-primary" 
+                    <button
+                        className="btn-primary"
                         disabled={batch.status === "completed"}
                         onClick={() => handleStatusChange("completed")}
                     >
@@ -96,7 +120,7 @@ function MetadataReviewDetailPage() {
             </div>
 
             <section className="detail-content panel">
-                <PosterUploadSection 
+                <PosterUploadSection
                     posterUrl={batch.poster_url}
                     isUploading={isUploadingPoster}
                     onUpload={handlePosterUpload}
@@ -127,7 +151,9 @@ function MetadataReviewDetailPage() {
                                     <td>{ep.episode}</td>
                                     <td>{ep.subtitle || "-"}</td>
                                     <td>{ep.running_time}</td>
-                                    <td className="cell-summary">{ep.summary}</td>
+                                    <td className="cell-summary">
+                                        {ep.summary}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

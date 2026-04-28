@@ -380,6 +380,25 @@
   max-width: 60ch;
 }
 
+.project-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.project-tag {
+  padding: 4px 12px;
+  background: transparent;
+  color: var(--brand-red);
+  border: 1px solid var(--brand-red);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: default;
+}
+
 /* Rest of the existing specialized component styles... */
 .screen-toolbar {
   display: flex;

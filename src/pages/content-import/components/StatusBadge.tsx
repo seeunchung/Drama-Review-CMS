@@ -1,20 +1,14 @@
 import type { RowStatus } from '@/pages/content-import/types/content-import'
+import { UPLOAD_STATUS_LABELS } from '@/app/project-meta'
 
 interface StatusBadgeProps {
   status: RowStatus
 }
 
-// 테이블의 상태값을 짧은 시각 단위로 묶는다.
-const statusLabelMap = {
-  valid: '정상',
-  error: '에러',
-  uploaded: '업로드 완료',
-} as const
-
 function StatusBadge({ status }: StatusBadgeProps) {
   return (
     <span className={`status-badge status-${status}`}>
-      {statusLabelMap[status]}
+      {UPLOAD_STATUS_LABELS[status] || status}
     </span>
   )
 }

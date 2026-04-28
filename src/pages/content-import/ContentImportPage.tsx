@@ -6,6 +6,7 @@ import { UploadWorkspace } from "@/pages/content-import/sections/UploadWorkspace
 import { UploadProgressBar } from "@/pages/content-import/components/UploadProgressBar";
 import { useModalStore } from "@/app/store/use-modal-store";
 import { useToastStore } from "@/app/store/use-toast-store";
+import { ADMIN_TASKS } from "@/app/project-meta";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -81,6 +82,9 @@ function ContentImportPage() {
     const { upload, uploadProgress, resetProgress } = useBulkUpload();
     const { alert: modalAlert } = useModalStore();
     const toast = useToastStore();
+
+    // 메타데이터 정보 추출
+    const pageMeta = ADMIN_TASKS.find(t => t.id === "content-import");
 
     const handleFileSelect = async (file: File) => {
         setSelectedFile({
@@ -199,9 +203,9 @@ function ContentImportPage() {
     return (
         <main className="content-import-page">
             <ProjectHeader
-                title="콘텐츠 등록"
-                description="방영 플랫폼별 중국 드라마 회차 데이터 대량 업로드 및 내용 검토"
-                tags={["대량 업로드"]}
+                title={pageMeta?.title || "콘텐츠 등록"}
+                description={pageMeta?.description || ""}
+                tags={pageMeta?.tags || []}
             />
 
             {batchError && (

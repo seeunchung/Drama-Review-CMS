@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { STATUS_LABELS } from "@/app/project-meta";
 
 export type BatchStatus = "pending" | "completed" | "failed";
 
@@ -60,9 +61,7 @@ export const reviewApi = {
         if (batchError) throw batchError;
 
         // 2. 활동 로그 기록
-        const statusMessage = 
-            status === "completed" ? "승인 완료" : 
-            status === "failed" ? "승인 거절" : "검토 대기";
+        const statusMessage = STATUS_LABELS[status] || "처리됨";
 
         const { error: logError } = await supabase.from("activities").insert({
             type: "review",

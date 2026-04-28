@@ -2,11 +2,15 @@ import { useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
 import { useBatches } from "@/network/hooks/use-review";
 import { ROUTES } from "@/app/paths";
+import { ADMIN_TASKS, STATUS_LABELS } from "@/app/project-meta";
 import "./styles.css";
 
 function MetadataReviewPage() {
     const navigate = useNavigate();
     const { batches, isLoading, error } = useBatches();
+    
+    // 이 페이지의 메타데이터 정보 추출
+    const pageMeta = ADMIN_TASKS.find(t => t.id === "metadata-review");
 
     if (isLoading) return <div className="loading-state">목록을 불러오는 중...</div>;
     if (error) return <div className="error-state">오류가 발생했습니다: {error.message}</div>;
@@ -20,9 +24,9 @@ function MetadataReviewPage() {
     return (
         <main className="project-page review-list-page">
             <ProjectHeader
-                title="Metadata Review"
-                description="대량 업로드된 드라마 메타데이터를 검토하고 승인하여 서비스에 반영합니다."
-                tags={["운영 관리", "드라마 승인", "데이터 검토"]}
+                title={pageMeta?.title || "메타 데이터 검토"}
+                description={pageMeta?.description || ""}
+                tags={pageMeta?.tags || []}
             />
 
             <section className="project-screen panel">
@@ -52,8 +56,7 @@ function MetadataReviewPage() {
                                     <tr key={batch.id} onClick={() => handleRowClick(batch.id)}>
                                         <td>
                                             <span className={`status-badge is-${batch.status}`}>
-                                                {batch.status === "pending" ? "검토 대기" : 
-                                                 batch.status === "completed" ? "승인 완료" : "승인 거절"}
+                                                {STATUS_LABELS[batch.status] || batch.status}
                                             </span>
                                         </td>
                                         <td className="cell-important">{batch.drama_title}</td>
