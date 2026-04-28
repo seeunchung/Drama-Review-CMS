@@ -523,9 +523,15 @@
   font-size: 0.9rem;
 }
 
-.cell-summary {
+/* .upload-result-table 안에 있는 .cell-summary에만 적용하겠다고 명시 */
+.upload-result-table .cell-summary {
   max-width: 200px;
+  display: table-cell !important; /* 강제로 테이블 셀 방식으로 되돌림 */
+  -webkit-line-clamp: unset !important; /* 말줄임 설정 해제 */
+  white-space: normal; /* 다시 줄바꿈 허용 */
+  overflow: visible;
 }
+
 
 .summary-text {
   overflow: hidden;
