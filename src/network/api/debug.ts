@@ -1,4 +1,5 @@
 import { supabase } from "@/lib/supabase";
+import { STATUS_LABELS } from "@/app/project-meta";
 
 /**
  * 개발 및 테스트를 위한 데이터 시딩 API
@@ -91,9 +92,10 @@ export const debugApi = {
             }
 
             // 5. 활동 로그 기록
+            const statusLabel = STATUS_LABELS[d.status] || "등록";
             await supabase.from("activities").insert({
                 type: d.status === "completed" ? "review" : "upload",
-                message: `'${d.title}' 데이터가 ${d.status === "completed" ? "승인 완료" : "업로드"} 되었습니다.`,
+                message: `'${d.title}' 데이터가 ${statusLabel} 되었습니다.`,
                 batch_id: batch.id
             });
         }

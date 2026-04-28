@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
-import { HOME_PATH, ROUTES } from "@/app/paths";
+import { HOME_PATH } from "@/app/paths";
+import { ADMIN_TASKS } from "@/app/project-meta";
 import { useAuthStore } from "@/app/store/use-auth-store";
 import { useModalStore } from "@/app/store/use-modal-store";
 import { useThemeStore } from "@/app/store/use-theme-store";
@@ -46,36 +47,15 @@ export function SiteHeader() {
                 >
                     대시보드
                 </Link>
-                <Link
-                    className={
-                        pathname.startsWith(ROUTES["content-import"])
-                            ? "is-active"
-                            : ""
-                    }
-                    to={ROUTES["content-import"]}
-                >
-                    콘텐츠 등록
-                </Link>
-                <Link
-                    className={
-                        pathname.startsWith(ROUTES["metadata-review"])
-                            ? "is-active"
-                            : ""
-                    }
-                    to={ROUTES["metadata-review"]}
-                >
-                    데이터 검토
-                </Link>
-                <Link
-                    className={
-                        pathname.startsWith(ROUTES["review-curation"])
-                            ? "is-active"
-                            : ""
-                    }
-                    to={ROUTES["review-curation"]}
-                >
-                    리뷰 큐레이션
-                </Link>
+                {ADMIN_TASKS.map((task) => (
+                    <Link
+                        key={task.id}
+                        className={pathname.startsWith(task.path) ? "is-active" : ""}
+                        to={task.path}
+                    >
+                        {task.navLabel}
+                    </Link>
+                ))}
             </nav>
 
             <div className="site-header-actions">

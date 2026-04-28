@@ -193,9 +193,7 @@ function HomePage() {
                                 className="dashboard-menu-item"
                             >
                                 <div className="menu-icon-box">
-                                    {project.id === "content-import" && "📂"}
-                                    {project.id === "metadata-review" && "🎬"}
-                                    {project.id === "review-curation" && "🎯"}
+                                    {project.icon}
                                 </div>
                                 <div className="menu-copy">
                                     <strong>{project.title}</strong>

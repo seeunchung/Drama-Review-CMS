@@ -8,6 +8,7 @@ import { MobilePreviewModal } from "./components/MobilePreviewModal";
 import { EpisodeTrendChart } from "./components/EpisodeTrendChart";
 import { useReviewCuration } from "@/network/hooks/use-review-curation";
 import { useQueryModal } from "@/app/hooks/use-query-modal";
+import { ADMIN_TASKS } from "@/app/project-meta";
 import "./styles.css";
 
 const ReviewCurationPage: React.FC = () => {
@@ -19,6 +20,9 @@ const ReviewCurationPage: React.FC = () => {
     isLoading,
     toggleStatus
   } = useReviewCuration();
+
+  // 메타데이터 정보 추출
+  const pageMeta = ADMIN_TASKS.find(t => t.id === "review-curation");
 
   const [activeEpisode, setActiveEpisode] = useState<number | null>(null);
   const [selectedCommentId, setSelectedCommentId] = useState<string | number | null>(null);
@@ -81,9 +85,9 @@ const ReviewCurationPage: React.FC = () => {
   return (
     <main className="review-curation-page">
       <ProjectHeader 
-        title="Review Curation Center" 
-        description="드라마 회차별 댓글 관리 및 베스트 리뷰 선정 워크스페이스"
-        tags={["Curation", "Review", "Admin"]}
+        title={pageMeta?.title || "리뷰 큐레이션"} 
+        description={pageMeta?.description || ""}
+        tags={pageMeta?.tags || []}
       />
       
       <div className="review-curation-container">
