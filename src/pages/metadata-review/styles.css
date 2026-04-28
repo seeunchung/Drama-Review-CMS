@@ -1,0 +1,290 @@
+/* Metadata Review Layout & Spacing */
+.review-list-page,
+.review-detail-page {
+    display: flex;
+    flex-direction: column;
+    gap: 28px; /* 페이지 헤더와 본문 사이 간격 확보 */
+    padding-bottom: 60px;
+}
+
+.review-list-page .list-header {
+    margin-bottom: 8px;
+}
+
+.review-list-page .list-header h2 {
+    font-size: 1.5rem;
+    color: var(--ink-strong); /* 프로젝트 표준 컬러 */
+    margin-bottom: 8px;
+}
+
+.review-list-page .list-header p {
+    color: var(--ink-muted);
+}
+
+/* Status Badges - Theme matched */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.85rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.status-badge.is-pending {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.status-badge.is-completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-badge.is-failed {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Table Enhancements - Deep Theme */
+.batch-table-wrap {
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--line-soft);
+    border-radius: 20px;
+    background: var(--bg-deep);
+}
+
+.review-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.review-table th {
+    background: var(--surface-2); /* 헤더 배경 구분 */
+    color: var(--ink-soft);
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.review-table td {
+    padding: 20px;
+    border-bottom: 1px solid var(--line-soft);
+    font-size: 0.95rem;
+    color: var(--ink-strong); /* 글씨를 훨씬 선명하게 */
+    vertical-align: middle;
+}
+
+.review-table.is-selectable tbody tr {
+    cursor: pointer;
+    transition: background 180ms ease;
+}
+
+.review-table.is-selectable tbody tr:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.cell-important {
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.empty-cell {
+    padding: 80px;
+    text-align: center;
+    color: var(--ink-muted);
+}
+
+/* Detail Page Toolbar */
+.detail-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    background: var(--surface-1);
+    border: 1px solid var(--line-soft);
+    border-radius: 20px;
+}
+
+.detail-toolbar .status-info {
+    color: var(--ink-strong);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.detail-toolbar .action-group {
+    display: flex;
+    gap: 12px;
+}
+
+/* Buttons - Theme matched */
+.btn-primary {
+    background: var(--button-bg);
+    color: var(--bg-deep);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-danger {
+    background: transparent;
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--line-soft);
+    padding: 10px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-outline:hover {
+    background: var(--surface-2);
+    color: var(--ink-strong);
+}
+
+.btn-primary:disabled, .btn-danger:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+/* Expansion Placeholder */
+.expansion-placeholder {
+    padding: 48px;
+    border: 2px dashed var(--line-soft);
+    border-radius: 24px;
+    background: var(--bg-deep);
+    text-align: center;
+    color: var(--ink-soft);
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+/* Poster Upload Section */
+.poster-upload-section {
+    display: flex;
+    gap: 32px;
+    padding: 32px;
+    background: var(--surface-1);
+    border-radius: 24px;
+    border: 1px solid var(--line-soft);
+    margin-bottom: 32px;
+    align-items: center;
+}
+
+.poster-preview-card {
+    width: 180px;
+    height: 270px; /* 2:3 Ratio */
+    background: var(--bg-deep);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--line-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.poster-preview-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.poster-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink-muted);
+}
+
+.poster-empty-state svg {
+    width: 40px;
+    height: 40px;
+    opacity: 0.5;
+}
+
+.poster-info-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.poster-info-group h3 {
+    font-size: 1.25rem;
+    color: var(--ink-strong);
+    margin: 0;
+}
+
+.poster-info-group p {
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 8px;
+}
+
+.upload-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.file-input-hidden {
+    display: none;
+}
+
+.btn-upload-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.upload-hint {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+}
+
+/* Detailed Table Adjustments */
+.cell-summary {
+    max-width: 300px;
+    color: var(--ink-muted) !important;
+    font-size: 0.88rem !important;
+    white-space: normal; /* 줄거리 가독성을 위해 자동 줄바꿈 허용 */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.loading-state, .error-state {
+    padding: 100px;
+    text-align: center;
+    color: var(--ink-muted);
+}
