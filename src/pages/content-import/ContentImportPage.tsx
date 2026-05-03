@@ -8,6 +8,7 @@ import { useModalStore } from "@/app/store/use-modal-store";
 import { useToastStore } from "@/app/store/use-toast-store";
 import { ADMIN_TASKS } from "@/app/project-meta";
 import { getErrorMessage } from "@/lib/error";
+import { extractNumbers, isNumeric, validateRowFields, applyCollectionValidation } from "@/pages/content-import/utils/validation";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -86,6 +87,49 @@ function ContentImportPage() {
 
     // 메타데이터 정보 추출
     const pageMeta = ADMIN_TASKS.find(t => t.id === "content-import");
+
+    //숫자 자동 변환
+    const handleAutoClean = () => {
+        if (rows.length === 0) return;
+
+        // 1. 정제가 필요한 행이 있는지 먼저 확인
+        const needsCleaning = rows.some(
+            (row) => !isNumeric(row.episode) || (row.rating && !isNumeric(row.rating))
+        );
+
+        if (!needsCleaning) {
+            toast.success("변환할 데이터가 없습니다. (모든 숫자가 올바른 형식입니다)");
+            return;
+        }
+
+        // 2. 숫자 추출 및 개별 행 검증 다시 수행
+        let updatedRows = rows.map((row) => {
+            const cleanedEpisode = extractNumbers(row.episode);
+            const cleanedRating = extractNumbers(row.rating);
+
+            const errorMessages = validateRowFields({
+                title: row.title,
+                baseTitle: rows[0]?.title || "",
+                rawEpisode: cleanedEpisode,
+                rating: cleanedRating,
+                summary: row.summary,
+            });
+
+            return {
+                ...row,
+                episode: cleanedEpisode,
+                rating: cleanedRating,
+                status: (errorMessages.length > 0 ? "error" : "valid") as any,
+                errorMessages,
+            };
+        });
+
+        // 2. 전체 컬렉션 검증 다시 수행
+        updatedRows = applyCollectionValidation(updatedRows);
+
+        setRows(updatedRows);
+        toast.success("등급 및 회차 데이터의 숫자를 자동으로 정제했습니다.");
+    };
 
     const handleFileSelect = async (file: File) => {
         setSelectedFile({
@@ -236,8 +280,10 @@ function ContentImportPage() {
                 onSortChange={setSortMode}
                 onDownload={() => downloadRowsAsCsv(visibleRows)}
                 onSave={handleSave}
+                onAutoClean={handleAutoClean}
                 isSaving={isUploading}
                 canDownload={visibleRows.length > 0 && !isUploading}
+                canClean={summary.total > 0 && !isUploading}
                 canSave={
                     summary.total > 0 &&
                     (currentStep === "reviewed" || currentStep === "saved") &&

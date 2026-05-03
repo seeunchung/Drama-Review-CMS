@@ -1,5 +1,10 @@
 import type { BulkUploadRow } from "../types/content-import";
 
+/** 문자열에서 숫자만 추출 (예: "15세이상" -> "15", "제1화" -> "1") */
+export const extractNumbers = (value: string): string => {
+    return value.replace(/[^0-9]/g, "");
+};
+
 /** 문자열이 순수 숫자로만 구성되어 있는지 확인 */
 export const isNumeric = (value: string): boolean => {
     if (!value) return false;
@@ -71,7 +76,6 @@ export const applyCollectionValidation = (rows: BulkUploadRow[]): BulkUploadRow[
     // 3. 에러 반영
     return rows.map((row) => {
         const newErrors = [...row.errorMessages];
-        const currentEpNum = parseInt(row.episode, 10);
         const hasFormatError = !isNumeric(row.episode);
 
         // [핵심] 현재 행이 '1화'처럼 형식이 틀린 경우, '누락' 메시지는 중복해서 보여주지 않음

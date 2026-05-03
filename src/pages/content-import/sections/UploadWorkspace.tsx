@@ -27,9 +27,11 @@ interface UploadWorkspaceProps {
   onSortChange: (mode: SortMode) => void
   onDownload: () => void
   onSave: () => void
+  onAutoClean?: () => void
   isSaving?: boolean
   canDownload: boolean
   canSave: boolean
+  canClean?: boolean
 }
 
 // 업로드 데모의 핵심 기능 블록만 한 화면에 조합한다.
@@ -48,9 +50,11 @@ function UploadWorkspace({
   onSortChange,
   onDownload,
   onSave,
+  onAutoClean,
   isSaving = false,
   canDownload,
   canSave,
+  canClean = false,
 }: UploadWorkspaceProps) {
   return (
     <section className="workspace-section panel fade-up" id="workflow">
@@ -82,11 +86,13 @@ function UploadWorkspace({
         totalCount={summary.total}
         canDownload={canDownload}
         canSave={canSave}
+        canClean={canClean}
         isSaving={isSaving}
         onFilterChange={onFilterChange}
         onSortChange={onSortChange}
         onDownload={onDownload}
         onSave={onSave}
+        onAutoClean={onAutoClean}
       />
 
       <UploadResultTable rows={rows} />
