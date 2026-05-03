@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import * as XLSX from "xlsx";
 import type { BulkUploadRow, RowStatus } from "@/pages/content-import/types/content-import";
+import { validateRowFields, applyCollectionValidation } from "../utils/validation";
 
 type ExcelCell = string | number | boolean | null | undefined;
 type ExcelRow = ExcelCell[];
@@ -8,11 +9,6 @@ type ExcelRow = ExcelCell[];
 /** 드라마 리뷰 엑셀 파싱 및 검증 훅 */
 export function useDramaExcelParsing() {
     const [isParsing, setIsParsing] = useState(false);
-
-    /** 특수문자나 잘못된 구분자 체크 */
-    const hasBadDelimiter = (value: string): boolean => {
-        return /\s\/\s/.test(value);
-    };
 
     const parseExcel = useCallback(
         async (file: File): Promise<BulkUploadRow[]> => {
@@ -34,7 +30,7 @@ export function useDramaExcelParsing() {
                             throw new Error("엑셀 시트를 찾을 수 없습니다.");
                         }
 
-                        // 헤더 포함 전체 데이터를 JSON 배열로 추출 (header: 1은 [ [row1_col1, row1_col2], [row2_col1, ... ] ] 형태)
+                        // 헤더 포함 전체 데이터를 JSON 배열로 추출
                         const rows = XLSX.utils.sheet_to_json<ExcelRow>(
                             worksheet,
                             { header: 1 },
@@ -46,18 +42,18 @@ export function useDramaExcelParsing() {
                             );
                         }
 
-                        const parsedRows: BulkUploadRow[] = [];
-                        let baseTitle = ""; // 파일의 기준이 되는 첫 번째 드라마 제목
+                        let parsedRows: BulkUploadRow[] = [];
+                        let baseTitle = "";
                         let lastTitle = "";
                         let lastDistributor = "";
                         let lastRating = "";
 
-                        // 첫 번째 행은 헤더라고 가정하고 인덱스 1부터 시작
+                        // 첫 번째 행(헤더) 제외하고 순회
                         for (let i = 1; i < rows.length; i++) {
                             const row = rows[i];
                             if (!row || row.length === 0) continue;
 
-                            // 데이터 추출 및 병합 셀 보정 (A, B, C열)
+                            // 1. 데이터 추출
                             const rawTitle = String(row[0] || "").trim();
                             const rawDistributor = String(row[1] || "").trim();
                             const rawRating = String(row[2] || "").trim();
@@ -66,60 +62,34 @@ export function useDramaExcelParsing() {
                             const runningTime = String(row[5] || "").trim();
                             const summary = String(row[6] || "").trim();
 
-                            // 기준 제목 설정 (첫 번째 유효한 제목)
+                            // 2. 기준 드라마 제목 설정
                             if (rawTitle && !baseTitle) {
                                 baseTitle = rawTitle;
                             }
 
-                            // 비어있으면 이전 행의 값을 사용 (Fill-down 로직)
+                            // 3. 병합 셀 처리 (Fill-down)
                             const title = rawTitle || lastTitle;
-                            const distributor =
-                                rawDistributor || lastDistributor;
+                            const distributor = rawDistributor || lastDistributor;
                             const rating = rawRating || lastRating;
 
-                            // 다음 행을 위해 현재 값 저장
+                            // 4. 다음 행을 위한 값 저장
                             if (rawTitle) lastTitle = rawTitle;
-                            if (rawDistributor)
-                                lastDistributor = rawDistributor;
+                            if (rawDistributor) lastDistributor = rawDistributor;
                             if (rawRating) lastRating = rawRating;
 
-                            // 모든 필드가 비어있는 행은 스킵
+                            // 빈 행 스킵
                             if (!title && !rawEpisode && !summary) continue;
 
-                            const errorMessages: string[] = [];
+                            // 5. 개별 필드 검증 (utils/validation 사용)
+                            const errorMessages = validateRowFields({
+                                title,
+                                baseTitle,
+                                rawEpisode,
+                                rating,
+                                summary,
+                            });
 
-                            // 검증 로직
-                            if (!title) {
-                                errorMessages.push("제목이 누락되었습니다.");
-                            } else if (baseTitle && title !== baseTitle) {
-                                // 제목 일관성 검증: 기준 제목과 다른 제목이 감지된 경우
-                                errorMessages.push(
-                                    `다른 드라마 제목이 감지되었습니다("${title}"). 한 파일에는 하나의 드라마만 포함되어야 합니다.`,
-                                );
-                            }
-
-                            if (!rawEpisode)
-                                errorMessages.push("회차가 누락되었습니다.");
-                            if (!summary || summary.length < 10)
-                                errorMessages.push(
-                                    "줄거리가 너무 짧거나 누락되었습니다.",
-                                );
-
-                            if (hasBadDelimiter(summary)) {
-                                errorMessages.push(
-                                    "줄거리에 잘못된 구분 기호( / )가 포함되어 있습니다.",
-                                );
-                            }
-
-                            const episode = parseInt(rawEpisode, 10);
-                            if (isNaN(episode)) {
-                                errorMessages.push(
-                                    "회차는 숫자 형식이어야 합니다.",
-                                );
-                            }
-
-                            const status: RowStatus =
-                                errorMessages.length > 0 ? "error" : "valid";
+                            const status: RowStatus = errorMessages.length > 0 ? "error" : "valid";
 
                             parsedRows.push({
                                 id: `row-${i}-${Date.now()}`,
@@ -127,7 +97,7 @@ export function useDramaExcelParsing() {
                                 title,
                                 distributor,
                                 rating,
-                                episode: isNaN(episode) ? 0 : episode,
+                                episode: rawEpisode, // 원본 문자열 그대로 저장
                                 subtitle,
                                 runningTime,
                                 summary,
@@ -136,7 +106,10 @@ export function useDramaExcelParsing() {
                             });
                         }
 
-                        resolve(parsedRows);
+                        // 6. 전체 데이터 검증 (회차 연속성 등)
+                        const finalRows = applyCollectionValidation(parsedRows);
+
+                        resolve(finalRows);
                     } catch (error) {
                         reject(error);
                     } finally {
