@@ -2,6 +2,9 @@ import { useState, useCallback } from "react";
 import * as XLSX from "xlsx";
 import type { BulkUploadRow, RowStatus } from "@/pages/content-import/types/content-import";
 
+type ExcelCell = string | number | boolean | null | undefined;
+type ExcelRow = ExcelCell[];
+
 /** 드라마 리뷰 엑셀 파싱 및 검증 훅 */
 export function useDramaExcelParsing() {
     const [isParsing, setIsParsing] = useState(false);
@@ -27,8 +30,12 @@ export function useDramaExcelParsing() {
                         const sheetName = workbook.SheetNames[0];
                         const worksheet = workbook.Sheets[sheetName];
 
+                        if (!worksheet) {
+                            throw new Error("엑셀 시트를 찾을 수 없습니다.");
+                        }
+
                         // 헤더 포함 전체 데이터를 JSON 배열로 추출 (header: 1은 [ [row1_col1, row1_col2], [row2_col1, ... ] ] 형태)
-                        const rows = XLSX.utils.sheet_to_json<any[]>(
+                        const rows = XLSX.utils.sheet_to_json<ExcelRow>(
                             worksheet,
                             { header: 1 },
                         );

@@ -4,7 +4,7 @@ interface PosterUploadSectionProps {
     posterUrl: string | null;
     isUploading: boolean;
     disabled?: boolean;
-    onUpload: (file: File) => Promise<any>;
+    onUpload: (file: File) => Promise<void>;
 }
 
 export function PosterUploadSection({

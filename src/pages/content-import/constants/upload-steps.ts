@@ -12,7 +12,7 @@ export const UPLOAD_STEPS: StepMeta[] = [
     {
         key: "validated",
         label: "유효성 검증",
-        detail: "방영일 및 중복 회차 체크",
+        detail: "중복 및 필수값 검증",
     },
     { key: "reviewed", label: "최종 리뷰", detail: "오탈자 및 에러 수정" },
     { key: "saved", label: "DB 저장", detail: "데이터 검토로 이동" },

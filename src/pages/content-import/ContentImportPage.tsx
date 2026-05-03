@@ -7,6 +7,7 @@ import { UploadProgressBar } from "@/pages/content-import/components/UploadProgr
 import { useModalStore } from "@/app/store/use-modal-store";
 import { useToastStore } from "@/app/store/use-toast-store";
 import { ADMIN_TASKS } from "@/app/project-meta";
+import { getErrorMessage } from "@/lib/error";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -112,10 +113,13 @@ function ContentImportPage() {
             } else {
                 toast.success("파일 파싱 및 데이터 검증이 완료되었습니다.");
             }
-        } catch (error: any) {
+        } catch (error) {
             console.error("Parsing error:", error);
             setCurrentStep("idle");
-            const errorMsg = error.message || "엑셀 파일 파싱 중 오류가 발생했습니다.";
+            const errorMsg = getErrorMessage(
+                error,
+                "엑셀 파일 파싱 중 오류가 발생했습니다.",
+            );
             setBatchError(errorMsg);
             toast.error(errorMsg);
             setRows([]);
@@ -164,9 +168,9 @@ function ContentImportPage() {
                 prev.map((row) => ({ ...row, status: "uploaded" })),
             );
             toast.success(`'${dramaTitle}' 에피소드 업로드가 완료되었습니다.`);
-        } catch (error: any) {
+        } catch (error) {
             console.error("Save error:", error);
-            toast.error(error.message || "DB 저장 중 오류가 발생했습니다.");
+            toast.error(getErrorMessage(error, "DB 저장 중 오류가 발생했습니다."));
         }
     };
 

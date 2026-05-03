@@ -123,7 +123,7 @@ const ReviewCurationPage: React.FC = () => {
           
           <CommentGrid 
             comments={filteredComments}
-            selectedId={selectedCommentId as any}
+            selectedId={selectedCommentId}
             onSelect={(c) => setSelectedCommentId(c.id)}
           />
           

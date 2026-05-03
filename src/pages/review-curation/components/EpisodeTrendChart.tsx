@@ -47,7 +47,7 @@ export const EpisodeTrendChart: React.FC<EpisodeTrendChartProps> = ({ data }) =>
                 borderRadius: '12px',
                 color: 'var(--ink-strong)'
               }}
-              formatter={(value: any) => [`${value}개`, '리뷰 수']}
+              formatter={(value) => [`${value}개`, '리뷰 수']}
               labelFormatter={(label) => `${label}화 에피소드`}
             />
             <Area

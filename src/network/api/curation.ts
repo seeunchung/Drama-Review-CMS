@@ -1,4 +1,8 @@
 import { supabase } from "@/lib/supabase";
+import type { DramaComment } from "@/pages/review-curation/types/review-curation";
+
+type CommentStatusField = "is_spoiler" | "is_best";
+export type CommentStatusUpdates = Partial<Pick<DramaComment, CommentStatusField>>;
 
 /**
  * 리뷰 큐레이션(댓글 관리) 관련 API
@@ -7,7 +11,7 @@ export const curationApi = {
     /**
      * 특정 드라마의 모든 댓글 조회
      */
-    getCommentsByDrama: async (dramaId: string) => {
+    getCommentsByDrama: async (dramaId: string): Promise<DramaComment[]> => {
         const { data, error } = await supabase
             .from("drama_comments")
             .select("*")
@@ -15,13 +19,16 @@ export const curationApi = {
             .order("created_at", { ascending: false });
 
         if (error) throw error;
-        return data;
+        return (data ?? []) as DramaComment[];
     },
 
     /**
      * 댓글 상태 업데이트 (스포일러, 베스트 등)
      */
-    updateCommentStatus: async (commentId: string, updates: Record<string, any>) => {
+    updateCommentStatus: async (
+        commentId: string,
+        updates: CommentStatusUpdates,
+    ): Promise<DramaComment> => {
         const { data, error } = await supabase
             .from("drama_comments")
             .update(updates)
@@ -30,6 +37,6 @@ export const curationApi = {
             .single();
 
         if (error) throw error;
-        return data;
+        return data as DramaComment;
     },
 };
