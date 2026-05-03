@@ -1,5 +1,24 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { reviewApi, type BatchStatus } from "../api/review";
+import { toError } from "@/lib/error";
+import {
+    reviewApi,
+    type BatchStatus,
+    type EpisodeRecord,
+    type ImportBatch,
+} from "../api/review";
+
+interface BatchDetailData {
+    batch: ImportBatch;
+    episodes: EpisodeRecord[];
+}
+
+export type ReviewActionResult =
+    | { success: true }
+    | { success: false; error: Error };
+
+export type PosterUploadResult =
+    | { success: true; publicUrl: string }
+    | { success: false; error: Error };
 
 /**
  * 배치 목록 조회를 위한 커스텀 훅
@@ -30,7 +49,7 @@ export function useBatchDetail(batchId: string | undefined) {
         isLoading, 
         error, 
         refetch 
-    } = useQuery({
+    } = useQuery<BatchDetailData>({
         queryKey: ["batch-detail", batchId],
         queryFn: async () => {
             if (!batchId) throw new Error("Batch ID is required");
@@ -56,12 +75,15 @@ export function useBatchDetail(batchId: string | undefined) {
         },
     });
 
-    const updateStatus = async (status: BatchStatus) => {
+    const updateStatus = async (status: BatchStatus): Promise<ReviewActionResult> => {
         try {
             await mutation.mutateAsync({ status });
             return { success: true };
-        } catch (err: any) {
-            return { success: false, error: err };
+        } catch (error) {
+            return {
+                success: false,
+                error: toError(error, "상태 업데이트에 실패했습니다."),
+            };
         }
     };
 
@@ -77,12 +99,15 @@ export function useBatchDetail(batchId: string | undefined) {
         },
     });
 
-    const uploadPoster = async (file: File) => {
+    const uploadPoster = async (file: File): Promise<PosterUploadResult> => {
         try {
-            await posterMutation.mutateAsync(file);
-            return { success: true };
-        } catch (err: any) {
-            return { success: false, error: err };
+            const { publicUrl } = await posterMutation.mutateAsync(file);
+            return { success: true, publicUrl };
+        } catch (error) {
+            return {
+                success: false,
+                error: toError(error, "포스터 업로드에 실패했습니다."),
+            };
         }
     };
 

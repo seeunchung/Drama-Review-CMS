@@ -13,7 +13,7 @@ export interface BulkUploadRow {
   title: string
   distributor: string // 방영 플랫폼 (넷플릭스, Youku 등)
   rating: string // 관람 등급
-  episode: number // 회차
+  episode: string // 회차 (사용자 입력 원본 유지를 위해 string 사용)
   subtitle: string // 부제목
   runningTime: string // 러닝타임
   summary: string // 줄거리

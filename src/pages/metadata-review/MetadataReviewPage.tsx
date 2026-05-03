@@ -24,7 +24,7 @@ function MetadataReviewPage() {
     return (
         <main className="project-page review-list-page">
             <ProjectHeader
-                title={pageMeta?.title || "메타 데이터 검토"}
+                title={pageMeta?.title || "메타데이터 검수"}
                 description={pageMeta?.description || ""}
                 tags={pageMeta?.tags || []}
             />

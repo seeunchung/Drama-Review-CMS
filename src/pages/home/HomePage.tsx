@@ -14,6 +14,7 @@ import { useHomeData } from "@/network/hooks/use-home";
 import { debugApi } from "@/network/api/debug";
 import { useToastStore } from "@/app/store/use-toast-store";
 import { useModalStore } from "@/app/store/use-modal-store";
+import { getErrorMessage } from "@/lib/error";
 
 // 시간을 사람이 읽기 좋은 형식으로 변환
 function formatTime(dateString: string) {
@@ -54,7 +55,7 @@ function StatWidget({
     );
 }
 
-// 중드 리뷰 CMS 대시보드
+// 중드 달글 CMS 대시보드
 function HomePage() {
     const { activities, chartData, reviewCounts, isLoading, refresh } = useHomeData();
     const toast = useToastStore();
@@ -69,8 +70,8 @@ function HomePage() {
             await debugApi.seedAllData();
             toast.success("데이터 시딩 및 정합성 검증이 완료되었습니다.");
             refresh(); 
-        } catch (error: any) {
-            toast.error(`시딩 실패: ${error.message}`);
+        } catch (error) {
+            toast.error(`시딩 실패: ${getErrorMessage(error, "알 수 없는 오류")}`);
         }
     };
 
@@ -81,12 +82,12 @@ function HomePage() {
             <section className="dashboard-hero">
                 <div className="dashboard-title-group">
                     <span className="dashboard-kicker">
-                        C-Drama Review Admin
+                        C-Drama Review Ops CMS
                     </span>
-                    <h1>중국드라마 리뷰 운영 시스템</h1>
+                    <h1>중국 드라마 리뷰 사이트 운영 센터</h1>
                     <p>
-                        중국 드라마 콘텐츠 등록, 회차 관리 및 팬 리뷰 플랫폼
-                        데이터를 관리합니다.
+                        드라마 메타데이터 등록부터 회차 검수, 포스터 관리,
+                        베스트 리뷰 큐레이션까지 한곳에서 운영합니다.
                     </p>
                 </div>
                 <div className="dashboard-actions">

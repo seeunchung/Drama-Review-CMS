@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { HOME_PATH } from "@/app/paths";
+import { getErrorMessage } from "@/lib/error";
 import "./styles.css";
 
 export const LoginPage = () => {
@@ -49,8 +50,8 @@ export const LoginPage = () => {
             if (error) throw error;
 
             navigate(from, { replace: true });
-        } catch (err: any) {
-            setError(err.message || "로그인에 실패했습니다.");
+        } catch (error) {
+            setError(getErrorMessage(error, "로그인에 실패했습니다."));
         } finally {
             setLoading(false);
         }
@@ -60,9 +61,9 @@ export const LoginPage = () => {
         <div className="login-container">
             <div className="login-card panel">
                 <div className="login-header">
-                    <h1 className="login-title">Drama Admin CMS</h1>
+                    <h1 className="login-title">중드 달글 CMS</h1>
                     <p className="login-subtitle">
-                        워크스페이스에 접근하기 위해 로그인하세요.
+                        중국 드라마 리뷰 사이트 운영 워크스페이스에 로그인하세요.
                     </p>
                 </div>
 

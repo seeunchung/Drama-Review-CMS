@@ -3,6 +3,29 @@ import { STATUS_LABELS } from "@/app/project-meta";
 
 export type BatchStatus = "pending" | "completed" | "failed";
 
+export interface ImportBatch {
+    id: string;
+    created_at: string;
+    drama_title: string;
+    file_name: string;
+    status: BatchStatus;
+    poster_url: string | null;
+}
+
+export interface EpisodeRecord {
+    id: number;
+    batch_id: string;
+    seq: number;
+    title: string;
+    distributor: string;
+    rating: string;
+    episode: number;
+    subtitle: string | null;
+    running_time: string;
+    summary: string;
+    status: string;
+}
+
 /**
  * 메타데이터 검토 관련 API
  */
@@ -10,20 +33,20 @@ export const reviewApi = {
     /**
      * 모든 배치(드라마) 목록 조회
      */
-    getBatches: async () => {
+    getBatches: async (): Promise<ImportBatch[]> => {
         const { data, error } = await supabase
             .from("import_batches")
             .select("*")
             .order("created_at", { ascending: false });
 
         if (error) throw error;
-        return data;
+        return (data ?? []) as ImportBatch[];
     },
 
     /**
      * 특정 배치의 상세 정보 조회
      */
-    getBatchById: async (batchId: string) => {
+    getBatchById: async (batchId: string): Promise<ImportBatch> => {
         const { data, error } = await supabase
             .from("import_batches")
             .select("*")
@@ -31,13 +54,13 @@ export const reviewApi = {
             .single();
 
         if (error) throw error;
-        return data;
+        return data as ImportBatch;
     },
 
     /**
      * 특정 배치에 속한 모든 에피소드 조회
      */
-    getEpisodesByBatch: async (batchId: string) => {
+    getEpisodesByBatch: async (batchId: string): Promise<EpisodeRecord[]> => {
         const { data, error } = await supabase
             .from("episodes")
             .select("*")
@@ -45,13 +68,17 @@ export const reviewApi = {
             .order("seq", { ascending: true });
 
         if (error) throw error;
-        return data;
+        return (data ?? []) as EpisodeRecord[];
     },
 
     /**
      * 배치의 상태를 업데이트하고 활동 로그를 기록
      */
-    updateBatchStatus: async (batchId: string, dramaTitle: string, status: BatchStatus) => {
+    updateBatchStatus: async (
+        batchId: string,
+        dramaTitle: string,
+        status: BatchStatus,
+    ) => {
         // 1. 배치 상태 업데이트
         const { error: batchError } = await supabase
             .from("import_batches")
@@ -79,7 +106,10 @@ export const reviewApi = {
     /**
      * 드라마 포스터 업로드
      */
-    uploadPoster: async (batchId: string, file: File) => {
+    uploadPoster: async (
+        batchId: string,
+        file: File,
+    ): Promise<{ publicUrl: string }> => {
         // 1. 기존 포스터 정보 조회 (삭제를 위해)
         const { data: currentBatch } = await supabase
             .from("import_batches")
@@ -104,7 +134,7 @@ export const reviewApi = {
             }
         }
 
-        const fileExt = file.name.split('.').pop();
+        const fileExt = file.name.split('.').pop() ?? "jpg";
         const fileName = `${batchId}-${Math.random()}.${fileExt}`;
         const filePath = `${fileName}`;
 

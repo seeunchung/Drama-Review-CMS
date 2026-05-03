@@ -1,4 +1,7 @@
-import type { FilterMode, SortMode } from "@/pages/content-import/types/content-import";
+import type {
+    FilterMode,
+    SortMode,
+} from "@/pages/content-import/types/content-import";
 
 interface UploadFilterBarProps {
     filterMode: FilterMode;
@@ -7,11 +10,13 @@ interface UploadFilterBarProps {
     totalCount: number;
     canDownload: boolean;
     canSave: boolean;
+    canClean?: boolean;
     isSaving?: boolean;
     onFilterChange: (mode: FilterMode) => void;
     onSortChange: (mode: SortMode) => void;
     onDownload: () => void;
     onSave: () => void;
+    onAutoClean?: () => void;
 }
 
 // 테이블 필터, 정렬, 액션 버튼을 한 줄에 묶는다.
@@ -22,11 +27,13 @@ function UploadFilterBar({
     totalCount,
     canDownload,
     canSave,
+    canClean = false,
     isSaving = false,
     onFilterChange,
     onSortChange,
     onDownload,
     onSave,
+    onAutoClean,
 }: UploadFilterBarProps) {
     return (
         <div className="upload-filter-bar">
@@ -72,6 +79,15 @@ function UploadFilterBar({
                     onClick={onDownload}
                 >
                     CSV 다운로드
+                </button>
+                <button
+                    className="filter-button filter-button-secondary"
+                    type="button"
+                    title="등급과 회차에서 숫자만 추출합니다"
+                    disabled={!canClean}
+                    onClick={onAutoClean}
+                >
+                    숫자 자동 변환
                 </button>
                 <button
                     className="filter-button filter-button-primary"

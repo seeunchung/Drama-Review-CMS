@@ -46,7 +46,7 @@ export function UploadResultTable({ rows }: Props) {
                                     </div>
                                 </td>
                                 <td style={{ textAlign: "center" }}>
-                                    {row.episode}화
+                                    {row.episode}
                                 </td>
                                 <td>{row.subtitle}</td>
                                 <td className="cell-summary upload-result-table">

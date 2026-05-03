@@ -1,8 +1,8 @@
 {
-    "name": "c-drama-reiview-admin-cms",
+    "name": "c-drama-review-ops-cms",
     "private": true,
     "version": "0.1.0",
-    "description": "Professional Content Management System for Movie & Drama Metadata Registration",
+    "description": "CMS for Chinese drama review site operations",
     "type": "module",
     "scripts": {
         "dev": "vite",

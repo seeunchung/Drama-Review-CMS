@@ -8,6 +8,20 @@ export interface ActivityLog {
     user_name: string;
 }
 
+interface DramaCommentCountRow {
+    count: number | null;
+}
+
+interface ReviewStatsRow {
+    drama_title: string;
+    drama_comments: DramaCommentCountRow[] | null;
+}
+
+export interface ReviewStat {
+    name: string;
+    count: number;
+}
+
 /**
  * 홈페이지 대시보드 관련 API
  */
@@ -29,7 +43,7 @@ export const homeApi = {
     /**
      * 드라마별 리뷰 개수 통계 조회 (Top 5)
      */
-    getReviewStats: async () => {
+    getReviewStats: async (): Promise<ReviewStat[]> => {
         const { data, error } = await supabase
             .from("import_batches")
             .select(`
@@ -41,10 +55,12 @@ export const homeApi = {
 
         if (error) throw error;
 
-        const stats = data
-            .map((item: any) => ({
+        const stats = ((data ?? []) as ReviewStatsRow[])
+            .map((item) => ({
                 name: item.drama_title,
-                count: item.drama_comments[0]?.count || 0
+                count: Array.isArray(item.drama_comments)
+                    ? item.drama_comments[0]?.count || 0
+                    : 0,
             }))
             .sort((a, b) => b.count - a.count)
             .slice(0, 5);

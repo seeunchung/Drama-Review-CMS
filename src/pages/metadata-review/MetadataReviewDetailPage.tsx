@@ -83,9 +83,9 @@ function MetadataReviewDetailPage() {
     return (
         <main className="project-page review-detail-page">
             <ProjectHeader
-                title={`${pageMeta?.title || "메타 데이터 검토"}: ${batch.drama_title}`}
-                description={`${batch.file_name}을(를) 통해 업로드된 메타데이터를 검토합니다.`}
-                tags={["상세 검토"]}
+                title={`${pageMeta?.title || "메타데이터 검수"}: ${batch.drama_title}`}
+                description={`${batch.file_name}을(를) 통해 업로드된 회차 메타데이터를 검수합니다.`}
+                tags={["상세 검수"]}
             />
 
             <div className="detail-toolbar panel">
