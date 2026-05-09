@@ -160,4 +160,53 @@ export const reviewApi = {
 
         return { publicUrl };
     },
+
+    /**
+     * 특정 배치(드라마)와 연관된 모든 데이터 삭제
+     */
+    deleteBatch: async (
+        batchId: string,
+        dramaTitle: string,
+    ): Promise<{ success: true }> => {
+        // 1. 포스터 삭제를 위해 정보 조회
+        const { data: batch } = await supabase
+            .from("import_batches")
+            .select("poster_url")
+            .eq("id", batchId)
+            .single();
+
+        // 2. 포스터 파일 삭제
+        if (batch?.poster_url) {
+            try {
+                const urlParts = batch.poster_url.split("/");
+                const fileName = urlParts[urlParts.length - 1];
+                if (fileName) {
+                    await supabase.storage.from("posters").remove([fileName]);
+                }
+            } catch (error) {
+                console.warn("포스터 파일 삭제 실패 (무시하고 진행):", error);
+            }
+        }
+
+        // 4. 배치 삭제 (episodes, drama_comments는 CASCADE 설정에 의해 자동 삭제됨)
+        const { error: deleteError } = await supabase
+            .from("import_batches")
+            .delete()
+            .eq("id", batchId);
+
+        if (deleteError) throw deleteError;
+
+        // 5. 삭제 활동 로그 기록 (batch_id는 삭제되었으므로 null로 기록됨)
+        const { error: logError } = await supabase.from("activities").insert({
+            type: "review",
+            message: `'${dramaTitle}' 드라마 및 관련 데이터가 삭제되었습니다.`,
+            batch_id: null, // 데이터가 이미 삭제되었으므로 null 처리
+        });
+
+        if (logError) {
+            console.warn("삭제 활동 로그 기록 중 오류 발생:", logError);
+        }
+
+        return { success: true };
+    },
 };

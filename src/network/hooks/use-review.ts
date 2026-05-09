@@ -111,6 +111,31 @@ export function useBatchDetail(batchId: string | undefined) {
         }
     };
 
+    // 4. 드라마 삭제 Mutation
+    const deleteMutation = useMutation({
+        mutationFn: () => {
+            if (!batchId || !data?.batch) throw new Error("Required data missing");
+            return reviewApi.deleteBatch(batchId, data.batch.drama_title);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["batches"] });
+            // 삭제된 상세 정보는 더 이상 유효하지 않으므로 캐시 제거
+            queryClient.removeQueries({ queryKey: ["batch-detail", batchId] });
+        },
+    });
+
+    const deleteBatch = async (): Promise<ReviewActionResult> => {
+        try {
+            await deleteMutation.mutateAsync();
+            return { success: true };
+        } catch (error) {
+            return {
+                success: false,
+                error: toError(error, "드라마 삭제에 실패했습니다."),
+            };
+        }
+    };
+
     return { 
         batch: data?.batch || null, 
         episodes: data?.episodes || [], 
@@ -118,7 +143,9 @@ export function useBatchDetail(batchId: string | undefined) {
         error, 
         updateStatus, 
         uploadPoster,
+        deleteBatch,
         isUploadingPoster: posterMutation.isPending,
+        isDeleting: deleteMutation.isPending,
         refresh: refetch 
     };
 }
