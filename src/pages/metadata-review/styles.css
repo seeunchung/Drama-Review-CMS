@@ -168,7 +168,34 @@
     color: var(--ink-strong);
 }
 
-.btn-primary:disabled, .btn-danger:disabled {
+.btn-text {
+    background: transparent;
+    border: none;
+    padding: 10px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--ink-soft);
+    transition: all 0.2s;
+    border-radius: 8px;
+}
+
+.btn-text:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--ink-strong);
+}
+
+.btn-text.is-danger {
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-text.is-danger:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #f87171;
+}
+
+.btn-primary:disabled, .btn-danger:disabled, .btn-text:disabled {
     opacity: 0.4;
     cursor: not-allowed;
 }

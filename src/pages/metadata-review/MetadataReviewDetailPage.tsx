@@ -19,13 +19,15 @@ function MetadataReviewDetailPage() {
         updateStatus,
         uploadPoster,
         isUploadingPoster,
+        deleteBatch,
+        isDeleting,
     } = useBatchDetail(batchId);
 
     const { confirm: modalConfirm } = useModalStore();
     const toast = useToastStore();
 
     // 메타데이터 정보 추출
-    const pageMeta = ADMIN_TASKS.find(t => t.id === "metadata-review");
+    const pageMeta = ADMIN_TASKS.find((t) => t.id === "metadata-review");
 
     if (isLoading)
         return <div className="loading-state">데이터를 불러오는 중...</div>;
@@ -80,6 +82,22 @@ function MetadataReviewDetailPage() {
         }
     };
 
+    const handleDelete = async () => {
+        const isConfirmed = await modalConfirm(
+            `'${batch.drama_title}' 드라마의 모든 데이터를 삭제하시겠습니까?\n이 작업은 되돌릴 수 없으며, 에피소드 및 리뷰 데이터가 모두 삭제됩니다.`,
+        );
+
+        if (isConfirmed) {
+            const result = await deleteBatch();
+            if (result.success) {
+                toast.success("드라마가 성공적으로 삭제되었습니다.");
+                navigate(ROUTES["metadata-review"]);
+            } else {
+                toast.error(`삭제 실패: ${result.error?.message}`);
+            }
+        }
+    };
+
     return (
         <main className="project-page review-detail-page">
             <ProjectHeader
@@ -98,20 +116,29 @@ function MetadataReviewDetailPage() {
                 <div className="action-group">
                     <button
                         className="btn-outline"
+                        disabled={isDeleting}
                         onClick={() => navigate(ROUTES["metadata-review"])}
                     >
                         목록으로
                     </button>
                     <button
+                        className="btn-text is-danger"
+                        disabled={isDeleting}
+                        onClick={handleDelete}
+                        style={{ marginRight: "auto" }}
+                    >
+                        {isDeleting ? "삭제 중..." : "드라마 삭제"}
+                    </button>
+                    <button
                         className="btn-danger"
-                        disabled={batch.status === "failed"}
+                        disabled={batch.status === "failed" || isDeleting}
                         onClick={() => handleStatusChange("failed")}
                     >
                         승인 거절
                     </button>
                     <button
                         className="btn-primary"
-                        disabled={batch.status === "completed"}
+                        disabled={batch.status === "completed" || isDeleting}
                         onClick={() => handleStatusChange("completed")}
                     >
                         최종 승인
