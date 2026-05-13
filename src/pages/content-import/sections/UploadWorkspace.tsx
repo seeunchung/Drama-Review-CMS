@@ -1,16 +1,18 @@
-import { UploadDropzone } from '@/pages/content-import/components/UploadDropzone'
-import { SelectedFileBar } from '@/pages/content-import/components/SelectedFileBar'
-import { UploadFilterBar } from '@/pages/content-import/components/UploadFilterBar'
-import { UploadProgressStepper } from '@/pages/content-import/components/UploadProgressStepper'
-import { UploadResultTable } from '@/pages/content-import/components/UploadResultTable'
-import { UploadStatsCards } from '@/pages/content-import/components/UploadStatsCards'
+import {
+  UploadDropzone,
+  SelectedFileBar,
+  UploadFilterBar,
+  UploadProgressStepper,
+  UploadResultTable,
+  UploadStatsCards
+} from '../components'
 import type {
   BulkUploadRow,
   BulkUploadSummary,
   DemoSelectedFile,
   FilterMode,
   SortMode,
-} from '@/pages/content-import/types/content-import'
+} from '../types'
 
 interface UploadWorkspaceProps {
   headingKicker?: string

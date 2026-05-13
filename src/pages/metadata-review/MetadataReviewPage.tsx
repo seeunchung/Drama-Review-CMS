@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
-import { useBatches } from "@/network/hooks/use-review";
+import { useBatches } from "@/network/hooks";
 import { ROUTES } from "@/app/paths";
 import { ADMIN_TASKS, STATUS_LABELS } from "@/app/project-meta";
 import "./styles.css";

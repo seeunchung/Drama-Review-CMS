@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { uploadApi } from "../api/upload";
+import { uploadApi } from "../api";
 import type { BulkUploadRow } from "@/pages/content-import/types/content-import";
 
 interface UploadProgress {
