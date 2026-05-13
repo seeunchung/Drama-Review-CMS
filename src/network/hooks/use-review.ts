@@ -5,7 +5,7 @@ import {
     type BatchStatus,
     type EpisodeRecord,
     type ImportBatch,
-} from "../api/review";
+} from "../api";
 
 interface BatchDetailData {
     batch: ImportBatch;

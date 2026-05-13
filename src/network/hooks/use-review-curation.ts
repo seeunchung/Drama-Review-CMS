@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { reviewApi, type ImportBatch } from "../api/review";
-import { curationApi, type CommentStatusUpdates } from "../api/curation";
+import { reviewApi, curationApi, type ImportBatch, type CommentStatusUpdates } from "../api";
 import { DramaComment } from "@/pages/review-curation/types/review-curation";
-import { useModalStore } from "@/app/store/use-modal-store";
+import { useModalStore } from "@/app/store";
 
 export function useReviewCuration() {
   const queryClient = useQueryClient();

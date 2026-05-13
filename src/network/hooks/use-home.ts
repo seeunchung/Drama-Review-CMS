@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { homeApi } from "../api/home";
+import { homeApi } from "../api";
 
 /**
  * 홈페이지 대시보드 데이터를 관리하는 훅

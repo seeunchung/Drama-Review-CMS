@@ -1,11 +1,10 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
-import { useBatchDetail } from "@/network/hooks/use-review";
-import { useModalStore } from "@/app/store/use-modal-store";
-import { useToastStore } from "@/app/store/use-toast-store";
+import { useBatchDetail } from "@/network/hooks";
+import { useModalStore, useToastStore } from "@/app/store";
 import { ROUTES } from "@/app/paths";
 import { ADMIN_TASKS, STATUS_LABELS } from "@/app/project-meta";
-import { PosterUploadSection } from "./components/PosterUploadSection";
+import { PosterUploadSection } from "./components";
 import "./styles.css";
 
 function MetadataReviewDetailPage() {

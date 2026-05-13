@@ -1,13 +1,15 @@
 import React, { useState, useMemo } from "react";
 import { ProjectHeader } from "@/components/layout";
-import { ReviewStatsCards } from "./components/ReviewStatsCards";
-import { EpisodeFilter } from "./components/EpisodeFilter";
-import { CommentGrid } from "./components/CommentGrid";
-import { ActionPanel } from "./components/ActionPanel";
-import { MobilePreviewModal } from "./components/MobilePreviewModal";
-import { EpisodeTrendChart } from "./components/EpisodeTrendChart";
-import { useReviewCuration } from "@/network/hooks/use-review-curation";
-import { useQueryModal } from "@/app/hooks/use-query-modal";
+import {
+  ReviewStatsCards,
+  EpisodeFilter,
+  CommentGrid,
+  ActionPanel,
+  MobilePreviewModal,
+  EpisodeTrendChart
+} from "./components";
+import { useReviewCuration } from "@/network/hooks";
+import { useQueryModal } from "@/app/hooks";
 import { ADMIN_TASKS } from "@/app/project-meta";
 import "./styles.css";
 

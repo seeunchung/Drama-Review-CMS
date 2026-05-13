@@ -10,10 +10,9 @@ import {
     Cell
 } from "recharts";
 import { ADMIN_TASKS } from "@/app/project-meta";
-import { useHomeData } from "@/network/hooks/use-home";
-import { debugApi } from "@/network/api/debug";
-import { useToastStore } from "@/app/store/use-toast-store";
-import { useModalStore } from "@/app/store/use-modal-store";
+import { useHomeData } from "@/network/hooks";
+import { debugApi } from "@/network/api";
+import { useToastStore, useModalStore } from "@/app/store";
 import { getErrorMessage } from "@/lib/error";
 
 // 시간을 사람이 읽기 좋은 형식으로 변환

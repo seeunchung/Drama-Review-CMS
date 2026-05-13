@@ -1,12 +1,10 @@
 import { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { HOME_PATH, ROUTES } from "@/app/paths";
-import { PageShell, SiteHeader } from "@/components/layout";
-import { AuthGuard } from "@/components/layout/AuthGuard";
-import { useAuthStore } from "@/app/store/use-auth-store";
-import { useThemeStore } from "@/app/store/use-theme-store";
-import { GlobalModal } from "@/components/common/Modal/GlobalModal";
-import { GlobalToast } from "@/components/common/Toast/GlobalToast";
+import { AuthGuard, PageShell, SiteHeader } from "@/components/layout";
+import { useAuthStore, useThemeStore } from "@/app/store";
+import { GlobalModal } from "@/components/common";
+import { GlobalToast } from "@/components/common";
 import { HomePage } from "@/pages/home";
 import { LoginPage } from "@/pages/auth";
 import { ContentImportPage } from "@/pages/content-import";
