@@ -1,19 +1,16 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ProjectHeader } from "@/components/layout";
 import { useDramaExcelParsing } from "./hooks";
 import { useBulkUpload } from "@/network/hooks";
 import { UploadWorkspace } from "./sections/UploadWorkspace";
 import { UploadProgressBar } from "./components";
-import { useModalStore, useToastStore } from "@/app/store";
+import { useModalStore, useToastStore, useUploadStore } from "@/app/store";
 import { ADMIN_TASKS } from "@/app/project-meta";
 import { getErrorMessage } from "@/lib/error";
 import { extractNumbers, isNumeric, validateRowFields, applyCollectionValidation } from "./utils";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
-    DemoSelectedFile,
-    FilterMode,
-    SortMode,
 } from "./types";
 import "./styles.css";
 
@@ -69,15 +66,20 @@ function downloadRowsAsCsv(rows: BulkUploadRow[]) {
 }
 
 function ContentImportPage() {
-    const [selectedFile, setSelectedFile] = useState<DemoSelectedFile | null>(
-        null,
-    );
-    const [rows, setRows] = useState<BulkUploadRow[]>([]);
-    const [filterMode, setFilterMode] = useState<FilterMode>("all");
-    const [sortMode, setSortMode] = useState<SortMode>("seq");
-    const [currentStep, setCurrentStep] =
-        useState<BulkUploadSummary["currentStep"]>("idle");
-    const [batchError, setBatchError] = useState<string | null>(null);
+    const {
+        selectedFile,
+        setSelectedFile,
+        rows,
+        setRows,
+        filterMode,
+        setFilterMode,
+        sortMode,
+        setSortMode,
+        currentStep,
+        setCurrentStep,
+        batchError,
+        setBatchError,
+    } = useUploadStore();
 
     const { parseExcel } = useDramaExcelParsing();
     const { upload, uploadProgress, resetProgress } = useBulkUpload();
