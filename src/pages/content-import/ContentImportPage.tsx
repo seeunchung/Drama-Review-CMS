@@ -7,7 +7,14 @@ import { UploadProgressBar } from "./components";
 import { useModalStore, useToastStore, useUploadStore } from "@/app/store";
 import { ADMIN_TASKS } from "@/app/project-meta";
 import { getErrorMessage } from "@/lib/error";
-import { extractNumbers, isNumeric, validateRowFields, applyCollectionValidation } from "./utils";
+import {
+    extractNumbers,
+    isNumeric,
+    validateRowFields,
+    applyCollectionValidation,
+    normalizeRunningTime,
+    isValidRunningTime,
+} from "./utils";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -89,24 +96,28 @@ function ContentImportPage() {
     // 메타데이터 정보 추출
     const pageMeta = ADMIN_TASKS.find(t => t.id === "content-import");
 
-    //숫자 자동 변환
+    //데이터 자동 변환
     const handleAutoClean = () => {
         if (rows.length === 0) return;
 
         // 1. 정제가 필요한 행이 있는지 먼저 확인
         const needsCleaning = rows.some(
-            (row) => !isNumeric(row.episode) || (row.rating && !isNumeric(row.rating))
+            (row) => 
+                !isNumeric(row.episode) || 
+                (row.rating && !isNumeric(row.rating)) ||
+                (row.runningTime && !isValidRunningTime(row.runningTime))
         );
 
         if (!needsCleaning) {
-            toast.success("변환할 데이터가 없습니다. (모든 숫자가 올바른 형식입니다)");
+            toast.success("변환할 데이터가 없습니다. (모든 데이터가 올바른 형식입니다)");
             return;
         }
 
-        // 2. 숫자 추출 및 개별 행 검증 다시 수행
+        // 2. 데이터 추출/정규화 및 개별 행 검증 다시 수행
         let updatedRows = rows.map((row) => {
             const cleanedEpisode = extractNumbers(row.episode);
             const cleanedRating = extractNumbers(row.rating);
+            const cleanedRunningTime = normalizeRunningTime(row.runningTime);
 
             const errorMessages = validateRowFields({
                 title: row.title,
@@ -114,22 +125,24 @@ function ContentImportPage() {
                 rawEpisode: cleanedEpisode,
                 rating: cleanedRating,
                 summary: row.summary,
+                runningTime: cleanedRunningTime,
             });
 
             return {
                 ...row,
                 episode: cleanedEpisode,
                 rating: cleanedRating,
+                runningTime: cleanedRunningTime,
                 status: (errorMessages.length > 0 ? "error" : "valid") as any,
                 errorMessages,
             };
         });
 
-        // 2. 전체 컬렉션 검증 다시 수행
+        // 3. 전체 컬렉션 검증 다시 수행
         updatedRows = applyCollectionValidation(updatedRows);
 
         setRows(updatedRows);
-        toast.success("등급 및 회차 데이터의 숫자를 자동으로 정제했습니다.");
+        toast.success("등급, 회차, 러닝타임 데이터를 자동으로 정제했습니다.");
     };
 
     const handleFileSelect = async (file: File) => {

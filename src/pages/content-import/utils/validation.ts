@@ -16,6 +16,46 @@ export const hasBadDelimiter = (value: string): boolean => {
     return /\s\/\s/.test(value);
 };
 
+/** 러닝타임 형식을 '00:00'으로 정규화 */
+export const normalizeRunningTime = (value: string): string => {
+    if (!value) return "";
+    
+    // 1. 숫자만 추출
+    const digits = value.replace(/[^0-9]/g, "");
+    
+    // 2. 이미 00:00 형식인 경우 (숫자 4개이고 원본에 : 가 있는 경우 등)
+    if (/^\d{2}:\d{2}$/.test(value)) return value;
+
+    // 3. 한글 '분', '초' 처리 또는 구분자 처리
+    // 예: "12분 30초", "12:30", "12 30"
+    const parts = value.split(/[^0-9]+/).filter(Boolean);
+    
+    if (parts.length >= 2) {
+        const mm = parts[0].padStart(2, "0").slice(-2);
+        const ss = parts[1].padStart(2, "0").slice(-2);
+        return `${mm}:${ss}`;
+    }
+    
+    // 4. 숫자만 들어온 경우 (예: "45" -> "45:00", "1230" -> "12:30")
+    if (digits.length === 1 || digits.length === 2) {
+        return `${digits.padStart(2, "0")}:00`;
+    } else if (digits.length === 3) {
+        // "123" -> "01:23"
+        return `0${digits.slice(0, 1)}:${digits.slice(1)}`;
+    } else if (digits.length === 4) {
+        // "1230" -> "12:30"
+        return `${digits.slice(0, 2)}:${digits.slice(2)}`;
+    }
+
+    return value; // 변환 불가 시 원본 반환
+};
+
+/** 문자열이 '00:00' 형식의 러닝타임 패턴인지 확인 */
+export const isValidRunningTime = (value: string): boolean => {
+    if (!value) return false;
+    return /^\d{2}:\d{2}$/.test(value);
+};
+
 /** 개별 행(Row)에 대한 유효성 검사 */
 export const validateRowFields = (params: {
     title: string;
@@ -23,8 +63,9 @@ export const validateRowFields = (params: {
     rawEpisode: string;
     rating: string;
     summary: string;
+    runningTime?: string;
 }): string[] => {
-    const { title, baseTitle, rawEpisode, rating, summary } = params;
+    const { title, baseTitle, rawEpisode, rating, summary, runningTime } = params;
     const errors: string[] = [];
 
     if (!title) {
@@ -41,6 +82,10 @@ export const validateRowFields = (params: {
 
     if (rating && !isNumeric(rating)) {
         errors.push(`등급 형식 오류: 숫자만 입력 가능합니다. (입력값: "${rating}")`);
+    }
+
+    if (runningTime && !isValidRunningTime(runningTime)) {
+        errors.push(`러닝타임 형식 오류: "00:00" 형식이 필요합니다. (입력값: "${runningTime}")`);
     }
 
     if (!summary || summary.length < 10) {

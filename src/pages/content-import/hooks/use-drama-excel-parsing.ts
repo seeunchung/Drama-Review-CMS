@@ -87,6 +87,7 @@ export function useDramaExcelParsing() {
                                 rawEpisode,
                                 rating,
                                 summary,
+                                runningTime,
                             });
 
                             const status: RowStatus = errorMessages.length > 0 ? "error" : "valid";
