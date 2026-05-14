@@ -142,7 +142,7 @@ function ContentImportPage() {
         updatedRows = applyCollectionValidation(updatedRows);
 
         setRows(updatedRows);
-        toast.success("등급, 회차, 러닝타임 데이터를 자동으로 정제했습니다.");
+        toast.success("자동변환되었습니다.");
     };
 
     const handleFileSelect = async (file: File) => {
@@ -167,7 +167,7 @@ function ContentImportPage() {
             
             const errorCount = parsedData.filter(r => r.status === 'error').length;
             if (errorCount > 0) {
-                toast.error(`데이터 검증 결과 ${errorCount}건의 오류가 발견되었습니다.`);
+                toast.error(`데이터 검증 결과 ${errorCount}건의 오류가 발견되었습니다. 자동변환 버튼 클릭 또는 엑셀파일을 수정하세요`);
             } else {
                 toast.success("파일 파싱 및 데이터 검증이 완료되었습니다.");
             }
@@ -218,14 +218,12 @@ function ContentImportPage() {
                 rows: rows,
                 dramaTitle: dramaTitle,
                 fileName: fileName,
-                chunkSize: 10,
             });
 
             setCurrentStep("saved");
             setRows((prev) =>
                 prev.map((row) => ({ ...row, status: "uploaded" })),
             );
-            toast.success(`'${dramaTitle}' 에피소드 업로드가 완료되었습니다.`);
         } catch (error) {
             console.error("Save error:", error);
             toast.error(getErrorMessage(error, "DB 저장 중 오류가 발생했습니다."));
@@ -309,9 +307,6 @@ function ContentImportPage() {
             {(isUploading || uploadProgress.progress > 0) && (
                 <UploadProgressBar
                     progress={uploadProgress.progress}
-                    currentChunk={uploadProgress.currentChunk}
-                    totalChunks={uploadProgress.totalChunks}
-                    isUploading={isUploading}
                     onClose={resetProgress}
                 />
             )}

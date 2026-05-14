@@ -28,52 +28,37 @@ export function useBulkUpload() {
             rows,
             dramaTitle,
             fileName,
-            chunkSize = 10,
         }: {
             rows: BulkUploadRow[];
             dramaTitle: string;
             fileName: string;
-            chunkSize?: number;
         }) => {
             const validRows = rows.filter((row) => row.status === "valid");
             if (validRows.length === 0) return;
 
-            // 1. 배치 생성
+            // 1. 배치 생성 (기본 status: pending)
             const batchData = await uploadApi.createBatch(dramaTitle, fileName);
             const batchId = batchData.id;
 
-            // 2. 데이터를 청크 단위로 나누기
-            const chunks = [];
-            for (let i = 0; i < validRows.length; i += chunkSize) {
-                chunks.push(validRows.slice(i, i + chunkSize));
-            }
-
             setUploadProgress({
-                totalChunks: chunks.length,
+                totalChunks: 1,
                 currentChunk: 0,
                 isUploading: true,
                 progress: 0,
             });
 
-            // 3. 순차적으로 업로드 진행
-            for (let i = 0; i < chunks.length; i++) {
-                const chunk = chunks[i];
+            // 2. 단일 트랜잭션으로 대량 삽입
+            await uploadApi.insertEpisodes(batchId, validRows);
 
-                await uploadApi.insertEpisodes(batchId, chunk);
-
-                // 시각적 피드백을 위한 의도적인 딜레이 (UX 최적화)
-                await new Promise((resolve) => setTimeout(resolve, 600));
-
-                // 진행 상태 업데이트
-                setUploadProgress((prev) => ({
-                    ...prev,
-                    currentChunk: i + 1,
-                    progress: Math.round(((i + 1) / chunks.length) * 100),
-                }));
-            }
-
-            // 4. 활동 내역 로그 기록
+            // 3. 활동 내역 로그 기록
             await uploadApi.logActivity(dramaTitle, validRows.length, batchId);
+
+            setUploadProgress({
+                totalChunks: 1,
+                currentChunk: 1,
+                isUploading: false,
+                progress: 100,
+            });
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["episodes"] });

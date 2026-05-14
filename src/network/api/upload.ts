@@ -14,7 +14,7 @@ export const uploadApi = {
             .insert({
                 drama_title: dramaTitle,
                 file_name: fileName,
-                status: "pending",
+                status: "pending", // 관리자 검토 대기 상태
             })
             .select()
             .single();
@@ -24,7 +24,7 @@ export const uploadApi = {
     },
 
     /**
-     * 배치에 속한 에피소드 데이터들을 대량 삽입
+     * 배치에 속한 에피소드 데이터들을 대량 삽입 (단일 트랜잭션)
      */
     insertEpisodes: async (batchId: string, rows: BulkUploadRow[]) => {
         const insertData = rows.map((row) => ({
