@@ -1,11 +1,15 @@
-import { StatusBadge } from "@/components/common";
-import type { StandardEpisode } from "@/app/types/drama";
+import { StatusBadge } from "./StatusBadge"
+import { StandardEpisode } from "@/app/types/drama";
 
 interface Props {
     rows: StandardEpisode[];
+    emptyMessage?: string;
 }
 
-export function UploadResultTable({ rows }: Props) {
+export function EpisodeReviewTable({ 
+    rows, 
+    emptyMessage = "검토할 데이터가 없습니다." 
+}: Props) {
     return (
         <div className="upload-result-table panel">
             <table>
@@ -26,8 +30,7 @@ export function UploadResultTable({ rows }: Props) {
                     {rows.length === 0 ? (
                         <tr>
                             <td colSpan={9} className="empty-row">
-                                검토할 데이터가 없습니다. 파일을 업로드해
-                                주세요.
+                                {emptyMessage}
                             </td>
                         </tr>
                     ) : (

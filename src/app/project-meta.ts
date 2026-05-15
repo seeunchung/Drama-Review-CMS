@@ -1,6 +1,6 @@
 import { ROUTES } from "./paths";
 
-export type ProjectRouteId = "content-import" | "metadata-review" | "review-curation";
+export type ProjectRouteId = "content-import" | "application-review" | "metadata-review" | "review-curation";
 export type ProjectPath = (typeof ROUTES)[ProjectRouteId];
 
 // 홈 카드와 상단 네비가 공유하는 운영 업무 메타 정보다.
@@ -15,6 +15,15 @@ interface AdminTask {
 }
 
 export const ADMIN_TASKS: AdminTask[] = [
+    {
+        id: "application-review",
+        title: "드라마 신청 관리",
+        navLabel: "드라마 신청관리",
+        description: "사용자가 신청한 드라마 메타데이터 검토 및 승인 이관",
+        path: ROUTES["application-review"],
+        icon: "📝",
+        tags: ["신청 검토", "데이터 이관"],
+    },
     {
         id: "content-import",
         title: "콘텐츠 등록",

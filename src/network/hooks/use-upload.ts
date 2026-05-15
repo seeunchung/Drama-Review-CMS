@@ -11,7 +11,7 @@ interface UploadProgress {
 }
 
 /**
- * 대량 데이터 업로드를 청크 단위로 처리하는 훅
+ * 대량 데이터 업로드를 처리하는 훅
  */
 export function useBulkUpload() {
     const [uploadProgress, setUploadProgress] = useState<UploadProgress>({

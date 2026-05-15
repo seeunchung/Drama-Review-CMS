@@ -9,6 +9,10 @@ import { HomePage } from "@/pages/home";
 import { LoginPage } from "@/pages/auth";
 import { ContentImportPage } from "@/pages/content-import";
 import {
+    ApplicationReviewPage,
+    ApplicationReviewDetailPage,
+} from "@/pages/application-review";
+import {
     MetadataReviewPage,
     MetadataReviewDetailPage,
 } from "@/pages/metadata-review";
@@ -73,6 +77,14 @@ function App() {
                     <Route
                         path={ROUTES["content-import"]}
                         element={<ContentImportPage />}
+                    />
+                    <Route
+                        path={ROUTES["application-review"]}
+                        element={<ApplicationReviewPage />}
+                    />
+                    <Route
+                        path={ROUTES["application-review-detail"]}
+                        element={<ApplicationReviewDetailPage />}
                     />
                     <Route
                         path={ROUTES["metadata-review"]}

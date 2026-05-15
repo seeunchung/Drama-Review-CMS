@@ -1,0 +1,189 @@
+.application-review-page {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.application-list-section {
+    padding: 32px;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.section-header h2 {
+    font-size: 1.4rem;
+    color: var(--ink-strong);
+}
+
+.application-table-wrapper {
+    overflow-x: auto;
+    border-radius: 18px;
+    border: 1px solid var(--line-soft);
+    background: var(--bg-deep);
+}
+
+.application-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.application-table th {
+    padding: 18px 20px;
+    text-align: left;
+    background: var(--surface-2);
+    color: var(--ink-soft);
+    font-size: 0.88rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.application-table td {
+    padding: 20px;
+    border-bottom: 1px solid var(--line-soft);
+    color: var(--ink-muted);
+    font-size: 0.92rem;
+}
+
+.application-table tr.application-row {
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.application-table tr.application-row:hover {
+    background: var(--surface-2);
+}
+
+.view-detail-link {
+    color: var(--accent);
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.view-detail-link:hover {
+    filter: brightness(1.2);
+}
+
+.table-loading, .table-empty {
+    text-align: center;
+    padding: 60px 0;
+    color: var(--ink-soft);
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background: rgba(234, 179, 8, 0.1);
+    color: #eab308;
+}
+
+.status-completed {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
+
+.status-failed {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+/* Application Detail Page Styles */
+.detail-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px;
+    background: var(--surface-1);
+    border: 1px solid var(--line-soft);
+    border-radius: 20px;
+}
+
+.info-header h2 {
+    font-size: 1.5rem;
+    color: var(--ink-strong);
+    margin-bottom: 4px;
+}
+
+.action-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+/* Standard Button Styles */
+.action-group button {
+    height: 44px;
+    padding: 0 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    border: 1px solid var(--line-soft);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.action-group button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: none;
+}
+
+.btn-auto-clean {
+    background: var(--surface-1);
+    color: var(--ink-strong);
+}
+
+.btn-auto-clean:hover:not(:disabled) {
+    background: var(--surface-2);
+}
+
+.btn-approve {
+    background: var(--accent);
+    color: var(--bg-deep);
+    border-color: var(--accent);
+}
+
+.btn-approve:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.btn-reject {
+    background: transparent;
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.btn-reject:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--ink-soft);
+}
+
+.btn-outline:hover:not(:disabled) {
+    background: var(--surface-2);
+    color: var(--ink-strong);
+}
+
+.episode-list-section {
+    padding: 32px;
+}
+
+.episode-table-container {
+    margin-top: 24px;
+}

@@ -3,8 +3,9 @@ import { ProjectHeader } from "@/components/layout";
 import { useBatchDetail } from "@/network/hooks";
 import { useModalStore, useToastStore } from "@/app/store";
 import { ROUTES } from "@/app/paths";
-import { ADMIN_TASKS, STATUS_LABELS } from "@/app/project-meta";
+import { ADMIN_TASKS } from "@/app/project-meta";
 import { PosterUploadSection } from "./components";
+import { StatusBadge } from "@/components/common";
 import "./styles.css";
 
 function MetadataReviewDetailPage() {
@@ -108,9 +109,7 @@ function MetadataReviewDetailPage() {
             <div className="detail-toolbar panel">
                 <div className="status-info">
                     현재 상태:{" "}
-                    <span className={`status-badge is-${batch.status}`}>
-                        {STATUS_LABELS[batch.status] || batch.status}
-                    </span>
+                    <StatusBadge status={batch.status} />
                 </div>
                 <div className="action-group">
                     <button
@@ -130,14 +129,14 @@ function MetadataReviewDetailPage() {
                     </button>
                     <button
                         className="btn-danger"
-                        disabled={batch.status === "failed" || isDeleting}
+                        disabled={batch.status !== "pending" || isDeleting}
                         onClick={() => handleStatusChange("failed")}
                     >
                         승인 거절
                     </button>
                     <button
                         className="btn-primary"
-                        disabled={batch.status === "completed" || isDeleting}
+                        disabled={batch.status !== "pending" || isDeleting}
                         onClick={() => handleStatusChange("completed")}
                     >
                         최종 승인

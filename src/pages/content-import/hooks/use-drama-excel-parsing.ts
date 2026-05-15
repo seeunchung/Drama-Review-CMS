@@ -1,12 +1,15 @@
 import { useState, useCallback } from "react";
 import * as XLSX from "xlsx";
 import type { BulkUploadRow, RowStatus } from "@/pages/content-import/types/content-import";
-import { validateRowFields, applyCollectionValidation } from "../utils/validation";
+import { 
+    validateDramaRow, 
+    applyDramaCollectionValidation 
+} from "@/lib/drama-validator";
 
 type ExcelCell = string | number | boolean | null | undefined;
 type ExcelRow = ExcelCell[];
 
-/** 드라마 리뷰 엑셀 파싱 및 검증 훅 */
+/** 드라마 정보 엑셀 파싱 및 검증 훅 */
 export function useDramaExcelParsing() {
     const [isParsing, setIsParsing] = useState(false);
 
@@ -80,8 +83,8 @@ export function useDramaExcelParsing() {
                             // 빈 행 스킵
                             if (!title && !rawEpisode && !summary) continue;
 
-                            // 5. 개별 필드 검증 (utils/validation 사용)
-                            const errorMessages = validateRowFields({
+                            // 5. 개별 필드 검증 (lib/drama-validator 사용)
+                            const errorMessages = validateDramaRow({
                                 title,
                                 baseTitle,
                                 rawEpisode,
@@ -108,7 +111,7 @@ export function useDramaExcelParsing() {
                         }
 
                         // 6. 전체 데이터 검증 (회차 연속성 등)
-                        const finalRows = applyCollectionValidation(parsedRows);
+                        const finalRows = applyDramaCollectionValidation(parsedRows);
 
                         resolve(finalRows);
                     } catch (error) {

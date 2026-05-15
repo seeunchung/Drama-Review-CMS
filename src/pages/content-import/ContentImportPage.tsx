@@ -10,11 +10,11 @@ import { getErrorMessage } from "@/lib/error";
 import {
     extractNumbers,
     isNumeric,
-    validateRowFields,
-    applyCollectionValidation,
+    validateDramaRow,
+    applyDramaCollectionValidation,
     normalizeRunningTime,
     isValidRunningTime,
-} from "./utils";
+} from "@/lib/drama-validator";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -119,7 +119,7 @@ function ContentImportPage() {
             const cleanedRating = extractNumbers(row.rating);
             const cleanedRunningTime = normalizeRunningTime(row.runningTime);
 
-            const errorMessages = validateRowFields({
+            const errorMessages = validateDramaRow({
                 title: row.title,
                 baseTitle: rows[0]?.title || "",
                 rawEpisode: cleanedEpisode,
@@ -139,7 +139,7 @@ function ContentImportPage() {
         });
 
         // 3. 전체 컬렉션 검증 다시 수행
-        updatedRows = applyCollectionValidation(updatedRows);
+        updatedRows = applyDramaCollectionValidation(updatedRows);
 
         setRows(updatedRows);
         toast.success("자동변환되었습니다.");
