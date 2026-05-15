@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { StandardEpisode } from "@/app/types/drama";
 
 /**
- * 대량 업로드 관련 API
+ * 업로드 관련 API
  */
 export const uploadApi = {
     /**
@@ -24,7 +24,7 @@ export const uploadApi = {
     },
 
     /**
-     * 배치에 속한 에피소드 데이터들을 대량 삽입 (단일 트랜잭션)
+     * 배치에 속한 에피소드 데이터들을  삽입 (단일 트랜잭션)
      */
     insertEpisodes: async (batchId: string, rows: StandardEpisode[]) => {
         const insertData = rows.map((row: any) => ({

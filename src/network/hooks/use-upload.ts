@@ -11,7 +11,7 @@ interface UploadProgress {
 }
 
 /**
- * 대량 데이터 업로드를 처리하는 훅
+ * 데이터 업로드를 처리하는 훅
  */
 export function useBulkUpload() {
     const [uploadProgress, setUploadProgress] = useState<UploadProgress>({
@@ -47,7 +47,7 @@ export function useBulkUpload() {
                 progress: 0,
             });
 
-            // 2. 단일 트랜잭션으로 대량 삽입
+            // 2. 단일 트랜잭션으로 삽입
             await uploadApi.insertEpisodes(batchId, validRows);
 
             // 3. 활동 내역 로그 기록

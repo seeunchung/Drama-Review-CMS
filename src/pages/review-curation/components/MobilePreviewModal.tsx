@@ -1,34 +1,45 @@
 import React from "react";
-import { DramaComment } from "../types/review-curation";
+import { buildReviewAppPreviewUrl } from "@/lib/review-app";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  comment: DramaComment | null;
+  dramaId: string | null;
+  dramaTitle: string | null;
 }
 
-export const MobilePreviewModal: React.FC<Props> = ({ isOpen, onClose, comment }) => {
-  if (!isOpen || !comment) return null;
+export const MobilePreviewModal: React.FC<Props> = ({ isOpen, onClose, dramaId, dramaTitle }) => {
+  if (!isOpen || !dramaId) return null;
+
+  const previewUrl = buildReviewAppPreviewUrl(dramaId);
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="mobile-simulator" onClick={e => e.stopPropagation()}>
-        <div className="simulator-screen">
-          <div className="simulator-header">에피소드 상세</div>
-          <div className="simulator-content">
-            <div className="best-badge">BEST COMMENT</div>
-            <div className="mobile-comment-card">
-              <div className="mobile-user">{comment.user_nickname}</div>
-              <div className="mobile-text">{comment.content}</div>
-              <div style={{ marginTop: '12px', color: 'var(--accent-gold)', fontSize: '12px' }}>
-                {"★".repeat(comment.rating)}
-              </div>
+      <div className="preview-modal" onClick={(e) => e.stopPropagation()}>
+        <div className="preview-modal-header">
+          <div>
+            <div className="preview-modal-title">리뷰사이트 프리뷰</div>
+            <div className="preview-modal-subtitle">
+              {dramaTitle || "선택한 드라마"} 상세 페이지
             </div>
           </div>
-          <div style={{ marginTop: 'auto', padding: '20px', textAlign: 'center', color: 'var(--ink-soft)', fontSize: '12px' }}>
-            모바일 앱 실제 적용 화면 예시입니다.
-          </div>
+          <button className="preview-close-button" onClick={onClose}>
+            닫기
+          </button>
         </div>
+
+        {previewUrl ? (
+          <iframe
+            className="preview-modal-iframe"
+            src={previewUrl}
+            title={`Review app preview for ${dramaTitle || dramaId}`}
+            loading="lazy"
+          />
+        ) : (
+          <div className="preview-modal-empty">
+            리뷰 앱 URL 또는 드라마 ID가 없어 프리뷰를 열 수 없습니다.
+          </div>
+        )}
       </div>
     </div>
   );

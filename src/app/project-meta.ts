@@ -28,10 +28,10 @@ export const ADMIN_TASKS: AdminTask[] = [
         id: "content-import",
         title: "콘텐츠 등록",
         navLabel: "콘텐츠 등록",
-        description: "중국 드라마 메타데이터 엑셀 대량 등록 및 1차 검수",
+        description: "중국 드라마 메타데이터 엑셀 등록 및 1차 검수",
         path: ROUTES["content-import"],
         icon: "📂",
-        tags: ["대량 업로드", "엑셀 파싱", "운영 입력"],
+        tags: ["업로드", "엑셀 파싱", "운영 입력"],
     },
     {
         id: "metadata-review",

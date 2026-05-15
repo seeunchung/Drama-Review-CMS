@@ -5,14 +5,12 @@ interface Props {
   comment: DramaComment | null;
   onToggleSpoiler: (id: string | number) => void;
   onToggleBest: (id: string | number) => void;
-  onOpenPreview: () => void;
 }
 
 export const ActionPanel: React.FC<Props> = ({ 
   comment, 
   onToggleSpoiler, 
-  onToggleBest, 
-  onOpenPreview 
+  onToggleBest
 }) => {
   if (!comment) {
     return (
@@ -48,12 +46,6 @@ export const ActionPanel: React.FC<Props> = ({
         >
           {comment.is_best ? '베스트 해제' : '베스트 선정'}
         </button>
-        
-        {comment.is_best && (
-          <button className="btn-preview" onClick={onOpenPreview}>
-            모바일 프리뷰 보기
-          </button>
-        )}
       </div>
     </div>
   );

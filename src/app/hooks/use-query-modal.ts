@@ -27,13 +27,20 @@ export function useQueryModal(key: string) {
   }, [key, navigate]);
 
   /**
-   * 모달 닫기 (히스토리 뒤로가기)
+   * 모달 닫기 (현재 URL에서 모달 query만 제거)
    */
   const close = useCallback(() => {
     if (isOpen) {
-      navigate(-1);
+      const newParams = new URLSearchParams(window.location.search);
+      newParams.delete(key);
+      const nextSearch = newParams.toString();
+
+      navigate(
+        nextSearch ? `?${nextSearch}` : window.location.pathname,
+        { replace: true },
+      );
     }
-  }, [isOpen, navigate]);
+  }, [isOpen, key, navigate]);
 
   return { isOpen, open, close, value };
 }
