@@ -4,6 +4,8 @@ const HOME_PATH = "/" as const;
 const ROUTES = {
     "auth": "/login",
     "content-import": "/content-import",
+    "application-review": "/application-review",
+    "application-review-detail": "/application-review/:id",
     "metadata-review": "/metadata-review",
     "metadata-review-detail": "/metadata-review/:batchId",
     "review-curation": "/review-curation",

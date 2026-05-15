@@ -2,21 +2,20 @@ import { useNavigate } from "react-router-dom";
 import { ProjectHeader } from "@/components/layout";
 import { useBatches } from "@/network/hooks";
 import { ROUTES } from "@/app/paths";
-import { ADMIN_TASKS, STATUS_LABELS } from "@/app/project-meta";
+import { ADMIN_TASKS } from "@/app/project-meta";
+import { StatusBadge } from "@/components/common";
 import "./styles.css";
 
 function MetadataReviewPage() {
     const navigate = useNavigate();
     const { batches, isLoading, error } = useBatches();
     
-    // 이 페이지의 메타데이터 정보 추출
     const pageMeta = ADMIN_TASKS.find(t => t.id === "metadata-review");
 
     if (isLoading) return <div className="loading-state">목록을 불러오는 중...</div>;
     if (error) return <div className="error-state">오류가 발생했습니다: {error.message}</div>;
 
     const handleRowClick = (batchId: string) => {
-        // 상세 페이지로 이동 (batchId 포함)
         const path = ROUTES["metadata-review-detail"].replace(":batchId", batchId);
         navigate(path);
     };
@@ -55,9 +54,7 @@ function MetadataReviewPage() {
                                 batches.map((batch) => (
                                     <tr key={batch.id} onClick={() => handleRowClick(batch.id)}>
                                         <td>
-                                            <span className={`status-badge is-${batch.status}`}>
-                                                {STATUS_LABELS[batch.status] || batch.status}
-                                            </span>
+                                            <StatusBadge status={batch.status} />
                                         </td>
                                         <td className="cell-important">{batch.drama_title}</td>
                                         <td>{batch.file_name}</td>

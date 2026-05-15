@@ -1,8 +1,8 @@
 import { supabase } from "@/lib/supabase";
-import type { BulkUploadRow } from "@/pages/content-import/types/content-import";
+import { StandardEpisode } from "@/app/types/drama";
 
 /**
- * 대량 업로드 관련 API
+ * 업로드 관련 API
  */
 export const uploadApi = {
     /**
@@ -14,7 +14,7 @@ export const uploadApi = {
             .insert({
                 drama_title: dramaTitle,
                 file_name: fileName,
-                status: "pending",
+                status: "pending", // 관리자 검토 대기 상태
             })
             .select()
             .single();
@@ -24,10 +24,10 @@ export const uploadApi = {
     },
 
     /**
-     * 배치에 속한 에피소드 데이터들을 대량 삽입
+     * 배치에 속한 에피소드 데이터들을  삽입 (단일 트랜잭션)
      */
-    insertEpisodes: async (batchId: string, rows: BulkUploadRow[]) => {
-        const insertData = rows.map((row) => ({
+    insertEpisodes: async (batchId: string, rows: StandardEpisode[]) => {
+        const insertData = rows.map((row: any) => ({
             batch_id: batchId,
             seq: row.seq,
             title: row.title,
@@ -35,11 +35,12 @@ export const uploadApi = {
             rating: row.rating,
             episode: row.episode,
             subtitle: row.subtitle,
-            running_time: row.runningTime,
+            running_time: row.runningTime || row.running_time,
             summary: row.summary,
             status: "uploaded",
         }));
 
+        // Supabase insert는 기본적으로 단일 요청에 대해 원자성을 보장합니다.
         const { error } = await supabase.from("episodes").insert(insertData);
 
         if (error) throw error;

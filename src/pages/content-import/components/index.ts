@@ -1,5 +1,4 @@
 export * from "./SelectedFileBar";
-export * from "./StatusBadge";
 export * from "./UploadDropzone";
 export * from "./UploadFilterBar";
 export * from "./UploadProgressBar";

@@ -7,7 +7,14 @@ import { UploadProgressBar } from "./components";
 import { useModalStore, useToastStore, useUploadStore } from "@/app/store";
 import { ADMIN_TASKS } from "@/app/project-meta";
 import { getErrorMessage } from "@/lib/error";
-import { extractNumbers, isNumeric, validateRowFields, applyCollectionValidation } from "./utils";
+import {
+    extractNumbers,
+    isNumeric,
+    validateDramaRow,
+    applyDramaCollectionValidation,
+    normalizeRunningTime,
+    isValidRunningTime,
+} from "@/lib/drama-validator";
 import type {
     BulkUploadRow,
     BulkUploadSummary,
@@ -89,47 +96,53 @@ function ContentImportPage() {
     // 메타데이터 정보 추출
     const pageMeta = ADMIN_TASKS.find(t => t.id === "content-import");
 
-    //숫자 자동 변환
+    //데이터 자동 변환
     const handleAutoClean = () => {
         if (rows.length === 0) return;
 
         // 1. 정제가 필요한 행이 있는지 먼저 확인
         const needsCleaning = rows.some(
-            (row) => !isNumeric(row.episode) || (row.rating && !isNumeric(row.rating))
+            (row) => 
+                !isNumeric(row.episode) || 
+                (row.rating && !isNumeric(row.rating)) ||
+                (row.runningTime && !isValidRunningTime(row.runningTime))
         );
 
         if (!needsCleaning) {
-            toast.success("변환할 데이터가 없습니다. (모든 숫자가 올바른 형식입니다)");
+            toast.success("변환할 데이터가 없습니다. (모든 데이터가 올바른 형식입니다)");
             return;
         }
 
-        // 2. 숫자 추출 및 개별 행 검증 다시 수행
+        // 2. 데이터 추출/정규화 및 개별 행 검증 다시 수행
         let updatedRows = rows.map((row) => {
             const cleanedEpisode = extractNumbers(row.episode);
             const cleanedRating = extractNumbers(row.rating);
+            const cleanedRunningTime = normalizeRunningTime(row.runningTime);
 
-            const errorMessages = validateRowFields({
+            const errorMessages = validateDramaRow({
                 title: row.title,
                 baseTitle: rows[0]?.title || "",
                 rawEpisode: cleanedEpisode,
                 rating: cleanedRating,
                 summary: row.summary,
+                runningTime: cleanedRunningTime,
             });
 
             return {
                 ...row,
                 episode: cleanedEpisode,
                 rating: cleanedRating,
+                runningTime: cleanedRunningTime,
                 status: (errorMessages.length > 0 ? "error" : "valid") as any,
                 errorMessages,
             };
         });
 
-        // 2. 전체 컬렉션 검증 다시 수행
-        updatedRows = applyCollectionValidation(updatedRows);
+        // 3. 전체 컬렉션 검증 다시 수행
+        updatedRows = applyDramaCollectionValidation(updatedRows);
 
         setRows(updatedRows);
-        toast.success("등급 및 회차 데이터의 숫자를 자동으로 정제했습니다.");
+        toast.success("자동변환되었습니다.");
     };
 
     const handleFileSelect = async (file: File) => {
@@ -154,7 +167,7 @@ function ContentImportPage() {
             
             const errorCount = parsedData.filter(r => r.status === 'error').length;
             if (errorCount > 0) {
-                toast.error(`데이터 검증 결과 ${errorCount}건의 오류가 발견되었습니다.`);
+                toast.error(`데이터 검증 결과 ${errorCount}건의 오류가 발견되었습니다. 자동변환 버튼 클릭 또는 엑셀파일을 수정하세요`);
             } else {
                 toast.success("파일 파싱 및 데이터 검증이 완료되었습니다.");
             }
@@ -205,14 +218,12 @@ function ContentImportPage() {
                 rows: rows,
                 dramaTitle: dramaTitle,
                 fileName: fileName,
-                chunkSize: 10,
             });
 
             setCurrentStep("saved");
             setRows((prev) =>
                 prev.map((row) => ({ ...row, status: "uploaded" })),
             );
-            toast.success(`'${dramaTitle}' 에피소드 업로드가 완료되었습니다.`);
         } catch (error) {
             console.error("Save error:", error);
             toast.error(getErrorMessage(error, "DB 저장 중 오류가 발생했습니다."));
@@ -296,9 +307,6 @@ function ContentImportPage() {
             {(isUploading || uploadProgress.progress > 0) && (
                 <UploadProgressBar
                     progress={uploadProgress.progress}
-                    currentChunk={uploadProgress.currentChunk}
-                    totalChunks={uploadProgress.totalChunks}
-                    isUploading={isUploading}
                     onClose={resetProgress}
                 />
             )}

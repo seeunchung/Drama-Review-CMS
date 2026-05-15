@@ -1,1 +1,1 @@
-export * from "./validation";
+export * from "@/lib/drama-validator";

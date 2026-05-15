@@ -83,11 +83,11 @@ function UploadFilterBar({
                 <button
                     className="filter-button filter-button-secondary"
                     type="button"
-                    title="등급과 회차에서 숫자만 추출합니다"
+                    title="데이터를 자동 정규화합니다.(등급,회차,러닝타임)"
                     disabled={!canClean}
                     onClick={onAutoClean}
                 >
-                    숫자 자동 변환
+                    자동 변환
                 </button>
                 <button
                     className="filter-button filter-button-primary"
