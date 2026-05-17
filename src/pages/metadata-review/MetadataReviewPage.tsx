@@ -73,4 +73,4 @@ function MetadataReviewPage() {
     );
 }
 
-export { MetadataReviewPage };
+export default MetadataReviewPage;

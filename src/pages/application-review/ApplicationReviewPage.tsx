@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { STATUS_LABELS } from "@/app/project-meta";
 import "./styles.css";
 
-export function ApplicationReviewPage() {
+function ApplicationReviewPage() {
     const navigate = useNavigate();
     const { data: applications, isLoading } = useApplications();
     const pageMeta = ADMIN_TASKS.find(t => t.id === ("application-review" as any));
@@ -71,3 +71,5 @@ export function ApplicationReviewPage() {
         </main>
     );
 }
+
+export default ApplicationReviewPage;

@@ -1,23 +1,32 @@
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect, type ReactNode } from "react";
 import { Navigate, Outlet, Route, Routes, useLocation } from "react-router-dom";
 import { HOME_PATH, ROUTES } from "@/app/paths";
 import { AuthGuard, PageShell, SiteHeader } from "@/components/layout";
 import { useAuthStore, useThemeStore } from "@/app/store";
 import { GlobalModal } from "@/components/common";
 import { GlobalToast } from "@/components/common";
-import { HomePage } from "@/pages/home";
-import { LoginPage } from "@/pages/auth";
-import { ContentImportPage } from "@/pages/content-import";
-import {
-    ApplicationReviewPage,
-    ApplicationReviewDetailPage,
-} from "@/pages/application-review";
-import {
-    MetadataReviewPage,
-    MetadataReviewDetailPage,
-} from "@/pages/metadata-review";
-import { ReviewCurationPage } from "@/pages/review-curation";
 import "./layout.css";
+
+const HomePage = lazy(() => import("@/pages/home/HomePage"));
+const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));
+const ContentImportPage = lazy(
+    () => import("@/pages/content-import/ContentImportPage"),
+);
+const ApplicationReviewPage = lazy(
+    () => import("@/pages/application-review/ApplicationReviewPage"),
+);
+const ApplicationReviewDetailPage = lazy(
+    () => import("@/pages/application-review/ApplicationReviewDetailPage"),
+);
+const MetadataReviewPage = lazy(
+    () => import("@/pages/metadata-review/MetadataReviewPage"),
+);
+const MetadataReviewDetailPage = lazy(
+    () => import("@/pages/metadata-review/MetadataReviewDetailPage"),
+);
+const ReviewCurationPage = lazy(
+    () => import("@/pages/review-curation/ReviewCurationPage"),
+);
 
 // 라우트가 바뀔 때마다 새 화면의 시작 지점으로 스크롤을 맞춘다.
 function ScrollToTop() {
@@ -30,6 +39,25 @@ function ScrollToTop() {
     return null;
 }
 
+function RouteFallback() {
+    return (
+        <div
+            style={{
+                minHeight: "40vh",
+                display: "grid",
+                placeItems: "center",
+                color: "var(--ink-soft)",
+            }}
+        >
+            페이지를 불러오는 중...
+        </div>
+    );
+}
+
+function RouteSuspense({ children }: { children: ReactNode }) {
+    return <Suspense fallback={<RouteFallback />}>{children}</Suspense>;
+}
+
 // 공통 레이아웃 안에서 각 화면 페이지만 교체한다.
 function AppLayout() {
     return (
@@ -38,7 +66,9 @@ function AppLayout() {
                 <ScrollToTop />
                 <div className="site-shell">
                     <SiteHeader />
-                    <Outlet />
+                    <RouteSuspense>
+                        <Outlet />
+                    </RouteSuspense>
                 </div>
             </PageShell>
         </AuthGuard>
@@ -69,7 +99,14 @@ function App() {
             <GlobalToast />
             <Routes>
                 {/* 인증이 필요 없는 라우트 */}
-                <Route path={ROUTES.auth} element={<LoginPage />} />
+                <Route
+                    path={ROUTES.auth}
+                    element={
+                        <RouteSuspense>
+                            <LoginPage />
+                        </RouteSuspense>
+                    }
+                />
 
                 {/* 인증이 필요한 라우트들 */}
                 <Route element={<AppLayout />}>

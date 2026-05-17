@@ -5,7 +5,7 @@ import { HOME_PATH } from "@/app/paths";
 import { getErrorMessage } from "@/lib/error";
 import "./styles.css";
 
-export const LoginPage = () => {
+const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);

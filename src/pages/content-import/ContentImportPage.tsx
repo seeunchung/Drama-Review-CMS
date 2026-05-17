@@ -314,4 +314,4 @@ function ContentImportPage() {
     );
 }
 
-export { ContentImportPage };
+export default ContentImportPage;

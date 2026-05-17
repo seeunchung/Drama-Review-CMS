@@ -1,6 +1,13 @@
-import { ROUTES } from "./paths";
+import { ROUTES, type ProjectRouteId as RouteId } from "./paths";
 
-export type ProjectRouteId = "content-import" | "application-review" | "metadata-review" | "review-curation";
+const ADMIN_ROUTE_IDS = [
+    "content-import",
+    "application-review",
+    "metadata-review",
+    "review-curation",
+] as const satisfies readonly RouteId[];
+
+export type ProjectRouteId = (typeof ADMIN_ROUTE_IDS)[number];
 export type ProjectPath = (typeof ROUTES)[ProjectRouteId];
 
 // 홈 카드와 상단 네비가 공유하는 운영 업무 메타 정보다.
