@@ -1,7 +1,29 @@
+.page-shell {
+  width: min(1320px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 24px 0 72px;
+}
+
 .site-shell {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.fade-up {
+  animation: rise-in 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .site-header {
@@ -434,13 +456,6 @@
   padding: 24px;
   background: var(--surface-1);
   border-radius: 20px;
-}
-
-.panel {
-  background: var(--surface-1);
-  border: 1px solid var(--line-soft);
-  border-radius: 20px;
-  overflow: hidden;
 }
 
 @media (max-width: 1024px) {

@@ -75,30 +75,6 @@
     color: var(--ink-soft);
 }
 
-/* Status Badges */
-.status-badge {
-    display: inline-flex;
-    padding: 6px 12px;
-    border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 600;
-}
-
-.status-pending {
-    background: rgba(234, 179, 8, 0.1);
-    color: #eab308;
-}
-
-.status-completed {
-    background: rgba(16, 185, 129, 0.1);
-    color: #10b981;
-}
-
-.status-failed {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-}
-
 /* Application Detail Page Styles */
 .detail-toolbar {
     display: flex;
@@ -168,16 +144,6 @@
 
 .btn-reject:hover:not(:disabled) {
     background: rgba(239, 68, 68, 0.1);
-}
-
-.btn-outline {
-    background: transparent;
-    color: var(--ink-soft);
-}
-
-.btn-outline:hover:not(:disabled) {
-    background: var(--surface-2);
-    color: var(--ink-strong);
 }
 
 .episode-list-section {

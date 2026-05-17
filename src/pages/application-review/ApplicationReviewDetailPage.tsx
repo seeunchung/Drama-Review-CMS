@@ -20,7 +20,7 @@ import { StandardEpisode } from "@/app/types/drama";
 import { useToastStore, useModalStore } from "@/app/store";
 import "./styles.css";
 
-export function ApplicationReviewDetailPage() {
+function ApplicationReviewDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const toast = useToastStore();
@@ -219,3 +219,5 @@ export function ApplicationReviewDetailPage() {
         </main>
     );
 }
+
+export default ApplicationReviewDetailPage;

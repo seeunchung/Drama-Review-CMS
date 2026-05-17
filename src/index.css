@@ -132,4 +132,116 @@ p {
   border: 1px solid var(--line-soft);
   box-shadow: var(--shadow-panel);
   border-radius: 20px;
+  overflow: hidden;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.status-badge.status-pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.status-badge.status-completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.status-badge.status-failed {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.btn-primary,
+.btn-danger,
+.btn-outline,
+.btn-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--button-bg);
+  color: var(--bg-deep);
+  border: 1px solid var(--button-bg);
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.btn-danger {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--line-soft);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--ink-strong);
+}
+
+.btn-text {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid transparent;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.btn-text:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink-strong);
+}
+
+.btn-text.is-danger {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.btn-text.is-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
+}
+
+.btn-primary:disabled,
+.btn-danger:disabled,
+.btn-outline:disabled,
+.btn-text:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: none;
+  pointer-events: none;
 }
