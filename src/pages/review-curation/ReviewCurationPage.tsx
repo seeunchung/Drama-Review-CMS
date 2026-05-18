@@ -93,7 +93,7 @@ const ReviewCurationPage: React.FC = () => {
     };
 
     if (isLoading && dramas.length === 0) {
-        return <div className="loading-container">데이터를 로드하는 중...</div>;
+        return <div className="page-feedback">데이터를 로드하는 중...</div>;
     }
 
     return (
@@ -104,12 +104,12 @@ const ReviewCurationPage: React.FC = () => {
                 tags={pageMeta?.tags || []}
             />
 
-            <div className="review-curation-container">
-                <div className="panel drama-selector-bar">
-                    <div className="selector-info">
-                        <span className="selector-label">대상 드라마 선택</span>
+            <div className="review-curation-layout">
+                <div className="panel curation-selector-bar">
+                    <div className="curation-selector-info">
+                        <span className="curation-selector-label">대상 드라마 선택</span>
                         <select
-                            className="drama-select"
+                            className="curation-drama-select"
                             value={selectedDramaId}
                             onChange={handleDramaChange}
                         >
@@ -121,7 +121,7 @@ const ReviewCurationPage: React.FC = () => {
                         </select>
                     </div>
                     <button
-                        className="preview-launcher-button"
+                        className="curation-preview-launcher"
                         onClick={() => openPreview()}
                         disabled={!selectedDrama}
                     >

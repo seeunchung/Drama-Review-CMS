@@ -1,3 +1,4 @@
+/* 앱 전체에서 공유하는 디자인 토큰과 브라우저 기본값만 정의한다. */
 @font-face {
   font-family: 'GMarketSans';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansLight.woff')
@@ -29,23 +30,23 @@
   --surface-1: #FFFFFF;
   --surface-2: #E2E8F0;
   --line-soft: rgba(15, 23, 42, 0.08);
-  
+
   --ink-strong: #0F172A;
   --ink-muted: #475569;
   --ink-soft: #64748B;
-  
+
   /* Brand & Accent */
-  --brand-red: #E11D48;        /* 로고 및 브랜딩: 크림슨 레드 */
-  --accent: #F59E0B;           /* 주요 포인트: 골드 */
+  --brand-red: #E11D48;
+  --accent: #F59E0B;
   --accent-soft: rgba(245, 158, 11, 0.15);
-  --button-bg: #E11D48;        /* 버튼 영역: 크림슨 레드 */
-  --accent-gold: #F59E0B;      /* 보조 포인트: 골드 */
-  
+  --button-bg: #E11D48;
+  --accent-gold: #F59E0B;
+
   /* Status Colors */
-  --status-valid: #10B981;    /* 에메랄드 그린 */
-  --status-pending: #F59E0B;  /* 골드와 동일 (검토 중) */
-  --status-error: #EF4444;    /* 크림슨 레드 (에러) */
-  
+  --status-valid: #10B981;
+  --status-pending: #F59E0B;
+  --status-error: #EF4444;
+
   --font-sans: 'GMarketSans', 'Segoe UI Variable', sans-serif;
   --font-display: 'GMarketSans', 'Segoe UI Variable', sans-serif;
   --shadow-panel: 0 4px 20px rgba(15, 23, 42, 0.06);
@@ -61,18 +62,18 @@
   font-weight: 400;
 }
 
-/* Dark Mode Theme */
+/* body에 dark-mode 클래스가 붙으면 토큰 값만 교체한다. */
 .dark-mode {
   --bg-deep: #0F172A;
   --surface-0: #0F172A;
   --surface-1: #1E293B;
   --surface-2: #334155;
   --line-soft: rgba(255, 255, 255, 0.08);
-  
+
   --ink-strong: #F8FAFC;
   --ink-muted: #CBD5E1;
   --ink-soft: #94A3B8;
-  
+
   --shadow-panel: 0 12px 34px rgba(0, 0, 0, 0.4);
   --accent-soft: rgba(245, 158, 11, 0.1);
 }
@@ -115,6 +116,7 @@ p {
   min-height: 100svh;
 }
 
+/* 스크린리더 전용 텍스트에 쓰는 접근성 유틸리티다. */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -125,123 +127,4 @@ p {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-.panel {
-  background: var(--surface-1);
-  border: 1px solid var(--line-soft);
-  box-shadow: var(--shadow-panel);
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.35rem 0.85rem;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.status-badge.status-pending {
-  background: rgba(245, 158, 11, 0.1);
-  color: #f59e0b;
-  border-color: rgba(245, 158, 11, 0.2);
-}
-
-.status-badge.status-completed {
-  background: rgba(16, 185, 129, 0.1);
-  color: #10b981;
-  border-color: rgba(16, 185, 129, 0.2);
-}
-
-.status-badge.status-failed {
-  background: rgba(239, 68, 68, 0.1);
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.2);
-}
-
-.btn-primary,
-.btn-danger,
-.btn-outline,
-.btn-text {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 10px 24px;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.2s ease;
-}
-
-.btn-primary {
-  background: var(--button-bg);
-  color: var(--bg-deep);
-  border: 1px solid var(--button-bg);
-}
-
-.btn-primary:hover:not(:disabled) {
-  filter: brightness(1.05);
-}
-
-.btn-danger {
-  background: transparent;
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.btn-danger:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.1);
-}
-
-.btn-outline {
-  background: transparent;
-  color: var(--ink-soft);
-  border: 1px solid var(--line-soft);
-}
-
-.btn-outline:hover:not(:disabled) {
-  background: var(--surface-2);
-  color: var(--ink-strong);
-}
-
-.btn-text {
-  background: transparent;
-  color: var(--ink-soft);
-  border: 1px solid transparent;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-.btn-text:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--ink-strong);
-}
-
-.btn-text.is-danger {
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.3);
-}
-
-.btn-text.is-danger:hover:not(:disabled) {
-  background: rgba(239, 68, 68, 0.08);
-  border-color: rgba(239, 68, 68, 0.5);
-  color: #f87171;
-}
-
-.btn-primary:disabled,
-.btn-danger:disabled,
-.btn-outline:disabled,
-.btn-text:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  filter: none;
-  pointer-events: none;
 }

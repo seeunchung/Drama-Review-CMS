@@ -12,8 +12,16 @@ function MetadataReviewPage() {
     
     const pageMeta = ADMIN_TASKS.find(t => t.id === "metadata-review");
 
-    if (isLoading) return <div className="loading-state">목록을 불러오는 중...</div>;
-    if (error) return <div className="error-state">오류가 발생했습니다: {error.message}</div>;
+    if (isLoading) {
+        return <div className="page-feedback">목록을 불러오는 중...</div>;
+    }
+    if (error) {
+        return (
+            <div className="page-feedback is-error">
+                오류가 발생했습니다: {error.message}
+            </div>
+        );
+    }
 
     const handleRowClick = (batchId: string) => {
         const path = ROUTES["metadata-review-detail"].replace(":batchId", batchId);
@@ -21,7 +29,7 @@ function MetadataReviewPage() {
     };
 
     return (
-        <main className="project-page review-list-page">
+        <main className="metadata-review-page">
             <ProjectHeader
                 title={pageMeta?.title || "메타데이터 검수"}
                 description={pageMeta?.description || ""}
@@ -29,13 +37,13 @@ function MetadataReviewPage() {
             />
 
             <section className="project-screen panel">
-                <div className="list-header">
+                <div className="metadata-review-list-header">
                     <h2>업로드 배치 목록 ({batches.length})</h2>
                     <p>드라마를 선택하여 상세 에피소드 정보를 확인하고 승인 처리를 진행하세요.</p>
                 </div>
 
-                <div className="batch-table-wrap">
-                    <table className="review-table is-selectable">
+                <div className="metadata-review-table-wrap">
+                    <table className="metadata-review-table metadata-review-table--selectable">
                         <thead>
                             <tr>
                                 <th>상태</th>
@@ -48,7 +56,7 @@ function MetadataReviewPage() {
                         <tbody>
                             {batches.length === 0 ? (
                                 <tr>
-                                    <td colSpan={5} className="empty-cell">업로드된 내역이 없습니다.</td>
+                                    <td colSpan={5} className="metadata-review-empty-cell">업로드된 내역이 없습니다.</td>
                                 </tr>
                             ) : (
                                 batches.map((batch) => (
@@ -56,7 +64,7 @@ function MetadataReviewPage() {
                                         <td>
                                             <StatusBadge status={batch.status} />
                                         </td>
-                                        <td className="cell-important">{batch.drama_title}</td>
+                                        <td className="metadata-review-primary-cell">{batch.drama_title}</td>
                                         <td>{batch.file_name}</td>
                                         <td>{new Date(batch.created_at).toLocaleString()}</td>
                                         <td>

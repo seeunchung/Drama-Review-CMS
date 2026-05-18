@@ -269,7 +269,7 @@ function ContentImportPage() {
             />
 
             {batchError && (
-                <div className="batch-error-message">
+                <div className="content-import-error-banner">
                     <p>⚠️ {batchError}</p>
                     <button
                         onClick={handleFileRemove}

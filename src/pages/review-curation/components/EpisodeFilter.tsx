@@ -8,11 +8,11 @@ interface Props {
 
 export const EpisodeFilter: React.FC<Props> = ({ episodes, activeEpisode, onSelect }) => {
   return (
-    <div className="panel episode-filter">
-      <div className="filter-header">회차 필터</div>
-      <div className="episode-list">
+    <div className="panel curation-episode-filter">
+      <div className="curation-pane-title">회차 필터</div>
+      <div className="curation-episode-list">
         <div 
-          className={`episode-item ${activeEpisode === null ? 'active' : ''}`}
+          className={`curation-episode-item ${activeEpisode === null ? 'is-active' : ''}`}
           onClick={() => onSelect(null)}
         >
           전체 회차
@@ -20,7 +20,7 @@ export const EpisodeFilter: React.FC<Props> = ({ episodes, activeEpisode, onSele
         {episodes.map(ep => (
           <div 
             key={ep}
-            className={`episode-item ${activeEpisode === ep ? 'active' : ''}`}
+            className={`curation-episode-item ${activeEpisode === ep ? 'is-active' : ''}`}
             onClick={() => onSelect(ep)}
           >
             {ep}화

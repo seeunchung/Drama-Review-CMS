@@ -149,18 +149,20 @@ function ApplicationReviewDetailPage() {
         }
     };
 
-    if (isLoading) return <div className="loading-container">로딩 중...</div>;
+    if (isLoading) {
+        return <div className="page-feedback">로딩 중...</div>;
+    }
 
     return (
-        <main className="project-page review-detail-page">
+        <main className="application-review-detail-page">
             <ProjectHeader
-                title="드라마 산청관리"
+                title="드라마 신청 관리"
                 description="사용자가 신청한 정보를 검토하고 메타데이터 검수에 반영합니다."
                 tags={["상세 검토", "데이터 이관"]}
             />
 
-            <div className="detail-toolbar panel">
-                <div className="info-header">
+            <div className="application-review-detail-toolbar panel">
+                <div className="application-review-info">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
                         <h2 style={{ margin: 0 }}>{data?.master.title}</h2>
                         <StatusBadge status={data?.master.status || 'pending'} />
@@ -171,7 +173,7 @@ function ApplicationReviewDetailPage() {
                         {data?.master.ott} | {data?.master.rating}세 관람가
                     </span>
                 </div>
-                <div className="action-group">
+                <div className="application-review-actions">
                     <button
                         className="btn-outline"
                         onClick={() => navigate("/application-review")}
@@ -179,14 +181,14 @@ function ApplicationReviewDetailPage() {
                         목록으로
                     </button>
                     <button
-                        className="btn-auto-clean"
+                        className="application-review-button-auto-clean"
                         onClick={handleAutoClean}
                         disabled={data?.master.status !== "pending"}
                     >
                         자동변환
                     </button>
                     <button
-                        className="btn-reject"
+                        className="application-review-button-reject"
                         onClick={handleReject}
                         disabled={
                             data?.master.status !== "pending" ||
@@ -196,7 +198,7 @@ function ApplicationReviewDetailPage() {
                         거절
                     </button>
                     <button
-                        className="btn-approve"
+                        className="application-review-button-approve"
                         onClick={handleApprove}
                         disabled={
                             data?.master.status !== "pending" ||
@@ -208,11 +210,11 @@ function ApplicationReviewDetailPage() {
                 </div>
             </div>
 
-            <section className="episode-list-section panel">
-                <div className="section-header">
+            <section className="application-review-episodes panel">
+                <div className="application-review-section-header">
                     <h2>회차 상세 내역 ({episodes.length})</h2>
                 </div>
-                <div className="episode-table-container">
+                <div className="application-review-episode-table">
                     <EpisodeReviewTable rows={episodes} />
                 </div>
             </section>

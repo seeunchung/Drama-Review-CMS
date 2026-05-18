@@ -14,6 +14,7 @@ import { useHomeData } from "@/network/hooks";
 import { debugApi } from "@/network/api";
 import { useToastStore, useModalStore } from "@/app/store";
 import { getErrorMessage } from "@/lib/error";
+import "./styles.css";
 
 // 시간을 사람이 읽기 좋은 형식으로 변환
 function formatTime(dateString: string) {
@@ -42,13 +43,13 @@ function StatWidget({
     isLoading?: boolean;
 }) {
     return (
-        <div className="stat-widget panel">
-            <span className="stat-label">{label}</span>
-            <div className="stat-value-group">
+        <div className="dashboard-stat-widget panel">
+            <span className="dashboard-stat-label">{label}</span>
+            <div className="dashboard-stat-value-group">
                 <strong style={{ color: color || "var(--ink-strong)" }}>
                     {isLoading ? "..." : value.toLocaleString()}
                 </strong>
-                <span className="stat-trend">{trend}</span>
+                <span className="dashboard-stat-trend">{trend}</span>
             </div>
         </div>
     );
@@ -97,7 +98,10 @@ function HomePage() {
                     >
                         테스트 데이터 시딩
                     </button>
-                    <Link to="/content-import" className="quick-action-button">
+                    <Link
+                        to="/content-import"
+                        className="dashboard-quick-action"
+                    >
                         신규 시리즈 에피소드 등록
                     </Link>
                 </div>
@@ -139,7 +143,7 @@ function HomePage() {
                     <h3>실시간 드라마 인기 지표 (리뷰 수 Top 5)</h3>
                     <p>승인 완료된 드라마 중 유저 리뷰가 가장 많이 달린 순위입니다.</p>
                 </div>
-                <div className="chart-container">
+                <div className="dashboard-chart-container">
                     {chartData.length > 0 ? (
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart
@@ -172,7 +176,7 @@ function HomePage() {
                             </BarChart>
                         </ResponsiveContainer>
                     ) : (
-                        <div className="empty-chart-state">
+                        <div className="dashboard-chart-empty">
                             <p>표시할 데이터가 없습니다. 드라마를 승인하거나 리뷰 데이터를 생성해주세요.</p>
                         </div>
                     )}
@@ -192,14 +196,14 @@ function HomePage() {
                                 to={project.path}
                                 className="dashboard-menu-item"
                             >
-                                <div className="menu-icon-box">
+                                <div className="dashboard-menu-icon">
                                     {project.icon}
                                 </div>
-                                <div className="menu-copy">
+                                <div className="dashboard-menu-copy">
                                     <strong>{project.title}</strong>
                                     <p>{project.description}</p>
                                 </div>
-                                <div className="menu-arrow">→</div>
+                                <div className="dashboard-menu-arrow">→</div>
                             </Link>
                         ))}
                     </div>
@@ -209,22 +213,22 @@ function HomePage() {
                     <div className="panel-header">
                         <h3>최근 업데이트 내역</h3>
                     </div>
-                    <ul className="activity-list">
+                    <ul className="dashboard-activity-list">
                         {isLoading ? (
-                            <li className="activity-loading">
+                            <li className="dashboard-activity-loading">
                                 데이터를 불러오는 중...
                             </li>
                         ) : activities && activities.length > 0 ? (
                             activities.map((activity) => (
                                 <li key={activity.id}>
-                                    <span className="activity-time">
+                                    <span className="dashboard-activity-time">
                                         {formatTime(activity.created_at)}
                                     </span>
                                     <p>{activity.message}</p>
                                 </li>
                             ))
                         ) : (
-                            <li className="activity-empty">
+                            <li className="dashboard-activity-empty">
                                 최근 활동 내역이 없습니다.
                             </li>
                         )}

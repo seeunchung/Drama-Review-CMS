@@ -18,21 +18,26 @@ function formatFileSize(size: number) {
 function SelectedFileBar({ file, onRemove }: SelectedFileBarProps) {
   if (!file) {
     return (
-      <div className="selected-file-bar is-empty">
+      <div className="upload-selected-file-bar is-empty">
         <span>아직 선택된 파일이 없습니다.</span>
       </div>
     )
   }
 
   return (
-    <div className="selected-file-bar">
-      <div className="selected-file-copy">
-        <span className="selected-file-pill">{file.typeLabel}</span>
+    <div className="upload-selected-file-bar">
+      <div className="upload-selected-file-copy">
+        <span className="upload-selected-file-pill">{file.typeLabel}</span>
         <strong>{file.name}</strong>
         <small>{formatFileSize(file.size)}</small>
       </div>
 
-      <button className="selected-file-remove" type="button" onClick={onRemove} aria-label="파일 제거">
+      <button
+        className="upload-selected-file-remove"
+        type="button"
+        onClick={onRemove}
+        aria-label="파일 제거"
+      >
         ✕
       </button>
     </div>

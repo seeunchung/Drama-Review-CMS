@@ -39,9 +39,9 @@ function UploadStatsCards({ summary }: UploadStatsCardsProps) {
   ]
 
   return (
-    <div className="stats-grid">
+    <div className="upload-stats-grid">
       {cards.map((card) => (
-        <article className="stat-card" key={card.title}>
+        <article className="upload-stat-card" key={card.title}>
           <span>{card.title}</span>
           <strong>{card.value}</strong>
           <small>{card.note}</small>

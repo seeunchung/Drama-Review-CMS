@@ -8,7 +8,7 @@ import "./styles.css";
 function ApplicationReviewPage() {
     const navigate = useNavigate();
     const { data: applications, isLoading } = useApplications();
-    const pageMeta = ADMIN_TASKS.find(t => t.id === ("application-review" as any));
+    const pageMeta = ADMIN_TASKS.find((t) => t.id === "application-review");
 
     return (
         <main className="application-review-page">
@@ -18,13 +18,13 @@ function ApplicationReviewPage() {
                 tags={pageMeta?.tags || ["사용자 신청", "데이터 검토"]}
             />
 
-            <section className="application-list-section panel fade-up">
-                <div className="section-header">
+            <section className="application-review-list-section panel fade-up">
+                <div className="application-review-section-header">
                     <h2>신청 내역 ({applications?.length || 0})</h2>
                 </div>
 
-                <div className="application-table-wrapper">
-                    <table className="application-table">
+                <div className="application-review-table-wrap">
+                    <table className="application-review-table">
                         <thead>
                             <tr>
                                 <th>신청일</th>
@@ -38,15 +38,28 @@ function ApplicationReviewPage() {
                         <tbody>
                             {isLoading ? (
                                 <tr>
-                                    <td colSpan={6} className="table-loading">데이터를 불러오는 중...</td>
+                                    <td
+                                        colSpan={6}
+                                        className="application-review-table-state"
+                                    >
+                                        데이터를 불러오는 중...
+                                    </td>
                                 </tr>
                             ) : applications?.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="table-empty">신청 내역이 없습니다.</td>
+                                    <td
+                                        colSpan={6}
+                                        className="application-review-table-state"
+                                    >
+                                        신청 내역이 없습니다.
+                                    </td>
                                 </tr>
                             ) : (
                                 applications?.map((app) => (
-                                    <tr key={app.id} className="application-row">
+                                    <tr
+                                        key={app.id}
+                                        className="application-review-row"
+                                    >
                                         <td onClick={() => navigate(`/application-review/${app.id}`)}>{new Date(app.created_at).toLocaleDateString()}</td>
                                         <td onClick={() => navigate(`/application-review/${app.id}`)}><strong>{app.title}</strong></td>
                                         <td onClick={() => navigate(`/application-review/${app.id}`)}>{app.ott}</td>
@@ -57,7 +70,10 @@ function ApplicationReviewPage() {
                                             </span>
                                         </td>
                                         <td>
-                                            <Link to={`/application-review/${app.id}`} className="view-detail-link">
+                                            <Link
+                                                to={`/application-review/${app.id}`}
+                                                className="application-review-detail-link"
+                                            >
                                                 상세보기
                                             </Link>
                                         </td>
