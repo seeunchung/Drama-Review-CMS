@@ -59,20 +59,24 @@ function UploadWorkspace({
   canClean = false,
 }: UploadWorkspaceProps) {
   return (
-    <section className="workspace-section panel fade-up" id="workflow">
+    <section className="content-import-workspace panel fade-up" id="workflow">
       {/* 상세 화면에서는 필요할 때만 제목 블록을 노출한다. */}
       {(headingKicker || headingTitle || headingDescription) && (
-        <div className="section-heading">
+        <div className="content-import-section-heading">
           <div>
-            {headingKicker && <span className="section-kicker">{headingKicker}</span>}
+            {headingKicker && (
+              <span className="content-import-section-kicker">
+                {headingKicker}
+              </span>
+            )}
             {headingTitle && <h2>{headingTitle}</h2>}
           </div>
           {headingDescription && <p>{headingDescription}</p>}
         </div>
       )}
 
-      <div className="workspace-top-grid">
-        <div className="workspace-upload-column">
+      <div className="content-import-workspace-grid">
+        <div className="content-import-upload-column">
           <UploadDropzone onFileSelect={onFileSelect} />
           <SelectedFileBar file={file} onRemove={onFileRemove} />
         </div>

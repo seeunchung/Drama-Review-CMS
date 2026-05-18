@@ -68,7 +68,7 @@ const LoginPage = () => {
                 </div>
 
                 <form className="login-form" onSubmit={handleLogin}>
-                    <div className="form-group">
+                    <div className="login-form-group">
                         <label htmlFor="email">이메일</label>
                         <input
                             id="email"
@@ -80,7 +80,7 @@ const LoginPage = () => {
                         />
                     </div>
 
-                    <div className="form-group">
+                    <div className="login-form-group">
                         <label htmlFor="password">비밀번호</label>
                         <input
                             id="password"
@@ -103,8 +103,8 @@ const LoginPage = () => {
                     </button>
                 </form>
 
-                <div className="shortcut-section">
-                    <div className="divider">
+                <div className="login-shortcut-section">
+                    <div className="login-divider">
                         <span>또는</span>
                     </div>
                     <button

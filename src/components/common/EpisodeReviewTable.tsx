@@ -11,7 +11,7 @@ export function EpisodeReviewTable({
     emptyMessage = "검토할 데이터가 없습니다." 
 }: Props) {
     return (
-        <div className="upload-result-table panel">
+        <div className="episode-review-table panel">
             <table>
                 <thead>
                     <tr>
@@ -29,21 +29,35 @@ export function EpisodeReviewTable({
                 <tbody>
                     {rows.length === 0 ? (
                         <tr>
-                            <td colSpan={9} className="empty-row">
+                            <td
+                                colSpan={9}
+                                className="episode-review-table__empty-row"
+                            >
                                 {emptyMessage}
                             </td>
                         </tr>
                     ) : (
                         rows.map((row) => (
-                            <tr key={row.id} className={`row-${row.status}`}>
-                                <td className="cell-seq">{row.seq}</td>
-                                <td className="cell-title">
+                            <tr
+                                key={row.id}
+                                className={
+                                    row.status === "error"
+                                        ? "episode-review-table__row--error"
+                                        : row.status === "uploaded"
+                                          ? "episode-review-table__row--uploaded"
+                                          : undefined
+                                }
+                            >
+                                <td className="episode-review-table__seq">
+                                    {row.seq}
+                                </td>
+                                <td className="episode-review-table__title">
                                     <strong>{row.title}</strong>
                                 </td>
                                 <td>
-                                    <div className="cell-sub-info">
+                                    <div className="episode-review-table__sub-info">
                                         <span>{row.distributor}</span>
-                                        <span className="badge-rating">
+                                        <span className="episode-review-table__rating">
                                             {row.rating}
                                         </span>
                                     </div>
@@ -52,9 +66,9 @@ export function EpisodeReviewTable({
                                     {row.episode}
                                 </td>
                                 <td>{row.subtitle}</td>
-                                <td className="cell-summary upload-result-table">
+                                <td className="episode-review-table__summary">
                                     <div
-                                        className="summary-text"
+                                        className="episode-review-table__summary-text"
                                         title={row.summary}
                                     >
                                         {row.summary}
@@ -64,9 +78,12 @@ export function EpisodeReviewTable({
                                 <td>
                                     <StatusBadge status={row.status} />
                                 </td>
-                                <td className="cell-error">
+                                <td className="episode-review-table__errors">
                                     {row.errorMessages.map((msg, idx) => (
-                                        <div key={idx} className="error-text">
+                                        <div
+                                            key={idx}
+                                            className="episode-review-table__error-text"
+                                        >
                                             • {msg}
                                         </div>
                                     ))}

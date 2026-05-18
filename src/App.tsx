@@ -5,7 +5,6 @@ import { AuthGuard, PageShell, SiteHeader } from "@/components/layout";
 import { useAuthStore, useThemeStore } from "@/app/store";
 import { GlobalModal } from "@/components/common";
 import { GlobalToast } from "@/components/common";
-import "./layout.css";
 
 const HomePage = lazy(() => import("@/pages/home/HomePage"));
 const LoginPage = lazy(() => import("@/pages/auth/LoginPage"));

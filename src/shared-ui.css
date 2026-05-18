@@ -1,0 +1,355 @@
+/* 여러 페이지가 함께 쓰는 카드, 버튼, 배지 같은 공용 UI만 모아둔다. */
+.panel {
+  background: var(--surface-1);
+  border: 1px solid var(--line-soft);
+  box-shadow: var(--shadow-panel);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+/* 상태 배지는 목록과 상세 화면 모두에서 같은 의미로 재사용한다. */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.status-badge.status-pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.status-badge.status-completed {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.status-badge.status-failed {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+/* 버튼 스타일은 화면별 의미만 달라지고 모양 규칙은 공유한다. */
+.btn-primary,
+.btn-danger,
+.btn-outline,
+.btn-text {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--button-bg);
+  color: var(--bg-deep);
+  border: 1px solid var(--button-bg);
+}
+
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.btn-danger {
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--line-soft);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--ink-strong);
+}
+
+.btn-text {
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid transparent;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.btn-text:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ink-strong);
+}
+
+.btn-text.is-danger {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.btn-text.is-danger:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
+}
+
+.btn-primary:disabled,
+.btn-danger:disabled,
+.btn-outline:disabled,
+.btn-text:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: none;
+  pointer-events: none;
+}
+
+/* 공통 등장 애니메이션은 여러 화면의 패널에 붙일 수 있게 분리한다. */
+.fade-up {
+  animation: rise-in 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.panel-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.panel-header h3 {
+  color: var(--ink-strong);
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.panel-header p {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+/* 상세 페이지 상단 헤더는 같은 골격을 유지하도록 공용화한다. */
+.project-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 28px;
+  background: var(--surface-1);
+  border-radius: 20px;
+}
+
+.project-back-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.project-header h1 {
+  font-size: 2.2rem;
+  color: var(--ink-strong);
+}
+
+.project-header p {
+  color: var(--ink-muted);
+  max-width: 60ch;
+}
+
+.project-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.project-tag {
+  padding: 4px 12px;
+  background: transparent;
+  color: var(--brand-red);
+  border: 1px solid var(--brand-red);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.screen-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--surface-1);
+  border-radius: 18px;
+}
+
+.screen-mode-group {
+  display: flex;
+  gap: 8px;
+}
+
+.screen-mode-group button {
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--bg-deep);
+  color: var(--ink-soft);
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.screen-mode-group button.is-active {
+  background: var(--button-bg);
+  color: var(--bg-deep);
+  font-weight: 700;
+}
+
+.project-screen {
+  padding: 24px;
+  background: var(--surface-1);
+  border-radius: 20px;
+}
+
+/* 페이지 전환 중 로딩/에러 같은 비어 있는 상태 화면을 공통 포맷으로 맞춘다. */
+.page-feedback {
+  min-height: 40vh;
+  display: grid;
+  place-items: center;
+  padding: 48px 24px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.page-feedback.is-error {
+  color: var(--status-error);
+}
+
+/* 회차 검수 테이블은 여러 화면에서 함께 쓰므로 공용 UI로 관리한다. */
+.episode-review-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.episode-review-table th {
+  padding: 16px;
+  text-align: left;
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-size: 0.85rem;
+}
+
+.episode-review-table td {
+  padding: 16px;
+  border-bottom: 1px solid var(--line-soft);
+  color: var(--ink-muted);
+  vertical-align: top;
+}
+
+.episode-review-table__empty-row {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--ink-soft);
+}
+
+.episode-review-table__row--error {
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.episode-review-table__row--uploaded {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.episode-review-table__seq {
+  text-align: center;
+  color: var(--ink-strong);
+  font-weight: 600;
+}
+
+.episode-review-table__title {
+  color: var(--ink-strong);
+}
+
+.episode-review-table__sub-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.episode-review-table__rating {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.episode-review-table__summary {
+  max-width: 240px;
+}
+
+.episode-review-table__summary-text {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.episode-review-table__errors {
+  min-width: 220px;
+}
+
+.episode-review-table__error-text {
+  color: var(--status-error);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .project-header {
+    flex-direction: column;
+  }
+
+  .panel-header,
+  .project-header,
+  .project-screen {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .episode-review-table {
+    overflow-x: auto;
+  }
+}

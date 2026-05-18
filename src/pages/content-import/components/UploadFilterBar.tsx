@@ -39,26 +39,26 @@ function UploadFilterBar({
         <div className="upload-filter-bar">
             <div className="upload-filter-group">
                 <button
-                    className={`filter-chip${filterMode === "all" ? " is-active" : ""}`}
+                    className={`upload-filter-chip${filterMode === "all" ? " is-active" : ""}`}
                     type="button"
                     onClick={() => onFilterChange("all")}
                 >
                     전체 보기
                 </button>
                 <button
-                    className={`filter-chip${filterMode === "error" ? " is-active" : ""}`}
+                    className={`upload-filter-chip${filterMode === "error" ? " is-active" : ""}`}
                     type="button"
                     onClick={() => onFilterChange("error")}
                 >
                     에러 행만 보기
                 </button>
-                <span className="filter-count">
+                <span className="upload-filter-count">
                     {totalCount}건 중 {visibleCount}건 표시
                 </span>
             </div>
 
             <div className="upload-filter-actions">
-                <label className="filter-select">
+                <label className="upload-filter-select">
                     <span>정렬</span>
                     <select
                         value={sortMode}
@@ -73,7 +73,7 @@ function UploadFilterBar({
                 </label>
 
                 <button
-                    className="filter-button filter-button-secondary"
+                    className="upload-filter-button upload-filter-button--secondary"
                     type="button"
                     disabled={!canDownload}
                     onClick={onDownload}
@@ -81,7 +81,7 @@ function UploadFilterBar({
                     CSV 다운로드
                 </button>
                 <button
-                    className="filter-button filter-button-secondary"
+                    className="upload-filter-button upload-filter-button--secondary"
                     type="button"
                     title="데이터를 자동 정규화합니다.(등급,회차,러닝타임)"
                     disabled={!canClean}
@@ -90,7 +90,7 @@ function UploadFilterBar({
                     자동 변환
                 </button>
                 <button
-                    className="filter-button filter-button-primary"
+                    className="upload-filter-button upload-filter-button--primary"
                     type="button"
                     disabled={!canSave}
                     onClick={onSave}

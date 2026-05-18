@@ -28,12 +28,12 @@ export function PosterUploadSection({
     };
 
     return (
-        <section className={`poster-upload-section ${disabled ? 'is-disabled' : ''}`}>
-            <div className="poster-preview-card">
+        <section className={`metadata-review-poster-section ${disabled ? 'is-disabled' : ''}`}>
+            <div className="metadata-review-poster-preview">
                 {posterUrl ? (
                     <img src={posterUrl} alt="드라마 포스터" />
                 ) : (
-                    <div className="poster-empty-state">
+                    <div className="metadata-review-poster-empty">
                         <svg
                             viewBox="0 0 24 24"
                             fill="none"
@@ -56,7 +56,7 @@ export function PosterUploadSection({
                 )}
             </div>
 
-            <div className="poster-info-group">
+            <div className="metadata-review-poster-info">
                 <h3>드라마 포스터 관리</h3>
                 <p>
                     리뷰 사이트의 메인 및 상세 페이지에 노출될 드라마 대표
@@ -65,17 +65,17 @@ export function PosterUploadSection({
                     권장 비율은 2:3이며, 고화질 이미지를 권장합니다.
                 </p>
 
-                <div className="upload-controls">
+                <div className="metadata-review-poster-controls">
                     <input
                         type="file"
                         accept="image/*"
-                        className="file-input-hidden"
+                        className="metadata-review-poster-input"
                         ref={fileInputRef}
                         onChange={handleFileChange}
                         disabled={disabled}
                     />
                     <button
-                        className="btn-primary btn-upload-trigger"
+                        className="btn-primary metadata-review-poster-trigger"
                         onClick={triggerUpload}
                         disabled={isUploading || disabled}
                         title={disabled ? "승인 거절된 상태에서는 포스터를 수정할 수 없습니다." : ""}
@@ -83,10 +83,10 @@ export function PosterUploadSection({
                         {isUploading
                             ? "업로드 중..."
                             : posterUrl
-                              ? "포스터 변경"
+                            ? "포스터 변경"
                               : "포스터 업로드"}
                     </button>
-                    <span className="upload-hint">
+                    <span className="metadata-review-poster-hint">
                         {disabled 
                             ? "❌ 승인 거절된 데이터는 포스터 수정을 할 수 없습니다." 
                             : "JPG, PNG, WEBP 지원 (최대 5MB)"}

@@ -15,12 +15,12 @@ interface EpisodeTrendChartProps {
 
 export const EpisodeTrendChart: React.FC<EpisodeTrendChartProps> = ({ data }) => {
   return (
-    <div className="episode-trend-chart-panel panel">
+    <div className="curation-trend-panel panel">
       <div className="panel-header">
         <h3>회차별 리뷰 등록 추이</h3>
         <p>각 에피소드별 유저 반응(리뷰 수)을 분석하여 이탈 구간을 파악합니다.</p>
       </div>
-      <div className="chart-wrapper">
+      <div className="curation-chart-wrapper">
         <ResponsiveContainer width="100%" height={240}>
           <AreaChart data={data} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
             <defs>

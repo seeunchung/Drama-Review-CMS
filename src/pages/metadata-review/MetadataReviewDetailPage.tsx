@@ -30,16 +30,18 @@ function MetadataReviewDetailPage() {
     const pageMeta = ADMIN_TASKS.find((t) => t.id === "metadata-review");
 
     if (isLoading)
-        return <div className="loading-state">데이터를 불러오는 중...</div>;
+        return <div className="page-feedback">데이터를 불러오는 중...</div>;
     if (error)
         return (
-            <div className="error-state">
+            <div className="page-feedback is-error">
                 오류가 발생했습니다: {error.message}
             </div>
         );
     if (!batch)
         return (
-            <div className="error-state">해당 데이터를 찾을 수 없습니다.</div>
+            <div className="page-feedback is-error">
+                해당 데이터를 찾을 수 없습니다.
+            </div>
         );
 
     const handlePosterUpload = async (file: File) => {
@@ -99,19 +101,19 @@ function MetadataReviewDetailPage() {
     };
 
     return (
-        <main className="project-page review-detail-page">
+        <main className="metadata-review-detail-page">
             <ProjectHeader
                 title={`${pageMeta?.title || "메타데이터 검수"}: ${batch.drama_title}`}
                 description={`${batch.file_name}을(를) 통해 업로드된 회차 메타데이터를 검수합니다.`}
                 tags={["상세 검수"]}
             />
 
-            <div className="detail-toolbar panel">
-                <div className="status-info">
+            <div className="metadata-review-detail-toolbar panel">
+                <div className="metadata-review-status-info">
                     현재 상태:{" "}
                     <StatusBadge status={batch.status} />
                 </div>
-                <div className="action-group">
+                <div className="metadata-review-actions">
                     <button
                         className="btn-outline"
                         disabled={isDeleting}
@@ -144,7 +146,7 @@ function MetadataReviewDetailPage() {
                 </div>
             </div>
 
-            <section className="detail-content panel">
+            <section className="metadata-review-detail-section panel">
                 <PosterUploadSection
                     posterUrl={batch.poster_url}
                     isUploading={isUploadingPoster}
@@ -152,8 +154,8 @@ function MetadataReviewDetailPage() {
                     disabled={batch.status === "failed"}
                 />
 
-                <div className="review-table-wrap is-full">
-                    <table className="review-table">
+                <div className="metadata-review-table-wrap metadata-review-table-wrap--detail">
+                    <table className="metadata-review-table">
                         <thead>
                             <tr>
                                 <th>순번</th>
@@ -170,13 +172,13 @@ function MetadataReviewDetailPage() {
                             {episodes.map((ep) => (
                                 <tr key={ep.id}>
                                     <td>{ep.seq}</td>
-                                    <td className="cell-title">{ep.title}</td>
+                                    <td className="metadata-review-title-cell">{ep.title}</td>
                                     <td>{ep.distributor}</td>
                                     <td>{ep.rating}</td>
                                     <td>{ep.episode}</td>
                                     <td>{ep.subtitle || "-"}</td>
                                     <td>{ep.running_time}</td>
-                                    <td className="cell-summary">
+                                    <td className="metadata-review-summary-cell">
                                         {ep.summary}
                                     </td>
                                 </tr>
