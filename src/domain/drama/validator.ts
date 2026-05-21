@@ -1,4 +1,4 @@
-import { StandardEpisode } from "@/app/types/drama";
+import { StandardEpisode } from "@/domain/drama/types";
 
 /** 문자열에서 숫자만 추출 (예: "15세이상" -> "15", "제1화" -> "1") */
 export const extractNumbers = (value: string | number | undefined | null): string => {

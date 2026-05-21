@@ -7,7 +7,7 @@ import {
     useRejectApplication,
 } from "@/network/hooks/use-application";
 import { EpisodeReviewTable, StatusBadge } from "@/components/common";
-import { toStandardEpisodesFromApplication } from "@/lib/adapters";
+import { toStandardEpisodesFromApplication } from "@/domain/drama/adapters";
 import {
     validateDramaRow,
     applyDramaCollectionValidation,
@@ -15,8 +15,8 @@ import {
     normalizeRunningTime,
     isNumeric,
     isValidRunningTime,
-} from "@/lib/drama-validator";
-import { StandardEpisode } from "@/app/types/drama";
+} from "@/domain/drama/validator";
+import { StandardEpisode } from "@/domain/drama/types";
 import { useToastStore, useModalStore } from "@/app/store";
 import "./styles.css";
 

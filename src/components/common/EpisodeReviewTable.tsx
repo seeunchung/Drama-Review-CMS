@@ -1,5 +1,5 @@
 import { StatusBadge } from "./StatusBadge"
-import { StandardEpisode } from "@/app/types/drama";
+import { StandardEpisode } from "@/domain/drama/types";
 
 interface Props {
     rows: StandardEpisode[];

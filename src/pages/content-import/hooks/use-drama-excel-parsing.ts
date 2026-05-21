@@ -4,7 +4,7 @@ import type { BulkUploadRow, RowStatus } from "@/pages/content-import/types/cont
 import { 
     validateDramaRow, 
     applyDramaCollectionValidation 
-} from "@/lib/drama-validator";
+} from "@/domain/drama/validator";
 
 type ExcelCell = string | number | boolean | null | undefined;
 type ExcelRow = ExcelCell[];
@@ -83,7 +83,7 @@ export function useDramaExcelParsing() {
                             // 빈 행 스킵
                             if (!title && !rawEpisode && !summary) continue;
 
-                            // 5. 개별 필드 검증 (lib/drama-validator 사용)
+                            // 5. 개별 필드 검증 (domain/drama/validator 사용)
                             const errorMessages = validateDramaRow({
                                 title,
                                 baseTitle,

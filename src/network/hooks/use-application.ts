@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { applicationApi } from "../api/application";
 import { uploadApi } from "../api/upload";
-import { StandardEpisode } from "@/app/types/drama";
+import { StandardEpisode } from "@/domain/drama/types";
 
 export function useApplications() {
     return useQuery({

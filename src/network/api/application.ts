@@ -2,7 +2,7 @@ import { supabase } from "@/lib/supabase";
 import { 
     DramaApplicationEntity, 
     EpisodeApplicationEntity 
-} from "@/app/types/drama";
+} from "@/domain/drama/types";
 
 /**
  * 사용자 신청 관리 관련 API

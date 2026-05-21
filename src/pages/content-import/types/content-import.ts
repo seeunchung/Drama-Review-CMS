@@ -1,4 +1,3 @@
-// Content Import 데모에서 공통으로 쓰는 타입 모음이다.
 export type UploadStep = 'idle' | 'parsed' | 'validated' | 'reviewed' | 'saved'
 
 export type RowStatus = 'valid' | 'error' | 'uploaded'

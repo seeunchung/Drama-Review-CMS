@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { StandardEpisode } from "@/app/types/drama";
+import { StandardEpisode } from "@/domain/drama/types";
 
 /**
  * 업로드 관련 API

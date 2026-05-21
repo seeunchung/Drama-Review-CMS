@@ -4,7 +4,8 @@ import { useDramaExcelParsing } from "./hooks";
 import { useBulkUpload } from "@/network/hooks";
 import { UploadWorkspace } from "./sections/UploadWorkspace";
 import { UploadProgressBar } from "./components";
-import { useModalStore, useToastStore, useUploadStore } from "@/app/store";
+import { useModalStore, useToastStore } from "@/app/store";
+import { useUploadStore } from "./store/use-upload-store";
 import { ADMIN_TASKS } from "@/app/project-meta";
 import { getErrorMessage } from "@/lib/error";
 import {
@@ -14,7 +15,7 @@ import {
     applyDramaCollectionValidation,
     normalizeRunningTime,
     isValidRunningTime,
-} from "@/lib/drama-validator";
+} from "@/domain/drama/validator";
 import type {
     BulkUploadRow,
     BulkUploadSummary,

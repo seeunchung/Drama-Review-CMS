@@ -4,7 +4,7 @@ import {
     ImportBatchEntity,
     StandardEpisode,
     StandardDramaMaster 
-} from "@/app/types/drama";
+} from "@/domain/drama/types";
 
 /**
  * 사용자 신청 내역을 표준 에피소드 모델 리스트로 변환

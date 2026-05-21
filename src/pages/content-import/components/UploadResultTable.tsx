@@ -1,5 +1,5 @@
 import { StatusBadge } from "@/components/common";
-import type { StandardEpisode } from "@/app/types/drama";
+import type { StandardEpisode } from "@/domain/drama/types";
 
 interface Props {
     rows: StandardEpisode[];
